@@ -1,84 +1,88 @@
-let chart
+let chart;
 
-function simulate(){
+function calculate(){
 
-let hAge=Number(document.getElementById("hAge").value)
-let wAge=Number(document.getElementById("wAge").value)
+let age = Number(document.getElementById("husbandAge").value)
 
-let age=Math.min(hAge,wAge)
+let asset = Number(document.getElementById("asset").value)
 
-let hIncome=Number(document.getElementById("hIncome").value)*12
-let wIncome=Number(document.getElementById("wIncome").value)*12
+let incomeH = Number(document.getElementById("husbandIncome").value)
 
-let hRetire=Number(document.getElementById("hRetire").value)
-let wRetire=Number(document.getElementById("wRetire").value)
+let incomeW = Number(document.getElementById("wifeIncome").value)
 
-let asset=Number(document.getElementById("asset").value)
+let expense = Number(document.getElementById("expense").value)
 
-let consume=Number(document.getElementById("consume").value)/100
-let r=Number(document.getElementById("returnRate").value)/100
-let inflation=Number(document.getElementById("inflation").value)/100
+let incomeGrowth = Number(document.getElementById("incomeGrowth").value)/100
 
-let income=hIncome+wIncome
-let expense=income*consume
+let inflation = Number(document.getElementById("inflation").value)/100
+
+let returnRate = Number(document.getElementById("returnRate").value)/100
+
+let retireH = Number(document.getElementById("husbandRetire").value)
+
+let retireW = Number(document.getElementById("wifeRetire").value)
 
 let labels=[]
 let data=[]
 
-let bankrupt=null
+let bankruptAge=null
 
-for(let a=age;a<=100;a++){
+for(let i=0;i<100-age;i++){
 
-if(a>=hRetire) income-=hIncome
-if(a>=wRetire) income-=wIncome
+let currentAge=age+i
 
-let cash=income-expense
+let income=0
 
-asset=asset*(1+r)+cash
+if(currentAge<retireH) income+=incomeH
+if(currentAge<retireW) income+=incomeW
 
-if(asset<0 && bankrupt==null){
-bankrupt=a
+let investIncome=asset*returnRate
+
+let saving=income+investIncome-expense
+
+asset+=saving
+
+if(asset<0 && bankruptAge==null){
+bankruptAge=currentAge
 }
 
-labels.push(a)
+labels.push(currentAge)
 data.push(asset)
 
-income*=1+inflation
+incomeH*=1+incomeGrowth
+incomeW*=1+incomeGrowth
 expense*=1+inflation
-
 }
 
-if(bankrupt){
-document.getElementById("summary").innerHTML=
-bankrupt+"세에 파산합니다."
+drawChart(labels,data)
+
+let result=document.getElementById("result")
+
+if(bankruptAge){
+result.innerHTML="이대로라면 <b>"+bankruptAge+"세에 파산합니다.</b>"
 }else{
-document.getElementById("summary").innerHTML=
-"100세까지 파산하지 않습니다."
+result.innerHTML="100세까지 자산이 유지됩니다."
 }
+
+}
+
+function drawChart(labels,data){
+
+let ctx=document.getElementById("chart")
 
 if(chart) chart.destroy()
 
-chart=new Chart(document.getElementById("chart"),{
-
-type:"line",
-
+chart=new Chart(ctx,{
+type:'line',
 data:{
 labels:labels,
-
 datasets:[{
-
 label:"순자산",
-
 data:data,
-
-segment:{
-borderColor:ctx=>ctx.p0.parsed.y>=0?"blue":"red"
-}
-
+borderColor:"#0064ff",
+tension:0.2
 }]
-
 }
-
 })
 
 }
