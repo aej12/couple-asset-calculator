@@ -10,28 +10,36 @@
 
 <h1>커플 경제적 자유 계산기</h1>
 
-<section>
+<section class="input-section">
   <h2>입력 정보</h2>
   <form id="inputForm">
-    <label>본인 나이<input type="number" id="ageSelf" value="25" min="0" max="100"></label>
-    <label>배우자 나이<input type="number" id="agePartner" value="27" min="0" max="100"></label>
-    <label>현재 자산 합계 (만원)<input type="number" id="assetTotal" value="0" min="0"></label>
-    <label>본인 월 수입 (만원)<input type="number" id="incomeSelf" value="200" min="0"></label>
-    <label>배우자 월 수입 (만원)<input type="number" id="incomePartner" value="150" min="0"></label>
-    <label>월 지출 합계 (만원)<input type="number" id="expenseTotal" value="270" min="0"></label>
-    <label>금융자산 증가율 (%)<input type="number" id="interestRate" value="0" step="0.1"></label>
-    <label>본인 은퇴 나이<input type="number" id="retireSelf" value="60" min="0" max="100"></label>
-    <label>배우자 은퇴 나이<input type="number" id="retirePartner" value="60" min="0" max="100"></label>
-    <button type="submit">계산하기</button>
+    <div class="form-row">
+      <label>본인 나이<input type="number" id="ageSelf" value="25" min="0" max="100"></label>
+      <label>배우자 나이<input type="number" id="agePartner" value="27" min="0" max="100"></label>
+    </div>
+    <div class="form-row">
+      <label>현재 자산 합계 (만원)<input type="number" id="assetTotal" value="0" min="0"></label>
+      <label>본인 월 수입 (만원)<input type="number" id="incomeSelf" value="200" min="0"></label>
+      <label>배우자 월 수입 (만원)<input type="number" id="incomePartner" value="150" min="0"></label>
+    </div>
+    <div class="form-row">
+      <label>월 지출 합계 (만원)<input type="number" id="expenseTotal" value="270" min="0"></label>
+      <label>금융자산 증가율 (%)<input type="number" id="interestRate" value="0" step="0.1"></label>
+    </div>
+    <div class="form-row">
+      <label>본인 은퇴 나이<input type="number" id="retireSelf" value="60" min="0" max="100"></label>
+      <label>배우자 은퇴 나이<input type="number" id="retirePartner" value="60" min="0" max="100"></label>
+    </div>
+    <button type="submit" class="calculate-btn">계산하기</button>
   </form>
 </section>
 
-<section>
+<section class="summary-section">
   <h2>계산 결과 요약</h2>
   <div id="summary"></div>
 </section>
 
-<section>
+<section class="result-section">
   <div class="tabs">
     <button class="tablink active" data-tab="monthly">월별 상세</button>
     <button class="tablink" data-tab="yearly">연 단위 요약</button>
