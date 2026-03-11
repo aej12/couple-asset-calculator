@@ -2,6 +2,12 @@ const btn=document.getElementById("calcBtn")
 
 let chart
 
+function format(num){
+
+return Math.round(num).toLocaleString()
+
+}
+
 btn.onclick=function(){
 
 let age=+ageSelf.value
@@ -32,6 +38,9 @@ let fireLine=[]
 let fireAge=null
 let bankruptAge=null
 
+let tableBody=document.querySelector("#resultTable tbody")
+tableBody.innerHTML=""
+
 for(let i=0;i<80;i++){
 
 let ageNow=age+i
@@ -55,22 +64,30 @@ let fireTarget=expense*25
 asset=asset*(1+r)+income-expense
 
 if(asset<=0 && !bankruptAge){
-
 bankruptAge=ageNow
-
 }
 
 let passive=asset*r
 
 if(!fireAge && passive>=expense){
-
 fireAge=ageNow
-
 }
 
 labels.push(ageNow+" / "+agePNow)
 assets.push(asset)
 fireLine.push(fireTarget)
+
+let row=`
+<tr>
+<td>${ageNow}</td>
+<td>${agePNow}</td>
+<td>${format(asset)}</td>
+<td>${format(income)}</td>
+<td>${format(expense)}</td>
+</tr>
+`
+
+tableBody.innerHTML+=row
 
 }
 
@@ -93,30 +110,23 @@ resultText.innerHTML=`100세까지 경제적 자유에 도달하지 못합니다
 if(chart) chart.destroy()
 
 chart=new Chart(assetChart,{
-
 type:"line",
-
 data:{
 labels:labels,
 datasets:[
-
 {
 label:"순자산",
 data:assets,
 borderWidth:4
 },
-
 {
 label:"FIRE 목표자산",
 data:fireLine,
 borderDash:[6,6],
 borderWidth:3
 }
-
 ]
-
 }
-
 })
 
 }
