@@ -1,79 +1,113 @@
-document.getElementById('inputForm').addEventListener('submit', function(e) {
-    e.preventDefault();
+const form = document.getElementById("inputForm");
+const summaryDiv = document.getElementById("summary");
+const assetTable = document.getElementById("assetTable");
+const yearlyTable = document.getElementById("yearlyTable");
+const tabs = document.querySelectorAll(".tablink");
+const tabContents = document.querySelectorAll(".tabcontent");
 
-    const ageSelf = Number(document.getElementById('ageSelf').value);
-    const agePartner = Number(document.getElementById('agePartner').value);
-    const assetTotal = Number(document.getElementById('assetTotal').value);
-    const incomeSelf = Number(document.getElementById('incomeSelf').value);
-    const incomePartner = Number(document.getElementById('incomePartner').value);
-    const expenseTotal = Number(document.getElementById('expenseTotal').value);
-    const interestRate = Number(document.getElementById('interestRate').value);
-    const retireSelf = Number(document.getElementById('retireSelf').value);
-    const retirePartner = Number(document.getElementById('retirePartner').value);
+let chart;
 
-    const netAssets=[];
-    let asset = assetTotal;
-    const monthlyInterest = interestRate/100/12;
-    const startAge = Math.min(ageSelf, agePartner);
+tabs.forEach(tab => {
+  tab.addEventListener("click", () => {
+    tabs.forEach(t => t.classList.remove("active"));
+    tab.classList.add("active");
+    tabContents.forEach(c => c.style.display = "none");
+    document.getElementById(tab.dataset.tab).style.display = "block";
+  });
+});
 
-    for(let age=startAge; age<=100; age++){
-        for(let month=1; month<=12; month++){
-            const monthlyIncomeSelf = age>=retireSelf ? 0 : incomeSelf;
-            const monthlyIncomePartner = age>=retirePartner ? 0 : incomePartner;
-            const totalIncome = monthlyIncomeSelf + monthlyIncomePartner;
+form.addEventListener("submit", function(e){
+  e.preventDefault();
+  calculateAssets();
+});
 
-            asset = asset + totalIncome - expenseTotal + asset*monthlyInterest;
-            netAssets.push({age, month, asset, income: totalIncome, expense: expenseTotal});
-        }
-    }
+function calculateAssets(){
+  // 입력값 가져오기
+  const ageSelf = parseInt(document.getElementById("ageSelf").value);
+  const agePartner = parseInt(document.getElementById("agePartner").value);
+  const assetTotal = parseFloat(document.getElementById("assetTotal").value);
+  const incomeSelf = parseFloat(document.getElementById("incomeSelf").value);
+  const incomePartner = parseFloat(document.getElementById("incomePartner").value);
+  const expenseTotal = parseFloat(document.getElementById("expenseTotal").value);
+  const interestRate = parseFloat(document.getElementById("interestRate").value) / 100;
+  const retireSelf = parseInt(document.getElementById("retireSelf").value);
+  const retirePartner = parseInt(document.getElementById("retirePartner").value);
 
-    // 요약 표시
-    document.getElementById('summary').innerHTML=
-`${startAge}세부터 누적 순자산 계산.<br>월 수입: ${incomeSelf+incomePartner}만원, 월 지출: ${expenseTotal}만원.<br>금융자산 증가율: ${interestRate}% 적용.`;
+  const maxAge = 100;
+  const months = (maxAge - Math.min(ageSelf, agePartner)) * 12;
 
-    // 그래프
-    const labels = netAssets.map(d=>`${d.age}세 ${d.month}월`);
-    const data={ labels, datasets:[{ label:'누적 순자산', data:netAssets.map(d=>d.asset), borderColor:netAssets.map(d=>d.asset>=0?'blue':'red'), backgroundColor:netAssets.map(d=>d.asset>=0?'rgba(0,0,255,0.1)':'rgba(255,0,0,0.1)'), fill:true, tension:0.2 }]};
-    if(window.assetChartInstance) window.assetChartInstance.destroy();
-    window.assetChartInstance = new Chart(document.getElementById('assetChart'), {type:'line', data, options:{plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}}}});
+  let monthlyAssets = [];
+  let yearlyAssets = [];
+  let currentAsset = assetTotal;
+  let year = Math.min(ageSelf, agePartner);
+  let monthCount = 0;
+  let annualIncome = 0, annualExpense = 0;
+
+  assetTable.innerHTML = "";
+  yearlyTable.innerHTML = "";
+
+  for(let i = 0; i < months; i++){
+    let currentAgeSelf = ageSelf + Math.floor(i / 12);
+    let currentAgePartner = agePartner + Math.floor(i / 12);
+    let monthlyIncome = 0;
+
+    if(currentAgeSelf < retireSelf) monthlyIncome += incomeSelf;
+    if(currentAgePartner < retirePartner) monthlyIncome += incomePartner;
+
+    currentAsset = currentAsset * (1 + interestRate/12) + monthlyIncome - expenseTotal;
+    monthlyAssets.push({age: Math.min(currentAgeSelf,currentAgePartner), month: (i%12)+1, asset: currentAsset, expense: expenseTotal, income: monthlyIncome});
 
     // 월별 테이블
-    const tableBody=document.getElementById('assetTable'); tableBody.innerHTML='';
-    netAssets.forEach(d=>{
-        const tr=document.createElement('tr');
-        const assetClass=d.asset>=0?'asset-positive':'asset-negative';
-        tr.innerHTML=`<td>${d.age}</td><td>${d.month}</td><td class="${assetClass}">${Math.round(d.asset).toLocaleString()}</td><td>${Math.round(d.expense).toLocaleString()}</td><td>${Math.round(d.income).toLocaleString()}</td>`;
-        tableBody.appendChild(tr);
-    });
+    let tr = document.createElement("tr");
+    tr.innerHTML = `<td>${Math.min(currentAgeSelf,currentAgePartner)}</td><td>${(i%12)+1}</td><td>${currentAsset.toFixed(1)}</td><td>${expenseTotal}</td><td>${monthlyIncome}</td>`;
+    assetTable.appendChild(tr);
 
-    // 연 단위 테이블
-    const yearlyTable = document.getElementById('yearlyTable'); yearlyTable.innerHTML='';
-    let yearAsset=0, yearIncome=0, yearExpense=0, currentYear=netAssets[0].age;
-    netAssets.forEach(d=>{
-        if(d.age !== currentYear){
-            const tr=document.createElement('tr');
-            tr.innerHTML=`<td>${currentYear}</td><td>${Math.round(yearAsset).toLocaleString()}</td><td>${Math.round(yearExpense).toLocaleString()}</td><td>${Math.round(yearIncome).toLocaleString()}</td>`;
-            yearlyTable.appendChild(tr);
-            currentYear = d.age;
-            yearAsset=0; yearIncome=0; yearExpense=0;
-        }
-        yearAsset=d.asset;
-        yearIncome+=d.income;
-        yearExpense+=d.expense;
-    });
-    const tr=document.createElement('tr');
-    tr.innerHTML=`<td>${currentYear}</td><td>${Math.round(yearAsset).toLocaleString()}</td><td>${Math.round(yearExpense).toLocaleString()}</td><td>${Math.round(yearIncome).toLocaleString()}</td>`;
-    yearlyTable.appendChild(tr);
+    // 연 단위 집계
+    annualIncome += monthlyIncome;
+    annualExpense += expenseTotal;
+    monthCount++;
+    if(monthCount === 12 || i === months-1){
+      yearlyAssets.push({age: Math.min(currentAgeSelf,currentAgePartner), asset: currentAsset, income: annualIncome, expense: annualExpense});
+      let ytr = document.createElement("tr");
+      ytr.innerHTML = `<td>${Math.min(currentAgeSelf,currentAgePartner)}</td><td>${currentAsset.toFixed(1)}</td><td>${annualExpense.toFixed(1)}</td><td>${annualIncome.toFixed(1)}</td>`;
+      yearlyTable.appendChild(ytr);
+      monthCount = 0;
+      annualIncome = 0;
+      annualExpense = 0;
+    }
+  }
 
-    // 탭 기능
-    document.querySelectorAll('.tablink').forEach(btn=>{
-        btn.classList.remove('active');
-        btn.addEventListener('click', ()=>{
-            document.querySelectorAll('.tablink').forEach(b=>b.classList.remove('active'));
-            btn.classList.add('active');
-            document.querySelectorAll('.tabcontent').forEach(tc=>tc.style.display='none');
-            document.getElementById(btn.dataset.tab).style.display='block';
-        });
-    });
-    document.querySelector('.tablink[data-tab="monthly"]').click();
-});
+  summaryDiv.innerHTML = `
+    1. ${ageSelf}세부터 ${incomeSelf}만원, ${agePartner}세부터 ${incomePartner}만원 수입으로 계산했습니다.<br>
+    2. 월 지출 ${expenseTotal}만원, 금융자산 증가율 ${interestRate*100}% 적용<br>
+    3. 100세까지 누적 순자산 기준
+  `;
+
+  // 그래프 그리기
+  const ctx = document.getElementById('assetChart').getContext('2d');
+  if(chart) chart.destroy();
+  chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: monthlyAssets.map(m => `${m.age}세-${m.month}월`),
+      datasets: [{
+        label: '누적 순자산 (만원)',
+        data: monthlyAssets.map(m => m.asset.toFixed(1)),
+        borderColor: '#4CAF50',
+        backgroundColor: 'rgba(76, 175, 80,0.2)',
+        fill: true,
+        tension: 0.2
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false }
+      },
+      scales: {
+        x: { display: false },
+        y: { beginAtZero: true }
+      }
+    }
+  });
+}
