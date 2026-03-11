@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>커플 경제적 자유 계산기</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>커플 경제적 자유 계산기 💸</h1>
+    <p>우리 커플의 파이어(FIRE) 시점은 언제일까요?</p>
+  </header>
+
+  <section class="card input-section">
+    <h2>기본 정보</h2>
+    <form id="inputForm">
+      <div class="form-row">
+        <label>
+          본인 나이
+          <span class="hint-text">만 나이로 작성해주세요</span>
+          <input type="number" id="ageSelf" value="27" min="0" max="100">
+        </label>
+        <label>
+          배우자 나이
+          <span class="hint-text">만 나이로 작성해주세요</span>
+          <input type="number" id="agePartner" value="30" min="0" max="100">
+        </label>
+      </div>
+      
+      <div class="form-row">
+        <label>
+          현재 자산 합계 (만원)
+          <span class="hint-text">퇴직금을 포함하여 작성해주세요</span>
+          <input type="number" id="assetTotal" value="10000" min="0">
+        </label>
+      </div>
+
+      <div class="form-row">
+        <label>
+          본인 연 수입 (만원)
+          <input type="number" id="incomeSelf" value="4200" min="0">
+        </label>
+        <label>
+          배우자 연 수입 (만원)
+          <input type="number" id="incomePartner" value="2800" min="0">
+        </label>
+      </div>
+      
+      <div class="form-row">
+        <label>
+          연 지출 합계 (만원)
+          <span class="hint-text">두 사람의 순수 생활비 합계</span>
+          <input type="number" id="expenseTotal" value="3000" min="0">
+        </label>
+      </div>
+
+      <div class="divider"></div>
+      <h2>성장 및 투자 설정</h2>
+
+      <div class="form-row">
+        <label>
+          금융자산 증가율 (%)
+          <span class="hint-text">전년대비 금융총자산의 상승률 (보수적으로 예적금만 할 때는 2-3%, 지수투자 등 주식투자 진행 시 4-10% 보수적으로 작성)</span>
+          <input type="number" id="interestRate" value="5" step="0.1">
+        </label>
+      </div>
+      
+      <div class="form-row">
+        <label>
+          근로소득 증가율 (%)
+          <span class="hint-text">연평균 수입 상승률</span>
+          <input type="number" id="incomeInflation" value="5" step="0.1">
+        </label>
+        <label>
+          연 소비 증가율 (%)
+          <span class="hint-text">물가 상승 및 소비 증가</span>
+          <input type="number" id="expenseInflation" value="3" step="0.1">
+        </label>
+      </div>
+
+      <div class="form-row">
+        <label>
+          본인 은퇴 나이
+          <input type="number" id="retireSelf" value="60" min="0" max="100">
+        </label>
+        <label>
+          배우자 은퇴 나이
+          <input type="number" id="retirePartner" value="60" min="0" max="100">
+        </label>
+      </div>
+
+      <div class="divider"></div>
+      <h2>자녀 계획</h2>
+
+      <div class="form-row">
+        <label>
+          자녀 수 (명)
+          <input type="number" id="childCount" value="1" min="0">
+        </label>
+        <label>
+          자녀 독립까지 남은 기간 (년)
+          <span class="hint-text">현재부터 독립까지 남은 년수</span>
+          <input type="number" id="childIndependenceYears" value="20" min="0" max="100">
+        </label>
+      </div>
+      <div class="form-row">
+        <label>
+          자녀 1인당 연 소비 (만원)
+          <input type="number" id="childAnnualExpense" value="500" min="0">
+        </label>
+      </div>
+
+      <button type="button" class="calculate-btn">결과 확인하기</button>
+    </form>
+  </section>
+
+  <div id="resultContainer" style="display: none;">
+    <section class="card summary-section">
+      <h2 id="resultTitle">계산 결과</h2>
+      <div id="summary"></div>
+    </section>
+
+    <section class="card chart-section">
+      <h2>연 단위 누적 순자산 그래프</h2>
+      <canvas id="assetChart"></canvas>
+    </section>
+
+    <section class="card table-section">
+      <h2>연 단위 요약표</h2>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>본인 나이</th>
+              <th>배우자 나이</th>
+              <th>누적 순자산 (만원)</th>
+              <th>연 수입 (만원)</th>
+              <th>연 지출 (만원)</th>
+            </tr>
+          </thead>
+          <tbody id="yearlyTable"></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
