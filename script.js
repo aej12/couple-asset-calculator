@@ -33,11 +33,11 @@ document.addEventListener("DOMContentLoaded", function() {
     yearlyTable.innerHTML = "";
     let labels = [];
     let assetData = [];
-    let childReductionData = [];
+    let childExpenseData = [];
 
     let adjustedIncomeSelf = incomeSelf;
     let adjustedIncomePartner = incomePartner;
-    let adjustedExpense = expenseTotal;
+    let adjustedExpenseBase = expenseTotal;
 
     for(let i=0;i<years;i++){
       let currentAgeSelf = ageSelf + i;
@@ -48,18 +48,13 @@ document.addEventListener("DOMContentLoaded", function() {
       if(currentAgeSelf < retireSelf) annualIncome += adjustedIncomeSelf;
       if(currentAgePartner < retirePartner) annualIncome += adjustedIncomePartner;
 
-      // 연 지출에 연 소비 증가율 적용
-      adjustedExpense = adjustedExpense * (i===0 ? 1 : (1 + expenseInflation));
+      // 기본 가계 지출 상승
+      let adjustedExpense = adjustedExpenseBase * Math.pow(1+expenseInflation, i);
 
-      // 자녀 지출 포함, 독립 후 제외
+      // 자녀 지출 계산
       let childExpense = 0;
-      let childReduction = 0;
-      if(childCount > 0){
-        if(currentAgeSelf < childIndependenceAge){
-          childExpense = childCount * childAnnualExpense * Math.pow(1+expenseInflation, i);
-        } else {
-          childReduction = childCount * childAnnualExpense * Math.pow(1+expenseInflation, childIndependenceAge - ageSelf);
-        }
+      if(childCount > 0 && currentAgeSelf < childIndependenceAge){
+        childExpense = childCount * childAnnualExpense * Math.pow(1+expenseInflation, i);
       }
 
       let totalExpense = adjustedExpense + childExpense;
@@ -72,12 +67,12 @@ document.addEventListener("DOMContentLoaded", function() {
                       <td>${formatNumber(currentAsset)}</td>
                       <td>${formatNumber(annualIncome)}</td>
                       <td>${formatNumber(totalExpense)}</td>
-                      <td>${formatNumber(childReduction)}</td>`;
+                      <td>${formatNumber(childExpense)}</td>`;
       yearlyTable.appendChild(tr);
 
       labels.push(currentAgeSelf + "세");
       assetData.push(currentAsset);
-      childReductionData.push(childReduction);
+      childExpenseData.push(childExpense);
 
       // 다음 해 수입 상승
       adjustedIncomeSelf *= (1 + incomeInflation);
@@ -107,8 +102,8 @@ document.addEventListener("DOMContentLoaded", function() {
             yAxisID: 'y1'
           },
           {
-            label:'자녀 독립 후 지출 감소 (만원)',
-            data: childReductionData,
+            label:'자녀 지출 (만원)',
+            data: childExpenseData,
             borderColor:'#FF9800',
             backgroundColor:'rgba(255,152,0,0.2)',
             fill:true,
