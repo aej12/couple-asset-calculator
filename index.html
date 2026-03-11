@@ -1,13 +1,20 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>부부 경제적 자유 계산기</title>
 
 <link rel="stylesheet" href="style.css">
+
+<link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
+
 
 <body>
 
@@ -17,8 +24,9 @@
 
 <p class="subtitle">
 <strong>경제적 자유란?</strong><br>
-금융 소득(이자, 배당금, 임대료 등)이 근로소득을 초과하는 상태입니다.
+금융 소득(이자, 배당금, 임대료 등)이 근로 소득을 초과하는 상태입니다.
 </p>
+
 
 <div class="card">
 
@@ -111,21 +119,34 @@
 
 <p id="resultText"></p>
 
+<div class="fireBox">
+
+현재 생활비 기준 FIRE 목표자산  
+<br>
+<strong id="fireTarget"></strong>
+
+</div>
+
 <canvas id="assetChart"></canvas>
 
 <h3>연도별 자산</h3>
 
 <table id="resultTable">
+
 <thead>
+
 <tr>
 <th>나이</th>
-<th>배우자나이</th>
+<th>배우자</th>
 <th>순자산</th>
 <th>수입</th>
 <th>지출</th>
 </tr>
+
 </thead>
+
 <tbody></tbody>
+
 </table>
 
 </div>
