@@ -2,127 +2,114 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title>부부 경제적 자유 계산기</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>커플 자산 FIRE 계산기</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
 <link rel="stylesheet" href="style.css">
+
+<!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
 
 <body>
 
-<header>
-<h1>부부 경제적 자유 계산기 💸</h1>
-<p class="subtitle">
-경제적 자유란 금융소득이 생활비를 초과하는 상태입니다.
-</p>
-</header>
+<div class="container">
 
-<section class="card input-section">
+<h1>커플 자산 FIRE 계산기</h1>
 
-<form id="inputForm">
+<h2>기본 정보</h2>
 
-<div class="form-row">
-<label>본인 나이
-<input type="number" id="ageSelf" value="30">
-</label>
+<div class="grid">
 
-<label>배우자 나이
-<input type="number" id="agePartner" value="30">
-</label>
-</div>
+<label>내 나이</label>
+<input id="ageSelf" type="number" value="30">
 
-<div class="form-row">
-<label>현재 자산 합계 (만원)
-<input type="number" id="assetTotal" value="10000">
-</label>
+<label>배우자 나이</label>
+<input id="agePartner" type="number" value="30">
 
-<label>투자 수익률 (%)
-<input type="number" id="interestRate" value="5">
-</label>
-</div>
+<label>현재 총 자산</label>
+<input id="assetTotal" type="number" value="100000000">
 
-<div class="form-row">
-<label>본인 연수입
-<input type="number" id="incomeSelf" value="5000">
-</label>
+<label>내 연봉</label>
+<input id="incomeSelf" type="number" value="40000000">
 
-<label>배우자 연수입
-<input type="number" id="incomePartner" value="4000">
-</label>
-</div>
+<label>배우자 연봉</label>
+<input id="incomePartner" type="number" value="40000000">
 
-<div class="form-row">
-<label>수입 증가율
-<input type="number" id="incomeGrowth" value="3">
-</label>
+<label>연봉 상승률 (%)</label>
+<input id="incomeGrowth" type="number" value="3">
 
-<label>연 지출
-<input type="number" id="expenseTotal" value="4000">
-</label>
+<label>연 지출</label>
+<input id="expenseTotal" type="number" value="30000000">
 
-<label>소비 증가율
-<input type="number" id="expenseInflation" value="3">
-</label>
-</div>
+<label>물가 상승률 (%)</label>
+<input id="expenseInflation" type="number" value="2">
 
-<div class="form-row">
-<label>본인 은퇴
-<input type="number" id="retireSelf" value="60">
-</label>
+<label>투자 수익률 (%)</label>
+<input id="interestRate" type="number" value="5">
 
-<label>배우자 은퇴
-<input type="number" id="retirePartner" value="60">
-</label>
-</div>
+<label>내 은퇴 나이</label>
+<input id="retireSelf" type="number" value="60">
 
-<div class="divider"></div>
-
-<h3>자녀 계획</h3>
-
-<div class="form-row">
-
-<label>자녀 수
-<input type="number" id="childCount" value="1">
-</label>
-
-<label>독립까지
-<input type="number" id="childYearsRemaining" value="20">
-</label>
-
-<label>연 자녀지출
-<input type="number" id="childAnnualExpense" value="1000">
-</label>
+<label>배우자 은퇴 나이</label>
+<input id="retirePartner" type="number" value="60">
 
 </div>
 
-<button type="button" id="calcBtn" class="calculate-btn">
-결과 확인하기
-</button>
+<h2>자녀 설정</h2>
 
-</form>
-</section>
+<div class="grid">
 
-<section class="card summary-section" id="summarySection" style="display:none">
+<label>자녀 수</label>
+<input id="childCount" type="number" value="1">
+
+<label>자녀 지출 남은 기간 (년)</label>
+<input id="childYearsRemaining" type="number" value="20">
+
+<label>자녀 연 지출</label>
+<input id="childAnnualExpense" type="number" value="5000000">
+
+</div>
+
+<br>
+
+<button id="calcBtn">계산하기</button>
+
+<div id="summarySection" style="display:none">
+
 <h2>결과 요약</h2>
-<div id="summaryText"></div>
-</section>
 
-<section class="card result-section" id="resultSection" style="display:none">
+<p id="summaryText"></p>
 
-<h2>자산 그래프</h2>
+</div>
+
+<div id="resultSection" style="display:none">
+
+<h2>순자산 성장 그래프</h2>
 
 <div class="chart-container">
 <canvas id="assetChart"></canvas>
 </div>
 
+<h2>수입 / 지출 흐름</h2>
+
+<div class="chart-container">
+<canvas id="cashChart"></canvas>
+</div>
+
+<h2>연도별 결과</h2>
+
 <table>
+
 <thead>
 <tr>
 <th>나이</th>
 <th>순자산</th>
 <th>수입</th>
-<th>지출</th>
-<th>자녀</th>
+<th>기본지출</th>
+<th>자녀지출</th>
 </tr>
 </thead>
 
@@ -130,7 +117,9 @@
 
 </table>
 
-</section>
+</div>
+
+</div>
 
 <script src="script.js"></script>
 
