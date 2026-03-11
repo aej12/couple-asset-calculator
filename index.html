@@ -1,158 +1,111 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>부부 FIRE 계산기</title>
-
 <link rel="stylesheet" href="style.css">
-
-<link rel="stylesheet"
-href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+<title>커플 FIRE 계산기</title>
 </head>
-
 
 <body>
 
 <div class="container">
 
-<h1>부부 경제적 자유 계산기</h1>
+<h1>경제적 자유 FIRE 계산기</h1>
 
 <div class="card">
 
 <h2>기본 정보 입력</h2>
 
-<div class="group">
+<div class="grid">
 
 <label>본인 나이</label>
-<input id="ageSelf">
+<input id="ageSelf" type="number">
 
 <label>배우자 나이</label>
-<input id="agePartner">
-
-</div>
-
-<hr>
-
-<div class="group">
+<input id="agePartner" type="number">
 
 <label>현재 자산 합계 (만원)</label>
-<input id="asset">
+<input id="asset" type="number">
 
 <label>금융자산 증가율 (%)</label>
-<input id="rate">
-
-</div>
-
-<hr>
-
-<div class="group">
+<input id="rate" type="number">
 
 <label>본인 연 수입 (만원)</label>
-<input id="incomeSelf">
+<input id="incomeSelf" type="number">
 
 <label>배우자 연 수입 (만원)</label>
-<input id="incomePartner">
+<input id="incomePartner" type="number">
 
 <label>연 수입 증가율 (%)</label>
-<input id="incomeGrowth">
-
-</div>
-
-<hr>
-
-<div class="group">
+<input id="incomeGrowth" type="number">
 
 <label>연 지출 합계 (만원)</label>
-<input id="expense">
+<input id="expense" type="number">
 
 <label>연 지출 증가율 (%)</label>
-<input id="inflation">
-
-</div>
-
-<hr>
-
-<div class="group">
+<input id="inflation" type="number">
 
 <label>본인 은퇴 나이</label>
-<input id="retireSelf">
+<input id="retireSelf" type="number">
 
 <label>배우자 은퇴 나이</label>
-<input id="retirePartner">
-
-</div>
-
-<hr>
-
-<div class="group">
+<input id="retirePartner" type="number">
 
 <label>자녀 수</label>
-<input id="childCount" value="1">
+<input id="childCount" type="number" value="1">
 
 <label>자녀 독립 나이</label>
-<input id="childIndep" value="27">
+<input id="childIndep" type="number" value="27">
 
 <label>자녀 1인당 연 소비 (만원)</label>
-<input id="childCost">
+<input id="childCost" type="number">
 
 </div>
-
-<div class="buttonBox">
 
 <button id="calcBtn">계산하기</button>
 
 </div>
 
-</div>
 
-
-
-<div id="resultBox" class="card" style="display:none">
+<div id="resultBox" style="display:none">
 
 <h2>계산 결과</h2>
 
-<p id="mainResult"></p>
+<h3 id="mainResult"></h3>
+
+<div class="fireGoal">
+현재 생활비 기준 FIRE 목표자산  
+<strong id="fireAsset"></strong>
+</div>
 
 <div class="assumption">
-
-<h3>계산 가정 설명</h3>
-
 <p id="assumption1"></p>
 <p id="assumption2"></p>
 <p id="assumption3"></p>
-
 </div>
 
-
-<h3>누적 순자산 그래프</h3>
-
+<h3>순자산 그래프</h3>
 <canvas id="assetChart"></canvas>
 
-
 <h3>수입 / 지출 흐름</h3>
-
 <canvas id="flowChart"></canvas>
-
 
 <h3>연도별 결과</h3>
 
 <table id="resultTable">
 
 <thead>
-
 <tr>
-<th>나이</th>
+<th>나이 (본인/배우자)</th>
 <th>순자산</th>
 <th>연 수입</th>
 <th>연 지출</th>
 </tr>
-
 </thead>
 
 <tbody></tbody>
