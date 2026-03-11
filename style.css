@@ -12,15 +12,20 @@ margin:auto;
 
 h1{
 text-align:center;
+}
+
+.subtitle{
+text-align:center;
 margin-bottom:30px;
+color:#555;
 }
 
 .card{
 background:white;
-border-radius:14px;
 padding:20px;
+border-radius:14px;
+box-shadow:0 2px 10px rgba(0,0,0,0.05);
 margin-bottom:20px;
-box-shadow:0 2px 8px rgba(0,0,0,0.05);
 }
 
 .grid{
@@ -29,69 +34,40 @@ grid-template-columns:1fr 1fr;
 gap:10px;
 }
 
-.grid label{
-font-size:14px;
-color:#555;
-}
-
 .grid input{
 padding:10px;
-border:1px solid #ddd;
 border-radius:8px;
+border:1px solid #ddd;
 }
 
-.button-area{
+.buttonArea{
+margin-top:20px;
 text-align:center;
-margin:20px 0;
 }
 
 button{
+padding:12px 20px;
+border:none;
+border-radius:10px;
 background:#3182f6;
 color:white;
-border:none;
-padding:14px 30px;
 font-size:16px;
-border-radius:10px;
 cursor:pointer;
+margin:5px;
 }
 
 button:hover{
-background:#2b6fe0;
+background:#2a6fe0;
 }
 
-.chart-container{
-position:relative;
-height:320px;
-width:100%;
+canvas{
+margin-top:20px;
 }
 
-.table-scroll{
-overflow-x:auto;
-}
-
-table{
-width:100%;
-border-collapse:collapse;
-}
-
-th,td{
-padding:8px;
-border-bottom:1px solid #eee;
-text-align:right;
-}
-
-th:first-child,td:first-child{
-text-align:left;
-}
-
-@media (max-width:700px){
+@media(max-width:700px){
 
 .grid{
 grid-template-columns:1fr;
-}
-
-.chart-container{
-height:260px;
 }
 
 }
