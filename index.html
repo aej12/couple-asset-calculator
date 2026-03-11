@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>PRO 커플 파이어 계산기</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<div class="container">
+  <header class="main-header">
+    <h1>경제적 자유 시뮬레이터 <span>PRO</span></h1>
+    <div class="fire-formula-card">
+      <p class="formula-title">FIRE 공식 적용</p>
+      <p class="formula-main">$$ \text{Target Asset} = \text{Annual Expense} \times 25 $$</p>
+      <p class="formula-sub">순자산이 연간 지출의 25배가 되면, 자산 수익만으로 생활이 가능해집니다.</p>
+    </div>
+  </header>
+
+  <main class="card input-card">
+    <section>
+      <h2 class="section-title">자산 및 수입</h2>
+      <div class="form-group">
+        <label>현재 순자산 합계 (만원)
+          <span class="tooltip">현금, 주식, 부동산, 퇴직금 포함</span>
+          <input type="number" id="assetTotal" value="10000">
+        </label>
+      </div>
+      <div class="grid-2">
+        <label>본인 연 수입 (만원) <input type="number" id="incomeSelf" value="4500"></label>
+        <label>배우자 연 수입 (만원) <input type="number" id="incomePartner" value="3500"></label>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <section>
+      <h2 class="section-title">지출 및 은퇴 설정</h2>
+      <div class="form-group">
+        <label>연간 생활비 합계 (만원)
+          <span class="tooltip">두 사람의 순수 고정/변동 지출 (자녀 제외)</span>
+          <input type="number" id="expenseTotal" value="3000">
+        </label>
+      </div>
+      <div class="grid-2">
+        <label>본인 은퇴 나이 (만) <input type="number" id="retireSelf" value="55"></label>
+        <label>배우자 은퇴 나이 (만) <input type="number" id="retirePartner" value="55"></label>
+      </div>
+      <div class="grid-2">
+        <label>본인 현재 나이 <input type="number" id="ageSelf" value="30"></label>
+        <label>배우자 현재 나이 <input type="number" id="agePartner" value="33"></label>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <section>
+      <h2 class="section-title">투자 및 인플레이션</h2>
+      <div class="form-group">
+        <label>연간 투자 수익률 (%)
+          <span class="tooltip">보수적 3~4%, 적극적 7~10%</span>
+          <input type="number" id="interestRate" value="5" step="0.1">
+        </label>
+      </div>
+      <div class="grid-2">
+        <label>소득 상승률 (%) <input type="number" id="incomeInflation" value="3" step="0.1"></label>
+        <label>물가 상승률 (%) <input type="number" id="expenseInflation" value="2.5" step="0.1"></label>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <section>
+      <h2 class="section-title">자녀 계획</h2>
+      <div class="grid-2">
+        <label>자녀 수 (명) <input type="number" id="childCount" value="1"></label>
+        <label>독립까지 남은 기간 (년) <input type="number" id="childYears" value="20"></label>
+      </div>
+      <div class="form-group mt-10">
+        <label>자녀 1인당 연 지출 (만원) <input type="number" id="childExpense" value="600"></label>
+      </div>
+    </section>
+
+    <button type="button" class="btn-calculate">시뮬레이션 시작</button>
+  </main>
+
+  <div id="resultArea" class="hidden">
+    <section class="card result-card">
+      <div id="statusIcon" class="status-icon">🚀</div>
+      <h2 id="resultHeadline" class="result-headline">분석 결과</h2>
+      <div id="summaryText" class="summary-text"></div>
+    </section>
+
+    <section class="card chart-card">
+      <h3 class="card-subtitle">자산 흐름 및 지출 변동</h3>
+      <canvas id="mainChart"></canvas>
+    </section>
+
+    <section class="card table-card">
+      <h3 class="card-subtitle">연도별 상세 데이터</h3>
+      <div class="table-container">
+        <table id="resultTable">
+          <thead>
+            <tr>
+              <th>본인</th><th>배우자</th><th>순자산</th><th>연 소득</th><th>연 지출</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
