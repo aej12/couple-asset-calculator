@@ -66,12 +66,30 @@ font-size:16px;
 cursor:pointer;
 }
 
-button:hover{
-background:#2769d8;
+canvas{
+margin-top:30px;
 }
 
-canvas{
-margin-top:25px;
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:20px;
+font-size:14px;
+}
+
+th,td{
+border-bottom:1px solid #eee;
+padding:8px;
+text-align:right;
+}
+
+th{
+background:#fafafa;
+}
+
+th:first-child,
+td:first-child{
+text-align:center;
 }
 
 @media(max-width:700px){
