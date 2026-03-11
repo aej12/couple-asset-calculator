@@ -2,7 +2,8 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title>부부 자산 계산기 </title>
+<title>커플 자산 계산기 - 연 단위 최종판</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="style.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -14,25 +15,25 @@
   <h2>입력 정보</h2>
   <form id="inputForm">
     <div class="form-row">
-      <label>본인 나이<input type="number" id="ageSelf" value="25" min="0" max="100"></label>
-      <label>배우자 나이<input type="number" id="agePartner" value="27" min="0" max="100"></label>
+      <label>본인 나이<input type="number" id="ageSelf" value="27" min="0" max="100"></label>
+      <label>배우자 나이<input type="number" id="agePartner" value="30" min="0" max="100"></label>
     </div>
     <div class="form-row">
-      <label>현재 자산 합계 (만원)<input type="number" id="assetTotal" value="0" min="0"></label>
-      <label>본인 연 수입 (만원)<input type="number" id="incomeSelf" value="2400" min="0"></label>
-      <label>배우자 연 수입 (만원)<input type="number" id="incomePartner" value="1800" min="0"></label>
+      <label>현재 자산 합계 (만원)<input type="number" id="assetTotal" value="10000" min="0"></label>
+      <label>본인 연 수입 (만원)<input type="number" id="incomeSelf" value="4200" min="0"></label>
+      <label>배우자 연 수입 (만원)<input type="number" id="incomePartner" value="2800" min="0"></label>
     </div>
     <div class="form-row">
-      <label>연 지출 합계 (만원)<input type="number" id="expenseTotal" value="3240" min="0"></label>
+      <label>연 지출 합계 (만원)<input type="number" id="expenseTotal" value="3000" min="0"></label>
       <label>금융자산 증가율 (%)<input type="number" id="interestRate" value="3" step="0.1"></label>
-      <label>연 소비 증가율 (%)<input type="number" id="expenseInflation" value="2" step="0.1"></label>
+      <label>연 소비 증가율 (%)<input type="number" id="expenseInflation" value="5" step="0.1"></label>
     </div>
     <div class="form-row">
       <label>본인 은퇴 나이<input type="number" id="retireSelf" value="60" min="0" max="100"></label>
       <label>배우자 은퇴 나이<input type="number" id="retirePartner" value="60" min="0" max="100"></label>
     </div>
     <div class="form-row">
-      <label>자녀 수<input type="number" id="childCount" value="0" min="0"></label>
+      <label>자녀 수<input type="number" id="childCount" value="1" min="0"></label>
       <label>자녀 독립 나이<input type="number" id="childIndependenceAge" value="20" min="0" max="100"></label>
       <label>자녀 1인당 연 소비 (만원)<input type="number" id="childAnnualExpense" value="500" min="0"></label>
     </div>
@@ -52,7 +53,7 @@
   <table>
     <thead>
       <tr>
-        <th>본인 나이</th><th>배우자 나이</th><th>누적 순자산 (만원)</th><th>연 수입 (만원)</th><th>연 지출 (만원)</th><th>자녀 지출 (만원)</th>
+        <th>본인 나이</th><th>배우자 나이</th><th>누적 순자산 (만원)</th><th>연 수입 (만원)</th><th>연 지출 (만원)</th>
       </tr>
     </thead>
     <tbody id="yearlyTable"></tbody>
