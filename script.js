@@ -1,92 +1,79 @@
 document.addEventListener("DOMContentLoaded", function() {
   const summaryDiv = document.getElementById("summary");
-  const assetTable = document.getElementById("assetTable");
   const yearlyTable = document.getElementById("yearlyTable");
-  const tabs = document.querySelectorAll(".tablink");
-  const tabContents = document.querySelectorAll(".tabcontent");
   const button = document.querySelector(".calculate-btn");
+  const chartCanvas = document.getElementById("assetChart");
   let chart;
-
-  tabs.forEach(tab => {
-    tab.addEventListener("click", () => {
-      tabs.forEach(t => t.classList.remove("active"));
-      tab.classList.add("active");
-      tabContents.forEach(c => c.style.display = "none");
-      document.getElementById(tab.dataset.tab).style.display = "block";
-    });
-  });
 
   button.addEventListener("click", function() {
     calculateAssets();
   });
 
-  function calculateAssets(){
+  function calculateAssets() {
     const ageSelf = parseInt(document.getElementById("ageSelf").value);
     const agePartner = parseInt(document.getElementById("agePartner").value);
-    const assetTotal = parseFloat(document.getElementById("assetTotal").value);
+    let currentAsset = parseFloat(document.getElementById("assetTotal").value);
     const incomeSelf = parseFloat(document.getElementById("incomeSelf").value);
     const incomePartner = parseFloat(document.getElementById("incomePartner").value);
     const expenseTotal = parseFloat(document.getElementById("expenseTotal").value);
     const interestRate = parseFloat(document.getElementById("interestRate").value)/100;
+    const expenseInflation = parseFloat(document.getElementById("expenseInflation").value)/100;
     const retireSelf = parseInt(document.getElementById("retireSelf").value);
     const retirePartner = parseInt(document.getElementById("retirePartner").value);
 
+    const childCount = parseInt(document.getElementById("childCount").value);
+    const childIndependenceAge = parseInt(document.getElementById("childIndependenceAge").value);
+    const childAnnualExpense = parseFloat(document.getElementById("childAnnualExpense").value);
+
     const maxAge = 100;
-    const months = (maxAge - Math.min(ageSelf, agePartner)) * 12;
+    const years = maxAge - Math.min(ageSelf, agePartner);
 
-    let monthlyAssets = [];
-    let yearlyAssets = [];
-    let currentAsset = assetTotal;
-    let year = Math.min(ageSelf, agePartner);
-    let monthCount = 0;
-    let annualIncome = 0, annualExpense = 0;
-
-    assetTable.innerHTML = "";
     yearlyTable.innerHTML = "";
+    let labels = [];
+    let assetData = [];
 
-    for(let i=0;i<months;i++){
-      let currentAgeSelf = ageSelf + Math.floor(i/12);
-      let currentAgePartner = agePartner + Math.floor(i/12);
-      let monthlyIncome = 0;
-      if(currentAgeSelf < retireSelf) monthlyIncome += incomeSelf;
-      if(currentAgePartner < retirePartner) monthlyIncome += incomePartner;
+    for(let i=0;i<years;i++){
+      let currentAgeSelf = ageSelf + i;
+      let currentAgePartner = agePartner + i;
 
-      currentAsset = currentAsset*(1+interestRate/12) + monthlyIncome - expenseTotal;
-      monthlyAssets.push({age: Math.min(currentAgeSelf,currentAgePartner), month:(i%12)+1, asset: currentAsset, expense: expenseTotal, income: monthlyIncome});
+      let annualIncome = 0;
+      if(currentAgeSelf < retireSelf) annualIncome += incomeSelf;
+      if(currentAgePartner < retirePartner) annualIncome += incomePartner;
+
+      let adjustedExpense = expenseTotal * Math.pow(1+expenseInflation, i);
+
+      let childExpense = 0;
+      if(childCount>0 && currentAgeSelf < childIndependenceAge){
+        childExpense = childCount * childAnnualExpense;
+      }
+
+      let totalExpense = adjustedExpense + childExpense;
+
+      currentAsset = currentAsset*(1+interestRate) + annualIncome - totalExpense;
 
       let tr = document.createElement("tr");
-      tr.innerHTML = `<td>${Math.min(currentAgeSelf,currentAgePartner)}</td><td>${(i%12)+1}</td><td>${currentAsset.toFixed(1)}</td><td>${expenseTotal}</td><td>${monthlyIncome}</td>`;
-      assetTable.appendChild(tr);
+      tr.innerHTML = `<td>${currentAgeSelf}</td><td>${currentAgePartner}</td><td>${currentAsset.toFixed(1)}</td><td>${annualIncome}</td><td>${adjustedExpense.toFixed(1)}</td><td>${childExpense}</td>`;
+      yearlyTable.appendChild(tr);
 
-      annualIncome += monthlyIncome;
-      annualExpense += expenseTotal;
-      monthCount++;
-      if(monthCount === 12 || i === months-1){
-        yearlyAssets.push({age: Math.min(currentAgeSelf,currentAgePartner), asset: currentAsset, income: annualIncome, expense: annualExpense});
-        let ytr = document.createElement("tr");
-        ytr.innerHTML = `<td>${Math.min(currentAgeSelf,currentAgePartner)}</td><td>${currentAsset.toFixed(1)}</td><td>${annualExpense.toFixed(1)}</td><td>${annualIncome.toFixed(1)}</td>`;
-        yearlyTable.appendChild(ytr);
-        monthCount = 0;
-        annualIncome = 0;
-        annualExpense = 0;
-      }
+      labels.push(currentAgeSelf);
+      assetData.push(currentAsset.toFixed(1));
     }
 
     summaryDiv.innerHTML = `
-      1. ${ageSelf}세부터 ${incomeSelf}만원, ${agePartner}세부터 ${incomePartner}만원 수입으로 계산했습니다.<br>
-      2. 월 지출 ${expenseTotal}만원, 금융자산 증가율 ${interestRate*100}% 적용<br>
-      3. 100세까지 누적 순자산 기준
+      계산기간: ${ageSelf}세부터 ${maxAge}세까지<br>
+      금융자산 증가율: ${(interestRate*100).toFixed(2)}%, 연 소비 증가율: ${(expenseInflation*100).toFixed(2)}%<br>
+      자녀 수: ${childCount}, 자녀 독립 나이: ${childIndependenceAge}, 자녀 1인당 연 소비: ${childAnnualExpense}만원
     `;
 
-    const ctx = document.getElementById('assetChart').getContext('2d');
+    const ctx = chartCanvas.getContext('2d');
     if(chart) chart.destroy();
     chart = new Chart(ctx,{
       type:'line',
       data:{
-        labels: monthlyAssets.map(m=>`${m.age}세-${m.month}월`),
+        labels: labels.map(a=>`${a}세`),
         datasets:[{
           label:'누적 순자산 (만원)',
-          data: monthlyAssets.map(m=>m.asset.toFixed(1)),
+          data: assetData,
           borderColor:'#4CAF50',
           backgroundColor:'rgba(76,175,80,0.2)',
           fill:true,
@@ -95,8 +82,8 @@ document.addEventListener("DOMContentLoaded", function() {
       },
       options:{
         responsive:true,
-        plugins:{legend:{display:false}},
-        scales:{x:{display:false},y:{beginAtZero:true}}
+        plugins:{legend:{display:true}},
+        scales:{y:{beginAtZero:true}}
       }
     });
   }
