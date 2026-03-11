@@ -37,22 +37,24 @@ document.addEventListener("DOMContentLoaded", function() {
 
     let adjustedIncomeSelf = incomeSelf;
     let adjustedIncomePartner = incomePartner;
+    let adjustedExpense = expenseTotal;
 
     for(let i=0;i<years;i++){
       let currentAgeSelf = ageSelf + i;
       let currentAgePartner = agePartner + i;
 
-      // 수입 적용
+      // 연 수입 적용
       let annualIncome = 0;
       if(currentAgeSelf < retireSelf) annualIncome += adjustedIncomeSelf;
       if(currentAgePartner < retirePartner) annualIncome += adjustedIncomePartner;
 
-      let adjustedExpense = expenseTotal * Math.pow(1+expenseInflation, i);
+      // 연 지출에 연 소비 증가율 적용
+      adjustedExpense = adjustedExpense * (i===0 ? 1 : (1 + expenseInflation));
 
-      // 자녀 지출
+      // 자녀 지출 포함, 독립 후 제외
       let childExpense = 0;
       let childReduction = 0;
-      if(childCount>0){
+      if(childCount > 0){
         if(currentAgeSelf < childIndependenceAge){
           childExpense = childCount * childAnnualExpense * Math.pow(1+expenseInflation, i);
         } else {
@@ -61,6 +63,7 @@ document.addEventListener("DOMContentLoaded", function() {
       }
 
       let totalExpense = adjustedExpense + childExpense;
+
       currentAsset = currentAsset*(1+interestRate) + annualIncome - totalExpense;
 
       let tr = document.createElement("tr");
