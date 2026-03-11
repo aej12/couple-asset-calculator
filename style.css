@@ -79,6 +79,12 @@ th {
   font-weight: bold;
 }
 
+.note {
+  font-size: 13px;
+  color: #666;
+  margin-top: 5px;
+}
+
 @media (max-width: 768px) {
   .form-row {
     flex-direction: column;
