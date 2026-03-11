@@ -2,47 +2,71 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title>신혼부부 자산 시뮬레이터</title>
-<link rel="stylesheet" href="style.css">
+<title>생애 자산 시뮬레이터</title>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link rel="stylesheet" href="style.css">
+
 </head>
 
 <body>
 
-<h1>💰 부부 자산 시뮬레이터</h1>
+<h1>부부 생애 자산 시뮬레이터</h1>
 
-<!-- 광고 자리 -->
-<div class="ad">
-광고 영역 (Google AdSense)
-</div>
+<div class="ad">광고 영역</div>
 
-<div class="calculator">
+<div class="form">
 
-<label>남편 연봉 (만원)</label>
-<input id="husband" type="number">
+<label>현재 나이</label>
+<input id="age" type="number">
 
-<label>아내 연봉 (만원)</label>
-<input id="wife" type="number">
+<label>초기 자산 (만원)</label>
+<input id="asset" type="number">
 
-<label>저축률 (%)</label>
-<input id="saveRate" type="number">
+<label>남편 월소득 (만원)</label>
+<input id="hIncome" type="number">
+
+<label>남편 은퇴 나이</label>
+<input id="hRetire" type="number">
+
+<label>아내 월소득 (만원)</label>
+<input id="wIncome" type="number">
+
+<label>아내 은퇴 나이</label>
+<input id="wRetire" type="number">
+
+<label>소비율 (%)</label>
+<input id="consume" type="number">
 
 <label>투자수익률 (%)</label>
 <input id="returnRate" type="number">
 
-<button onclick="calculate()">계산하기</button>
+<label>물가상승률 (%)</label>
+<input id="inflation" type="number">
+
+<button onclick="simulate()">계산</button>
 
 </div>
 
-<h2 id="result10"></h2>
-<h2 id="result20"></h2>
+<h2 id="summary"></h2>
 
 <canvas id="assetChart"></canvas>
 
-<!-- 광고 자리 -->
-<div class="ad">
-광고 영역 (Google AdSense)
-</div>
+<h3>연간 현금 흐름</h3>
+
+<table id="cashTable">
+<thead>
+<tr>
+<th>나이</th>
+<th>수입</th>
+<th>지출</th>
+<th>순자산</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+
+<div class="ad">광고 영역</div>
 
 <script src="script.js"></script>
 
