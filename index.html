@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>신혼부부 자산 시뮬레이터</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<h1>💰 부부 자산 시뮬레이터</h1>
+
+<!-- 광고 자리 -->
+<div class="ad">
+광고 영역 (Google AdSense)
+</div>
+
+<div class="calculator">
+
+<label>남편 연봉 (만원)</label>
+<input id="husband" type="number">
+
+<label>아내 연봉 (만원)</label>
+<input id="wife" type="number">
+
+<label>저축률 (%)</label>
+<input id="saveRate" type="number">
+
+<label>투자수익률 (%)</label>
+<input id="returnRate" type="number">
+
+<button onclick="calculate()">계산하기</button>
+
+</div>
+
+<h2 id="result10"></h2>
+<h2 id="result20"></h2>
+
+<canvas id="assetChart"></canvas>
+
+<!-- 광고 자리 -->
+<div class="ad">
+광고 영역 (Google AdSense)
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
