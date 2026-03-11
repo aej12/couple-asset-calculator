@@ -1,7 +1,87 @@
-body { font-family: Arial, sans-serif; margin: 20px; background-color: #f9f9f9; }
-h1, h2 { color: #333; }
-table { border-collapse: collapse; width: 100%; margin-top: 10px; }
-th, td { border: 1px solid #ccc; padding: 5px 8px; text-align: right; }
-th { background-color: #f0f0f0; }
-#assetChart { background-color: #fff; box-shadow: 0 0 5px rgba(0,0,0,0.1); }
-#summary { line-height: 1.6; }
+/* 전체 배경 & 폰트 */
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background-color: #f5f6fa;
+    margin: 0;
+    padding: 20px;
+    color: #1a1a1a;
+}
+
+/* 제목 */
+h1 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #000;
+}
+
+h2 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+/* 카드 스타일 섹션 */
+section {
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+/* 요약 */
+#summary {
+    line-height: 1.8;
+    font-size: 16px;
+}
+
+/* 그래프 */
+#assetChart {
+    border-radius: 12px;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    padding: 10px;
+}
+
+/* 테이블 */
+table {
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    font-size: 14px;
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: right;
+}
+
+thead th {
+    background-color: #f2f3f7;
+    font-weight: 600;
+    color: #555;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #fafafa;
+}
+
+tbody tr:hover {
+    background-color: #f0f4ff;
+}
+
+/* 자산 강조 색상 */
+td:nth-child(3) {
+    font-weight: 600;
+}
+
+td:nth-child(3)[data-value^="-"] {
+    color: #ff4d4f; /* 빨간색 음수 */
+}
+
+td:nth-child(3)[data-value^="0"], td:nth-child(3)[data-value^="1"], td:nth-child(3)[data-value^="2"], td:nth-child(3)[data-value^="3"] {
+    color: #1890ff; /* 파란색 양수 */
+}
