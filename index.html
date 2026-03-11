@@ -7,7 +7,6 @@
 
 <link rel="stylesheet" href="style.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 </head>
 
 <body>
@@ -18,64 +17,90 @@
 
 <p class="subtitle">
 <strong>경제적 자유란?</strong><br>
-당신의 금융 소득(이자, 배당금, 임대료 등)이 생활비를 초과하는 상태를 의미합니다.<br>
-이 시점부터는 일하지 않아도 생활비를 충당할 수 있게 됩니다.
+금융 소득(이자, 배당금, 임대료 등)이 생활비를 초과하는 상태입니다.
 </p>
 
 
 <div class="card">
 
-<h2>입력 정보</h2>
+<h2>기본 정보 입력</h2>
 
-<div class="grid">
+<div class="form-grid">
 
+<div class="field">
 <label>본인 나이</label>
 <input id="ageSelf" type="number">
+</div>
 
+<div class="field">
 <label>배우자 나이</label>
 <input id="agePartner" type="number">
+</div>
 
+<div class="field">
 <label>현재 자산 합계 (만원)</label>
-<input id="asset" type="number">
+<input id="asset">
+</div>
 
+<div class="field">
 <label>금융자산 증가율 (%)</label>
-<input id="returnRate" type="number">
+<input id="rate">
+</div>
 
+<div class="field">
 <label>본인 연 수입 (만원)</label>
-<input id="incomeSelf" type="number">
+<input id="incomeSelf">
+</div>
 
+<div class="field">
 <label>배우자 연 수입 (만원)</label>
-<input id="incomePartner" type="number">
+<input id="incomePartner">
+</div>
 
+<div class="field">
 <label>연 수입 증가율 (%)</label>
-<input id="incomeGrowth" type="number">
+<input id="incomeGrowth">
+</div>
 
+<div class="field">
 <label>연 지출 합계 (만원)</label>
-<input id="expense" type="number">
+<input id="expense">
+</div>
 
+<div class="field">
 <label>연 소비 증가율 (%)</label>
-<input id="inflation" type="number">
+<input id="inflation">
+</div>
 
+<div class="field">
 <label>본인 은퇴 나이</label>
-<input id="retireSelf" type="number">
+<input id="retireSelf">
+</div>
 
+<div class="field">
 <label>배우자 은퇴 나이</label>
-<input id="retirePartner" type="number">
+<input id="retirePartner">
+</div>
 
+<div class="field">
 <label>자녀 수</label>
-<input id="childCount" type="number">
+<input id="childCount">
+</div>
 
+<div class="field">
 <label>자녀 독립 나이</label>
-<input id="childIndepAge" type="number">
+<input id="childIndep">
+</div>
 
+<div class="field">
 <label>자녀 1인당 연 소비 (만원)</label>
-<input id="childCost" type="number">
+<input id="childCost">
+</div>
 
 </div>
 
-<div class="buttonArea">
+<div class="buttonBox">
 <button id="calcBtn">계산하기</button>
-<button id="shareBtn">결과 공유하기</button>
 </div>
 
 </div>
@@ -85,7 +110,7 @@
 
 <h2>계산 결과</h2>
 
-<p id="summary"></p>
+<p id="resultText"></p>
 
 <canvas id="assetChart"></canvas>
 
