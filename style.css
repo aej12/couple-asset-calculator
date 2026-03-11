@@ -1,97 +1,134 @@
 body{
-
 font-family:"Pretendard",sans-serif;
-
 background:#f6f7fb;
 margin:0;
 padding:20px;
-
+color:#222;
 }
 
 .container{
-max-width:900px;
+max-width:1000px;
 margin:auto;
 }
 
+/* 카드 */
+
 .card{
-
 background:white;
-padding:25px;
+padding:30px;
 border-radius:16px;
-margin-bottom:20px;
-
+margin-bottom:25px;
+box-shadow:0 4px 14px rgba(0,0,0,0.05);
 }
 
+h1{
+text-align:center;
+margin-bottom:30px;
+}
+
+h2{
+margin-top:0;
+}
+
+/* 입력 영역 */
+
 .group{
-
 display:grid;
-grid-template-columns:1fr 1fr;
-gap:10px;
-margin-bottom:10px;
-
+grid-template-columns:1fr;
+gap:8px;
+margin-bottom:15px;
 }
 
 .group label{
 font-size:14px;
+font-weight:500;
 }
 
 .group input{
-
 padding:10px;
 border:1px solid #ddd;
 border-radius:8px;
+font-size:14px;
+}
 
+hr{
+margin:25px 0;
+border:none;
+border-top:1px solid #eee;
+}
+
+/* 버튼 */
+
+.buttonBox{
+display:flex;
+justify-content:center;
+margin-top:20px;
 }
 
 button{
-
-width:100%;
-padding:14px;
+padding:14px 30px;
 background:#3182f6;
 color:white;
 border:none;
 border-radius:10px;
-
+font-size:16px;
+cursor:pointer;
+transition:0.2s;
 }
 
-table{
+button:hover{
+background:#1f6fe5;
+}
 
+/* 결과 */
+
+.assumption{
+background:#f8f9fc;
+padding:15px;
+border-radius:10px;
+margin:20px 0;
+}
+
+#mainResult{
+font-size:20px;
+font-weight:600;
+margin-bottom:10px;
+}
+
+/* 그래프 */
+
+canvas{
+margin-top:15px;
+}
+
+/* 테이블 */
+
+table{
 width:100%;
 margin-top:20px;
 border-collapse:collapse;
-
+font-size:14px;
 }
 
 th,td{
-
-padding:8px;
+padding:10px;
 border-bottom:1px solid #eee;
+}
+
+th{
+background:#fafafa;
+}
+
+td{
 text-align:right;
-
 }
 
-th:first-child,
-td:first-child{
-
+td:first-child,
+th:first-child{
 text-align:center;
-
 }
 
-canvas{
-
-margin-top:20px;
-
-}
-
-hr{
-
-margin:20px 0;
-border:none;
-border-top:1px solid #eee;
-
-}
-
-/* PC 레이아웃 개선 */
+/* PC 레이아웃 */
 
 @media (min-width:900px){
 
@@ -105,13 +142,18 @@ text-align:right;
 padding-right:10px;
 }
 
-.buttonBox{
-display:flex;
-justify-content:center;
+button{
+width:260px;
 }
 
-button{
-width:300px;
+/* 그래프 2개 가로 배치 */
+
+#assetChart{
+max-width:100%;
+}
+
+#flowChart{
+max-width:100%;
 }
 
 }
