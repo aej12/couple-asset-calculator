@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>부부 경제적 자유 계산기</title>
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --toss-blue: #3182f6;
+      --toss-bg: #f2f4f6;
+      --toss-grey: #8b95a1;
+      --toss-dark: #191f28;
+      --white: #ffffff;
+    }
+
+    body {
+      font-family: "Pretendard", -apple-system, sans-serif;
+      background-color: var(--toss-bg);
+      color: var(--toss-dark);
+      margin: 0; padding: 20px;
+      line-height: 1.5;
+      display: flex; flex-direction: column; align-items: center;
+    }
+
+    .container { width: 100%; max-width: 540px; }
+
+    header { text-align: left; width: 100%; margin-bottom: 30px; padding-left: 10px; }
+    header h1 { font-size: 26px; font-weight: 700; margin-bottom: 8px; }
+    header p { color: var(--toss-grey); font-size: 15px; margin: 0; word-break: keep-all; }
+
+    .card {
+      background: var(--white);
+      border-radius: 24px;
+      padding: 24px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+    }
+
+    h2 { font-size: 18px; font-weight: 700; margin-bottom: 20px; color: var(--toss-dark); }
+
+    .input-group { margin-bottom: 20px; }
+    .input-row { display: flex; gap: 12px; margin-bottom: 16px; }
+    .input-item { flex: 1; display: flex; flex-direction: column; }
+    
+    label { font-size: 13px; color: var(--toss-grey); font-weight: 500; margin-bottom: 8px; padding-left: 4px; }
+    input {
+      border: none; background: #f9fafb;
+      padding: 14px; border-radius: 14px;
+      font-size: 16px; font-weight: 600; color: var(--toss-dark);
+      transition: all 0.2s;
+    }
+    input:focus { outline: 2px solid var(--toss-blue); background: #fff; }
+
+    .btn-calc {
+      width: 100%; background: var(--toss-blue); color: #fff;
+      border: none; border-radius: 18px;
+      padding: 18px; font-size: 18px; font-weight: 700;
+      cursor: pointer; transition: transform 0.1s;
+      margin-top: 10px;
+    }
+    .btn-calc:active { transform: scale(0.98); }
+
+    /* 결과 섹션 */
+    #resultSection { display: none; width: 100%; }
+    .summary-box { background: #f9fafb; border-radius: 16px; padding: 20px; font-size: 16px; }
+    .summary-box b { color: var(--toss-blue); }
+    .summary-box .bankrupt { color: #f04452; }
+
+    .chart-container { position: relative; height: 450px; width: 100%; margin-top: 10px; }
+
+    .table-wrapper { overflow-x: auto; margin-top: 10px; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 400px; }
+    th { color: var(--toss-grey); font-weight: 500; padding: 12px; border-bottom: 1px solid #eee; text-align: center; }
+    td { padding: 14px 10px; border-bottom: 1px solid #f2f4f6; text-align: right; font-weight: 500; }
+    td:first-child { text-align: center; color: var(--toss-grey); }
+
+    .hr-line { border: 0; height: 1px; background: #eee; margin: 24px 0; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>경제적 자유 계산기</h1>
+      <p>일하지 않아도 되는 시점, 언제일까요?</p>
+    </header>
+
+    <div class="card">
+      <h2>기본 정보</h2>
+      <div class="input-row">
+        <div class="input-item">
+          <label>본인 나이</label>
+          <input type="number" id="ageSelf" value="27">
+        </div>
+        <div class="input-item">
+          <label>배우자 나이</label>
+          <input type="number" id="agePartner" value="30">
+        </div>
+      </div>
+      <div class="input-group">
+        <label>현재 총 자산 (만원)</label>
+        <input type="number" id="assetTotal" style="width: 100%; box-sizing: border-box;" value="10000">
+      </div>
+      <div class="input-row">
+        <div class="input-item">
+          <label>본인 연봉 (만원)</label>
+          <input type="number" id="incS" value="4200">
+        </div>
+        <div class="input-item">
+          <label>배우자 연봉 (만원)</label>
+          <input type="number" id="incP" value="3000">
+        </div>
+      </div>
+      <div class="input-row">
+        <div class="input-item">
+          <label>수익률 (%)</label>
+          <input type="number" id="roi" value="8" step="0.1">
+        </div>
+        <div class="input-item">
+          <label>연봉 상승률 (%)</label>
+          <input type="number" id="incGrowth" value="3">
+        </div>
+      </div>
+
+      <div class="hr-line"></div>
+      
+      <h2>지출 및 은퇴</h2>
+      <div class="input-row">
+        <div class="input-item">
+          <label>연 지출 (만원)</label>
+          <input type="number" id="expTotal" value="3000">
+        </div>
+        <div class="input-item">
+          <label>물가 상승률 (%)</label>
+          <input type="number" id="inf" value="3">
+        </div>
+      </div>
+      <div class="input-row">
+        <div class="input-item">
+          <label>본인 은퇴나이</label>
+          <input type="number" id="retS" value="55">
+        </div>
+        <div class="input-item">
+          <label>배우자 은퇴나이</label>
+          <input type="number" id="retP" value="55">
+        </div>
+      </div>
+
+      <div class="hr-line"></div>
+
+      <h2>자녀 정보</h2>
+      <div class="input-row">
+        <div class="input-item">
+          <label>자녀 수</label>
+          <input type="number" id="childCount" value="1">
+        </div>
+        <div class="input-item">
+          <label>양육 기간(년)</label>
+          <input type="number" id="childYears" value="20">
+        </div>
+      </div>
+      <div class="input-group">
+        <label>1인당 연 양육비 (만원)</label>
+        <input type="number" id="childExp" style="width: 100%; box-sizing: border-box;" value="1000">
+      </div>
+
+      <button class="btn-calc" onclick="runCalculation()">결과 확인하기</button>
+    </div>
+
+    <div id="resultSection">
+      <div class="card">
+        <h2>계산 결과 요약 ✨</h2>
+        <div id="summaryDisplay" class="summary-box"></div>
+      </div>
+
+      <div class="card">
+        <h2>연 단위 자산 흐름 그래프</h2>
+        <div class="chart-container">
+          <canvas id="mainChart"></canvas>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>상세 데이터 (5년 단위)</h2>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr><th>본인(배우자)</th><th>순자산</th><th>연수입</th><th>총지출</th></tr>
+            </thead>
+            <tbody id="dataTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let myChart = null;
+
+    function runCalculation() {
+      // 1. 값 가져오기
+      const v = (id) => parseFloat(document.getElementById(id).value) || 0;
+      
+      const ageS = v('ageSelf'), ageP = v('agePartner');
+      let asset = v('assetTotal');
+      const incS = v('incS'), incP = v('incP'), incG = v('incGrowth')/100;
+      const roi = v('roi')/100, exp = v('expTotal'), inf = v('inf')/100;
+      const retS = v('retS'), retP = v('retP');
+      const cCount = v('childCount'), cYears = v('childYears'), cExp = v('childExp');
+
+      const maxYear = 100 - ageS;
+      let labels = [], assetData = [], incomeData = [], expenseData = [], childExpData = [];
+      let fireAge = null, bankruptAge = null;
+      
+      const tbody = document.getElementById('dataTableBody');
+      tbody.innerHTML = "";
+
+      // 2. 루프 계산
+      for (let i = 0; i <= maxYear; i++) {
+        let curS = ageS + i;
+        let curP = ageP + i;
+
+        // 수입 (은퇴 전까지 물가상승 반영)
+        let curInc = (curS < retS ? incS * Math.pow(1+incG, i) : 0) + 
+                     (curP < retP ? incP * Math.pow(1+incG, i) : 0);
+        
+        // 지출 (물가상승 반영)
+        let curBaseExp = exp * Math.pow(1+inf, i);
+        let curChildExp = (i < cYears) ? (cCount * cExp * Math.pow(1+inf, i)) : 0;
+        let totalExp = curBaseExp + curChildExp;
+
+        // 경제적 자유 (금융소득 > 총지출)
+        if (!fireAge && asset * roi > totalExp && asset > 0) fireAge = curS;
+
+        // 자산 갱신
+        asset = asset * (1 + roi) + curInc - totalExp;
+        if (!bankruptAge && asset < 0) bankruptAge = curS;
+
+        // 데이터 저장
+        labels.push(`${curS}(${curP})`);
+        assetData.push(Math.round(asset));
+        incomeData.push(Math.round(curInc));
+        expenseData.push(Math.round(totalExp));
+        childExpData.push(Math.round(curChildExp));
+
+        // 표 데이터 (5년 단위)
+        if (i % 5 === 0 || i === maxYear) {
+          tbody.innerHTML += `<tr>
+            <td>${curS}(${curP})세</td>
+            <td>${Math.round(asset).toLocaleString()}만</td>
+            <td>${Math.round(curInc).toLocaleString()}만</td>
+            <td>${Math.round(totalExp).toLocaleString()}만</td>
+          </tr>`;
+        }
+      }
+
+      // 3. 요약 표시
+      document.getElementById('resultSection').style.display = 'block';
+      const summary = document.getElementById('summaryDisplay');
+      if (bankruptAge) {
+        summary.innerHTML = `이대로 계산하면 당신은 <b class="bankrupt">${bankruptAge}세에 파산</b>하게 됩니다. 지출을 줄이거나 수익률을 높여야 합니다.`;
+      } else if (fireAge) {
+        summary.innerHTML = `축하합니다! 당신은 <b class="highlight-blue">${fireAge}세에 경제적 자유</b>를 달성합니다. 이후로는 일하지 않아도 자산이 늘어납니다.`;
+      } else {
+        summary.innerHTML = `100세까지 파산하지 않지만, 금융 소득이 지출을 완전히 압도하는 시점은 오지 않았습니다.`;
+      }
+
+      // 4. 그래프 (억 단위 축 통합)
+      if (myChart) myChart.destroy();
+      const ctx = document.getElementById('mainChart').getContext('2d');
+      
+      myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [
+            { label: '누적 순자산', data: assetData, borderColor: '#3182f6', borderWidth: 6, pointRadius: 0, fill: false, tension: 0.2 },
+            { label: '총 연수입', data: incomeData, borderColor: '#20c997', borderWidth: 3, borderDash: [5,5], pointRadius: 0 },
+            { label: '총 지출', data: expenseData, borderColor: '#f04452', borderWidth: 3, pointRadius: 0 },
+            { label: '자녀 지출', data: childExpData, borderColor: '#ff9800', borderWidth: 2, pointRadius: 0 }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                callback: function(val) {
+                  if (val >= 100000) return (val/10000).toFixed(0) + '억';
+                  if (val >= 10000) return (val/10000).toFixed(1) + '억';
+                  return val.toLocaleString();
+                },
+                stepSize: 50000 // 5억 단위 그리드 지향
+              },
+              grid: { color: '#f2f4f6' }
+            },
+            x: {
+              grid: { display: false },
+              ticks: { maxRotation: 0, autoSkip: true, maxTicksLimit: 8, color: '#8b95a1' }
+            }
+          },
+          plugins: {
+            legend: { position: 'top', labels: { usePointStyle: true, boxWidth: 6, font: { size: 12, weight: '600' } } }
+          }
+        }
+      });
+
+      // 스크롤 이동
+      window.scrollTo({ top: document.getElementById('resultSection').offsetTop - 20, behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>
