@@ -29,6 +29,7 @@ form {
   display: flex;
   gap: 15px;
   margin-bottom: 15px;
+  flex-wrap: wrap;
 }
 
 label {
@@ -59,28 +60,6 @@ button {
 
 button:hover {
   background: #45a049;
-}
-
-.tabs {
-  display: flex;
-  margin-bottom: 15px;
-  gap: 10px;
-}
-
-.tablink {
-  flex: 1;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-bottom: none;
-  border-radius: 8px 8px 0 0;
-  background: #f1f1f1;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.tablink.active {
-  background: #fff;
-  border-bottom: 1px solid #fff;
 }
 
 table {
