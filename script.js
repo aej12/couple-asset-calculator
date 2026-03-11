@@ -1,12 +1,12 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded",function(){
 
-const btn = document.getElementById("calcBtn");
+const btn=document.getElementById("calcBtn");
 
-const summary = document.getElementById("summarySection");
-const result = document.getElementById("resultSection");
+const summary=document.getElementById("summarySection");
+const result=document.getElementById("resultSection");
 
-const table = document.getElementById("yearlyTable");
-const summaryText = document.getElementById("summaryText");
+const table=document.getElementById("yearlyTable");
+const summaryText=document.getElementById("summaryText");
 
 let assetChart;
 let cashChart;
@@ -19,29 +19,29 @@ function toEok(x){
 return (x/100000000).toFixed(1);
 }
 
-btn.addEventListener("click", function () {
+btn.addEventListener("click",function(){
 
-let ageSelf = +document.getElementById("ageSelf").value;
-let agePartner = +document.getElementById("agePartner").value;
+let ageSelf=+document.getElementById("ageSelf").value;
+let agePartner=+document.getElementById("agePartner").value;
 
-let asset = +document.getElementById("assetTotal").value;
+let asset=+document.getElementById("assetTotal").value;
 
-let incomeSelf = +document.getElementById("incomeSelf").value;
-let incomePartner = +document.getElementById("incomePartner").value;
+let incomeSelf=+document.getElementById("incomeSelf").value;
+let incomePartner=+document.getElementById("incomePartner").value;
 
-let incomeGrowth = document.getElementById("incomeGrowth").value/100;
+let incomeGrowth=document.getElementById("incomeGrowth").value/100;
 
-let expense = +document.getElementById("expenseTotal").value;
-let inflation = document.getElementById("expenseInflation").value/100;
+let expense=+document.getElementById("expenseTotal").value;
+let inflation=document.getElementById("expenseInflation").value/100;
 
-let rate = document.getElementById("interestRate").value/100;
+let rate=document.getElementById("interestRate").value/100;
 
-let retireSelf = +document.getElementById("retireSelf").value;
-let retirePartner = +document.getElementById("retirePartner").value;
+let retireSelf=+document.getElementById("retireSelf").value;
+let retirePartner=+document.getElementById("retirePartner").value;
 
-let childCount = +document.getElementById("childCount").value;
-let childYears = +document.getElementById("childYearsRemaining").value;
-let childCost = +document.getElementById("childAnnualExpense").value;
+let childCount=+document.getElementById("childCount").value;
+let childYears=+document.getElementById("childYearsRemaining").value;
+let childCost=+document.getElementById("childAnnualExpense").value;
 
 let labels=[];
 let assetData=[];
@@ -53,20 +53,14 @@ let fireLine=[];
 table.innerHTML="";
 
 let fireAge=null;
-let fireIndex=null;
 
 for(let i=0;i<100-ageSelf;i++){
 
 let age=ageSelf+i;
 let ageP=agePartner+i;
 
-let inc1=age<retireSelf
-? incomeSelf*Math.pow(1+incomeGrowth,i)
-:0;
-
-let inc2=ageP<retirePartner
-? incomePartner*Math.pow(1+incomeGrowth,i)
-:0;
+let inc1=age<retireSelf?incomeSelf*Math.pow(1+incomeGrowth,i):0;
+let inc2=ageP<retirePartner?incomePartner*Math.pow(1+incomeGrowth,i):0;
 
 let income=inc1+inc2;
 
@@ -80,15 +74,12 @@ childExpense=childCost*childCount*Math.pow(1+inflation,i);
 
 let totalExpense=baseExpense+childExpense;
 
-/* FIRE 목표자산 (4% 룰) */
 let fireTarget=totalExpense*25;
 
 let passive=asset*0.04;
 
-/* FIRE 도달 시점 */
 if(!fireAge && passive>=totalExpense){
 fireAge=age;
-fireIndex=i;
 }
 
 asset=asset*(1+rate)+income-totalExpense;
@@ -126,8 +117,6 @@ fireAge
 if(assetChart) assetChart.destroy();
 if(cashChart) cashChart.destroy();
 
-/* 그래프1 : 순자산 */
-
 assetChart=new Chart(document.getElementById("assetChart"),{
 
 type:"line",
@@ -160,13 +149,6 @@ pointRadius:0
 },
 
 options:{
-
-plugins:{
-legend:{
-position:"top"
-}
-},
-
 scales:{
 y:{
 ticks:{
@@ -177,11 +159,7 @@ return toEok(value)+"억";
 }
 }
 
-}
-
 });
-
-/* 그래프2 : 수입 / 지출 */
 
 cashChart=new Chart(document.getElementById("cashChart"),{
 
@@ -197,7 +175,6 @@ label:"수입",
 data:incomeData,
 borderColor:"#20c997",
 borderWidth:4,
-tension:0.3,
 pointRadius:0
 },
 
@@ -206,7 +183,6 @@ label:"기본지출",
 data:expenseData,
 borderColor:"#f04452",
 borderWidth:4,
-tension:0.3,
 pointRadius:0
 },
 
@@ -215,7 +191,6 @@ label:"자녀지출",
 data:childData,
 borderColor:"#ff9800",
 borderWidth:4,
-tension:0.3,
 pointRadius:0
 }
 
@@ -224,13 +199,6 @@ pointRadius:0
 },
 
 options:{
-
-plugins:{
-legend:{
-position:"top"
-}
-},
-
 scales:{
 y:{
 ticks:{
@@ -239,8 +207,6 @@ return toEok(value)+"억";
 }
 }
 }
-}
-
 }
 
 });
