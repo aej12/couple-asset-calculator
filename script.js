@@ -5,11 +5,11 @@ document.addEventListener("DOMContentLoaded", function() {
   const chartCanvas = document.getElementById("assetChart");
   let chart;
 
-  button.addEventListener("click", function() {
-    calculateAssets();
-  });
+  function formatNumber(num){
+    return Number(num.toFixed(0)).toLocaleString();
+  }
 
-  function calculateAssets() {
+  button.addEventListener("click", function() {
     const ageSelf = parseInt(document.getElementById("ageSelf").value);
     const agePartner = parseInt(document.getElementById("agePartner").value);
     let currentAsset = parseFloat(document.getElementById("assetTotal").value);
@@ -42,26 +42,30 @@ document.addEventListener("DOMContentLoaded", function() {
 
       let adjustedExpense = expenseTotal * Math.pow(1+expenseInflation, i);
 
+      // 자녀 지출 반영, 독립 후 제외
       let childExpense = 0;
       if(childCount>0 && currentAgeSelf < childIndependenceAge){
-        childExpense = childCount * childAnnualExpense;
+        childExpense = childCount * childAnnualExpense * Math.pow(1+expenseInflation, i);
       }
 
       let totalExpense = adjustedExpense + childExpense;
+      if(childCount>0 && currentAgeSelf >= childIndependenceAge){
+        totalExpense = adjustedExpense; // 독립 후 자녀 비용 제외
+      }
 
       currentAsset = currentAsset*(1+interestRate) + annualIncome - totalExpense;
 
       let tr = document.createElement("tr");
-      tr.innerHTML = `<td>${currentAgeSelf}</td><td>${currentAgePartner}</td><td>${currentAsset.toFixed(1)}</td><td>${annualIncome}</td><td>${adjustedExpense.toFixed(1)}</td><td>${childExpense}</td>`;
+      tr.innerHTML = `<td>${currentAgeSelf}</td><td>${currentAgePartner}</td><td>${formatNumber(currentAsset)}</td><td>${formatNumber(annualIncome)}</td><td>${formatNumber(totalExpense)}</td>`;
       yearlyTable.appendChild(tr);
 
       labels.push(currentAgeSelf);
-      assetData.push(currentAsset.toFixed(1));
+      assetData.push(currentAsset);
     }
 
     summaryDiv.innerHTML = `
       계산기간: ${ageSelf}세부터 ${maxAge}세까지<br>
-      금융자산 증가율: ${(interestRate*100).toFixed(2)}%, 연 소비 증가율: ${(expenseInflation*100).toFixed(2)}%<br>
+      금융자산 증가율: ${(interestRate*100).toFixed(1)}%, 연 소비 증가율: ${(expenseInflation*100).toFixed(1)}%<br>
       자녀 수: ${childCount}, 자녀 독립 나이: ${childIndependenceAge}, 자녀 1인당 연 소비: ${childAnnualExpense}만원
     `;
 
@@ -86,5 +90,5 @@ document.addEventListener("DOMContentLoaded", function() {
         scales:{y:{beginAtZero:true}}
       }
     });
-  }
+  });
 });
