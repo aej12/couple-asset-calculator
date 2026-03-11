@@ -1,147 +1,141 @@
-const btn=document.getElementById("calcBtn")
+const btn = document.getElementById("calcBtn")
 
-let chart1
-let chart2
+let assetChart
+let flowChart
 
-function format(n){
-
+function formatNumber(n){
 return Math.round(n).toLocaleString()
-
 }
 
-btn.onclick=function(){
+btn.onclick = function(){
 
-let age=+ageSelf.value
-let ageP=+agePartner.value
+const ageSelf = Number(document.getElementById("ageSelf").value) || 0
+const agePartner = Number(document.getElementById("agePartner").value) || 0
 
-let asset=+asset.value*10000
-let r=rate.value/100
+let asset = (Number(document.getElementById("asset").value) || 0) * 10000
+const investRate = (Number(document.getElementById("rate").value) || 0) / 100
 
-let inc1=incomeSelf.value*10000
-let inc2=incomePartner.value*10000
+let incomeSelf = (Number(document.getElementById("incomeSelf").value) || 0) * 10000
+let incomePartner = (Number(document.getElementById("incomePartner").value) || 0) * 10000
+const incomeGrowth = (Number(document.getElementById("incomeGrowth").value) || 0) / 100
 
-let g=incomeGrowth.value/100
+let expenseBase = (Number(document.getElementById("expense").value) || 0) * 10000
+const expenseGrowth = (Number(document.getElementById("inflation").value) || 0) / 100
 
-let expenseBase=expense.value*10000
-let infl=inflation.value/100
+const retireSelf = Number(document.getElementById("retireSelf").value) || 100
+const retirePartner = Number(document.getElementById("retirePartner").value) || 100
 
-let retire1=retireSelf.value
-let retire2=retirePartner.value
+const childCount = Number(document.getElementById("childCount").value) || 0
+const childIndep = Number(document.getElementById("childIndep").value) || 0
+const childCost = (Number(document.getElementById("childCost").value) || 0) * 10000
 
-let childN=childCount.value
-let childIndep=childIndep.value
-let childCost=childCost.value*10000
+const labels = []
+const assetData = []
+const fireLine = []
 
+const incomeData = []
+const expenseData = []
+const childData = []
 
-let labels=[]
-let assets=[]
-let fireLine=[]
+let fireAge = null
+let bankruptAge = null
 
-let incomeArr=[]
-let expenseArr=[]
-let childArr=[]
-
-let fireAge=null
-let bankruptAge=null
-
-
-let tableBody=document.querySelector("#resultTable tbody")
-
-tableBody.innerHTML=""
-
+const tableBody = document.querySelector("#resultTable tbody")
+tableBody.innerHTML = ""
 
 for(let i=0;i<80;i++){
 
-let ageNow=age+i
+const currentAge = ageSelf + i
+const partnerAge = agePartner + i
 
-let income=0
+let income = 0
 
-if(ageNow<retire1) income+=inc1*Math.pow(1+g,i)
-if(ageP+i<retire2) income+=inc2*Math.pow(1+g,i)
-
-let expense=expenseBase*Math.pow(1+infl,i)
-
-let childExpense=0
-
-if(ageNow<childIndep){
-
-childExpense=childCost*childN*Math.pow(1+infl,i)
-
+if(currentAge < retireSelf){
+income += incomeSelf * Math.pow(1+incomeGrowth,i)
 }
 
-expense+=childExpense
+if(partnerAge < retirePartner){
+income += incomePartner * Math.pow(1+incomeGrowth,i)
+}
 
+let expense = expenseBase * Math.pow(1+expenseGrowth,i)
 
-asset=asset*(1+r)+income-expense
+let childExpense = 0
 
-let fireTarget=expense*25
+if(currentAge < childIndep){
+childExpense = childCost * childCount * Math.pow(1+expenseGrowth,i)
+}
 
+expense += childExpense
 
-if(asset<=0 && !bankruptAge) bankruptAge=ageNow
+asset = asset * (1+investRate) + income - expense
 
-if(asset*r>=expense && !fireAge) fireAge=ageNow
+const fireTarget = expense * 25
 
+if(asset <= 0 && bankruptAge === null){
+bankruptAge = currentAge
+}
 
-labels.push(ageNow)
+if(asset * investRate >= expense && fireAge === null){
+fireAge = currentAge
+}
 
-assets.push(asset)
-
+labels.push(currentAge)
+assetData.push(asset)
 fireLine.push(fireTarget)
 
-incomeArr.push(income)
+incomeData.push(income)
+expenseData.push(expense)
+childData.push(childExpense)
 
-expenseArr.push(expense)
+const row = document.createElement("tr")
 
-childArr.push(childExpense)
-
-
-tableBody.innerHTML+=`
-
-<tr>
-<td>${ageNow}/${ageP+i}</td>
-<td>${format(asset)}</td>
-<td>${format(income)}</td>
-<td>${format(expense)}</td>
-</tr>
-
+row.innerHTML = `
+<td>${currentAge}/${partnerAge}</td>
+<td>${formatNumber(asset)}</td>
+<td>${formatNumber(income)}</td>
+<td>${formatNumber(expense)}</td>
 `
 
+tableBody.appendChild(row)
+
 }
 
+document.getElementById("resultBox").style.display = "block"
 
-resultBox.style.display="block"
-
+const resultText = document.getElementById("mainResult")
 
 if(bankruptAge){
-
-mainResult.innerHTML=`${bankruptAge}세에 자산이 고갈됩니다.`
-
+resultText.innerText = bankruptAge + "세에 자산이 고갈됩니다."
+}else if(fireAge){
+resultText.innerText = fireAge + "세에 경제적 자유(FIRE)에 도달합니다."
 }else{
-
-mainResult.innerHTML=`${fireAge}세에 경제적 자유(FIRE)에 도달합니다.`
-
+resultText.innerText = "100세까지 자산이 유지됩니다."
 }
 
+document.getElementById("assumption1").innerText =
+"현재 기준 월 " + formatNumber((incomeSelf+incomePartner)/12) +
+"원 수입 / 월 " + formatNumber(expenseBase/12) + "원 지출"
 
-assumption1.innerText=`현재 기준 월 ${(inc1+inc2)/12/10000}만원 수입 / 월 ${expenseBase/12/10000}만원 지출`
+document.getElementById("assumption2").innerText =
+"근로소득 증가율 " + (incomeGrowth*100) +
+"% / 지출 상승률 " + (expenseGrowth*100) + "% 가정"
 
-assumption2.innerText=`소득 증가율 ${incomeGrowth.value}% / 지출 증가율 ${inflation.value}%`
+document.getElementById("assumption3").innerText =
+"투자 수익률 연 " + (investRate*100) + "% 가정"
 
-assumption3.innerText=`투자수익률 ${rate.value}% 가정`
+if(assetChart){
+assetChart.destroy()
+}
 
-
-if(chart1) chart1.destroy()
-
-chart1=new Chart(assetChart,{
-
+assetChart = new Chart(document.getElementById("assetChart"),{
 type:"line",
-
 data:{
 labels:labels,
 datasets:[
 {
 label:"순자산",
-data:assets
+data:assetData
 },
 {
 label:"FIRE 목표자산",
@@ -149,34 +143,31 @@ data:fireLine
 }
 ]
 }
-
 })
 
+if(flowChart){
+flowChart.destroy()
+}
 
-if(chart2) chart2.destroy()
-
-chart2=new Chart(flowChart,{
-
+flowChart = new Chart(document.getElementById("flowChart"),{
 type:"line",
-
 data:{
 labels:labels,
 datasets:[
 {
 label:"수입",
-data:incomeArr
+data:incomeData
 },
 {
 label:"지출",
-data:expenseArr
+data:expenseData
 },
 {
 label:"자녀지출",
-data:childArr
+data:childData
 }
 ]
 }
-
 })
 
 }
