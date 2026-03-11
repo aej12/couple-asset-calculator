@@ -1,48 +1,50 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded",function(){
 
-const btn = document.getElementById("calcBtn");
+const btn=document.getElementById("calcBtn");
 
-const summary = document.getElementById("summarySection");
-const result = document.getElementById("resultSection");
+const summary=document.getElementById("summarySection");
+const result=document.getElementById("resultSection");
 
-const table = document.getElementById("yearlyTable");
-const summaryText = document.getElementById("summaryText");
+const table=document.getElementById("yearlyTable");
+const summaryText=document.getElementById("summaryText");
 
-let chart;
+let assetChart;
+let cashChart;
 
 function money(x){
 return Math.round(x).toLocaleString();
 }
 
-btn.addEventListener("click", function(){
+btn.addEventListener("click",function(){
 
-let ageSelf = +ageSelf.value;
-let agePartner = +agePartner.value;
+let ageSelf=+document.getElementById("ageSelf").value;
+let agePartner=+document.getElementById("agePartner").value;
 
-let asset = +assetTotal.value;
+let asset=+document.getElementById("assetTotal").value;
 
-let incomeSelfStart = +incomeSelf.value;
-let incomePartnerStart = +incomePartner.value;
+let incomeSelf=+document.getElementById("incomeSelf").value;
+let incomePartner=+document.getElementById("incomePartner").value;
 
-let incomeGrowth = incomeGrowth.value/100;
+let incomeGrowth=document.getElementById("incomeGrowth").value/100;
 
-let expense = +expenseTotal.value;
-let inflation = expenseInflation.value/100;
+let expense=+document.getElementById("expenseTotal").value;
+let inflation=document.getElementById("expenseInflation").value/100;
 
-let rate = interestRate.value/100;
+let rate=document.getElementById("interestRate").value/100;
 
-let retireSelfAge = +retireSelf.value;
-let retirePartnerAge = +retirePartner.value;
+let retireSelf=+document.getElementById("retireSelf").value;
+let retirePartner=+document.getElementById("retirePartner").value;
 
-let childCountN = +childCount.value;
-let childYears = +childYearsRemaining.value;
-let childCost = +childAnnualExpense.value;
+let childCount=+document.getElementById("childCount").value;
+let childYears=+document.getElementById("childYearsRemaining").value;
+let childCost=+document.getElementById("childAnnualExpense").value;
 
 let labels=[];
 let assetData=[];
 let incomeData=[];
 let expenseData=[];
 let childData=[];
+let fireLine=[];
 
 table.innerHTML="";
 
@@ -53,12 +55,12 @@ for(let i=0;i<100-ageSelf;i++){
 let age=ageSelf+i;
 let ageP=agePartner+i;
 
-let inc1 = age<retireSelfAge
-? incomeSelfStart*Math.pow(1+incomeGrowth,i)
+let inc1=age<retireSelf
+? incomeSelf*Math.pow(1+incomeGrowth,i)
 :0;
 
-let inc2 = ageP<retirePartnerAge
-? incomePartnerStart*Math.pow(1+incomeGrowth,i)
+let inc2=ageP<retirePartner
+? incomePartner*Math.pow(1+incomeGrowth,i)
 :0;
 
 let income=inc1+inc2;
@@ -68,10 +70,12 @@ let baseExpense=expense*Math.pow(1+inflation,i);
 let childExpense=0;
 
 if(i<childYears){
-childExpense=childCost*childCountN*Math.pow(1+inflation,i);
+childExpense=childCost*childCount*Math.pow(1+inflation,i);
 }
 
 let totalExpense=baseExpense+childExpense;
+
+let fireTarget=totalExpense*25;
 
 let passive=asset*rate;
 
@@ -79,13 +83,15 @@ if(!fireAge && passive>totalExpense){
 fireAge=age;
 }
 
-asset = asset*(1+rate)+income-totalExpense;
+asset=asset*(1+rate)+income-totalExpense;
 
 labels.push(age+"("+ageP+")");
+
 assetData.push(asset);
 incomeData.push(income);
-expenseData.push(totalExpense);
+expenseData.push(baseExpense);
 childData.push(childExpense);
+fireLine.push(fireTarget);
 
 let tr=document.createElement("tr");
 
@@ -104,73 +110,76 @@ table.appendChild(tr);
 summary.style.display="block";
 result.style.display="block";
 
-summaryText.innerHTML =
+summaryText.innerHTML=
 fireAge
-? `<b>${fireAge}세 경제적 자유 예상</b>`
-: `100세까지 FIRE 도달하지 못함`;
+? `<b>${fireAge}세 FIRE 가능</b>`
+: `100세까지 FIRE 도달 못함`;
 
-const ctx=document.getElementById("assetChart");
+if(assetChart) assetChart.destroy();
+if(cashChart) cashChart.destroy();
 
-if(chart) chart.destroy();
+assetChart=new Chart(document.getElementById("assetChart"),{
 
-chart=new Chart(ctx,{
 type:"line",
 
 data:{
 labels:labels,
 
 datasets:[
+
 {
 label:"순자산",
 data:assetData,
-borderWidth:5,
 borderColor:"#3182f6",
+borderWidth:4,
 tension:0.3
 },
+
+{
+label:"FIRE 목표자산",
+data:fireLine,
+borderColor:"#f04452",
+borderDash:[5,5],
+borderWidth:3
+}
+
+]
+
+}
+
+});
+
+cashChart=new Chart(document.getElementById("cashChart"),{
+
+type:"line",
+
+data:{
+labels:labels,
+
+datasets:[
+
 {
 label:"수입",
 data:incomeData,
-borderWidth:3,
 borderColor:"#20c997",
-tension:0.3
+borderWidth:3
 },
+
 {
-label:"지출",
+label:"기본지출",
 data:expenseData,
-borderWidth:3,
 borderColor:"#f04452",
-tension:0.3
+borderWidth:3
 },
+
 {
 label:"자녀지출",
 data:childData,
-borderWidth:3,
 borderColor:"#ff9800",
-tension:0.3
+borderWidth:3
 }
+
 ]
-},
-
-options:{
-
-responsive:true,
-
-scales:{
-y:{
-ticks:{
-callback:function(value){
-
-let eok=value/10000;
-
-if(eok>=1){
-return eok+"억";
-}
-
-return value;
-}
-}
-}
-}
 
 }
 
