@@ -1,10 +1,14 @@
 <!DOCTYPE html>
 <html lang="ko">
-
 <head>
-
 <meta charset="UTF-8">
-<title>신혼부부 자산 계산기</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>부부 자산 시뮬레이터 | 맞벌이 자산 계산기</title>
+
+<meta name="description" content="맞벌이 부부의 자산 증가를 시뮬레이션 해보세요. 경제적 자유와 파산 시점을 계산하는 자산 계산기입니다.">
+
+<link rel="stylesheet" href="style.css">
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -12,45 +16,90 @@
 
 <body>
 
+<div class="container">
+
 <h1>부부 자산 시뮬레이터</h1>
 
-남편 나이  
-<input id="hAge"><br><br>
+<p class="desc">
+맞벌이 부부의 자산 증가와 경제적 자유 시점을 계산합니다.
+</p>
 
-아내 나이  
-<input id="wAge"><br><br>
+<div class="card">
 
-남편 월소득(만원)  
-<input id="hIncome"><br><br>
+<h2>기본 정보</h2>
 
-아내 월소득(만원)  
-<input id="wIncome"><br><br>
+<label>남편 나이</label>
+<input id="husbandAge" type="number" value="30">
 
-남편 은퇴나이  
-<input id="hRetire"><br><br>
+<label>아내 나이</label>
+<input id="wifeAge" type="number" value="30">
 
-아내 은퇴나이  
-<input id="wRetire"><br><br>
+<label>현재 자산 (만원)</label>
+<input id="asset" type="number" value="8000">
 
-현재 순자산(만원)  
-<input id="asset"><br><br>
+</div>
 
-소비율(%)  
-<input id="consume"><br><br>
 
-투자수익률(%)  
-<input id="returnRate"><br><br>
+<div class="card">
 
-물가상승률(%)  
-<input id="inflation"><br><br>
+<h2>소득</h2>
 
-<button onclick="simulate()">계산하기</button>
+<label>남편 연봉 (만원)</label>
+<input id="husbandIncome" type="number" value="6000">
 
-<h2 id="summary"></h2>
+<label>아내 연봉 (만원)</label>
+<input id="wifeIncome" type="number" value="5000">
+
+<label>연봉 상승률 (%)</label>
+<input id="incomeGrowth" type="number" value="2">
+
+</div>
+
+
+<div class="card">
+
+<h2>지출</h2>
+
+<label>연간 생활비 (만원)</label>
+<input id="expense" type="number" value="3600">
+
+<label>물가 상승률 (%)</label>
+<input id="inflation" type="number" value="2">
+
+</div>
+
+
+<div class="card">
+
+<h2>투자</h2>
+
+<label>투자 수익률 (%)</label>
+<input id="returnRate" type="number" value="5">
+
+<label>남편 은퇴 나이</label>
+<input id="husbandRetire" type="number" value="60">
+
+<label>아내 은퇴 나이</label>
+<input id="wifeRetire" type="number" value="60">
+
+</div>
+
+
+<button onclick="calculate()">계산하기</button>
+
+<div class="result" id="result"></div>
 
 <canvas id="chart"></canvas>
 
-<script src="calculator.js"></script>
+<div class="ad">
+
+광고 영역 (Adsense)
+
+</div>
+
+</div>
+
+<script src="script.js"></script>
 
 </body>
 </html>
