@@ -1,108 +1,62 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-<meta charset="UTF-8">
-<title>커플 자산 FIRE 계산기</title>
-
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<link rel="stylesheet" href="style.css">
-
-<!-- Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-</head>
-
-<body>
-
 <div class="container">
 
 <h1>커플 자산 FIRE 계산기</h1>
 
+<div class="card">
+
 <h2>기본 정보</h2>
 
 <div class="grid">
-
-<label>내 나이</label>
-<input id="ageSelf" type="number" value="30">
-
-<label>배우자 나이</label>
-<input id="agePartner" type="number" value="30">
-
-<label>현재 총 자산</label>
-<input id="assetTotal" type="number" value="100000000">
-
-<label>내 연봉</label>
-<input id="incomeSelf" type="number" value="40000000">
-
-<label>배우자 연봉</label>
-<input id="incomePartner" type="number" value="40000000">
-
-<label>연봉 상승률 (%)</label>
-<input id="incomeGrowth" type="number" value="3">
-
-<label>연 지출</label>
-<input id="expenseTotal" type="number" value="30000000">
-
-<label>물가 상승률 (%)</label>
-<input id="expenseInflation" type="number" value="2">
-
-<label>투자 수익률 (%)</label>
-<input id="interestRate" type="number" value="5">
-
-<label>내 은퇴 나이</label>
-<input id="retireSelf" type="number" value="60">
-
-<label>배우자 은퇴 나이</label>
-<input id="retirePartner" type="number" value="60">
+<!-- 입력칸 그대로 -->
+</div>
 
 </div>
+
+
+<div class="card">
 
 <h2>자녀 설정</h2>
 
 <div class="grid">
-
-<label>자녀 수</label>
-<input id="childCount" type="number" value="1">
-
-<label>자녀 지출 남은 기간 (년)</label>
-<input id="childYearsRemaining" type="number" value="20">
-
-<label>자녀 연 지출</label>
-<input id="childAnnualExpense" type="number" value="5000000">
+<!-- 입력칸 그대로 -->
+</div>
 
 </div>
 
-<br>
-
+<div class="button-area">
 <button id="calcBtn">계산하기</button>
+</div>
 
-<div id="summarySection" style="display:none">
+
+<div id="summarySection" class="card" style="display:none">
 
 <h2>결과 요약</h2>
-
 <p id="summaryText"></p>
 
 </div>
 
-<div id="resultSection" style="display:none">
 
-<h2>순자산 성장 그래프</h2>
+<div id="resultSection">
 
+<div class="card">
+<h2>순자산 성장</h2>
 <div class="chart-container">
 <canvas id="assetChart"></canvas>
 </div>
+</div>
 
+<div class="card">
 <h2>수입 / 지출 흐름</h2>
-
 <div class="chart-container">
 <canvas id="cashChart"></canvas>
 </div>
+</div>
 
+<div class="card">
 <h2>연도별 결과</h2>
 
+<div class="table-scroll">
 <table>
-
 <thead>
 <tr>
 <th>나이</th>
@@ -116,12 +70,10 @@
 <tbody id="yearlyTable"></tbody>
 
 </table>
-
 </div>
 
 </div>
 
-<script src="script.js"></script>
+</div>
 
-</body>
-</html>
+</div>
