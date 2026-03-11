@@ -1,26 +1,56 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
-<meta charset="UTF-8">
-<title>자산 계산기 모음</title>
-<meta name="description" content="신혼부부 자산 계산기, FIRE 계산기, 순자산 계산기">
 
-<link rel="stylesheet" href="css/style.css">
+<head>
+
+<meta charset="UTF-8">
+<title>신혼부부 자산 계산기</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
 
 <body>
 
-<h1>자산 계산기</h1>
+<h1>부부 자산 시뮬레이터</h1>
 
-<ul>
+남편 나이  
+<input id="hAge"><br><br>
 
-<li>
-<a href="calculators/couple-asset.html">
-신혼부부 자산 계산기
-</a>
-</li>
+아내 나이  
+<input id="wAge"><br><br>
 
-</ul>
+남편 월소득(만원)  
+<input id="hIncome"><br><br>
+
+아내 월소득(만원)  
+<input id="wIncome"><br><br>
+
+남편 은퇴나이  
+<input id="hRetire"><br><br>
+
+아내 은퇴나이  
+<input id="wRetire"><br><br>
+
+현재 순자산(만원)  
+<input id="asset"><br><br>
+
+소비율(%)  
+<input id="consume"><br><br>
+
+투자수익률(%)  
+<input id="returnRate"><br><br>
+
+물가상승률(%)  
+<input id="inflation"><br><br>
+
+<button onclick="simulate()">계산하기</button>
+
+<h2 id="summary"></h2>
+
+<canvas id="chart"></canvas>
+
+<script src="calculator.js"></script>
 
 </body>
 </html>
