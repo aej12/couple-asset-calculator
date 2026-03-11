@@ -1,74 +1,25 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-<meta charset="UTF-8">
-<title>생애 자산 시뮬레이터</title>
+<h1>부부 생애 자산 계산기</h1>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<link rel="stylesheet" href="style.css">
+<h2>현재 자산</h2>
+<input id="asset">
 
-</head>
+<h2>남편</h2>
+현재 나이 <input id="hAge">
+월소득 <input id="hIncome">
+은퇴나이 <input id="hRetire">
 
-<body>
+<h2>아내</h2>
+현재 나이 <input id="wAge">
+월소득 <input id="wIncome">
+은퇴나이 <input id="wRetire">
 
-<h1>부부 생애 자산 시뮬레이터</h1>
+<h2>소비</h2>
+소비율 <input id="consume">
 
-<div class="ad">광고 영역</div>
-
-<div class="form">
-
-<label>현재 나이</label>
-<input id="age" type="number">
-
-<label>초기 자산 (만원)</label>
-<input id="asset" type="number">
-
-<label>남편 월소득 (만원)</label>
-<input id="hIncome" type="number">
-
-<label>남편 은퇴 나이</label>
-<input id="hRetire" type="number">
-
-<label>아내 월소득 (만원)</label>
-<input id="wIncome" type="number">
-
-<label>아내 은퇴 나이</label>
-<input id="wRetire" type="number">
-
-<label>소비율 (%)</label>
-<input id="consume" type="number">
-
-<label>투자수익률 (%)</label>
-<input id="returnRate" type="number">
-
-<label>물가상승률 (%)</label>
-<input id="inflation" type="number">
+<h2>경제 가정</h2>
+투자수익률 <input id="return">
+물가상승률 <input id="inflation">
 
 <button onclick="simulate()">계산</button>
 
-</div>
-
-<h2 id="summary"></h2>
-
 <canvas id="assetChart"></canvas>
-
-<h3>연간 현금 흐름</h3>
-
-<table id="cashTable">
-<thead>
-<tr>
-<th>나이</th>
-<th>수입</th>
-<th>지출</th>
-<th>순자산</th>
-</tr>
-</thead>
-<tbody></tbody>
-</table>
-
-<div class="ad">광고 영역</div>
-
-<script src="script.js"></script>
-
-</body>
-</html>
