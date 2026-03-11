@@ -1,53 +1,69 @@
 let chart;
 
-function calculate(){
+function simulate(){
 
-const husband = Number(document.getElementById("husband").value);
-const wife = Number(document.getElementById("wife").value);
-const saveRate = Number(document.getElementById("saveRate").value)/100;
-const returnRate = Number(document.getElementById("returnRate").value)/100;
+const age = Number(ageInput.value);
+let asset = Number(assetInput.value);
 
-const income = husband + wife;
-const yearlySave = income * saveRate;
+const hIncome = Number(hIncomeInput.value)*12;
+const wIncome = Number(wIncomeInput.value)*12;
 
-let asset = 0;
-let data = [];
-let labels = [];
+const hRetire = Number(hRetireInput.value);
+const wRetire = Number(wRetireInput.value);
 
-for(let i=1;i<=20;i++){
+const consumeRate = Number(consumeInput.value)/100;
+const r = Number(returnRateInput.value)/100;
+const inflation = Number(inflationInput.value)/100;
 
-asset = asset*(1+returnRate) + yearlySave;
+let labels=[]
+let data=[]
+let table=""
 
-data.push(Math.round(asset));
-labels.push(i+"년");
+let bankruptAge=null;
+
+let income=hIncome+wIncome
+let expense=income*consumeRate
+
+for(let a=age; a<=100; a++){
+
+if(a>=hRetire) income-=hIncome
+if(a>=wRetire) income-=wIncome
+
+let cashFlow=income-expense
+
+asset=asset*(1+r)+cashFlow
+
+if(asset<0 && bankruptAge===null){
+bankruptAge=a
+}
+
+labels.push(a)
+data.push(asset)
+
+table+=`
+<tr>
+<td>${a}</td>
+<td>${Math.round(income)}</td>
+<td>${Math.round(expense)}</td>
+<td>${Math.round(asset)}</td>
+</tr>
+`
+
+income*=1+inflation
+expense*=1+inflation
 
 }
 
-document.getElementById("result10").innerText =
-"10년 후 자산: " + data[9].toLocaleString()+"만원";
+document.querySelector("#cashTable tbody").innerHTML=table
 
-document.getElementById("result20").innerText =
-"20년 후 자산: " + data[19].toLocaleString()+"만원";
-
-
-const ctx = document.getElementById("assetChart");
-
-if(chart) chart.destroy();
-
-chart = new Chart(ctx, {
-
-type:"line",
-
-data:{
-labels:labels,
-
-datasets:[{
-label:"자산 성장",
-data:data,
-borderWidth:2
-}]
+if(bankruptAge){
+summary.innerHTML=
+`이대로 계산하면 당신은 <b>${bankruptAge}세</b>에 파산하게 됩니다.`
+}else{
+summary.innerHTML=
+`100세까지 파산하지 않습니다.`
 }
 
-});
+drawChart(labels,data)
 
 }
