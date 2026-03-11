@@ -1,35 +1,33 @@
-const btn=document.getElementById("calcBtn")
+const btn = document.getElementById("calcBtn")
 
 let chart
 
 function format(num){
-
 return Math.round(num).toLocaleString()
-
 }
 
-btn.onclick=function(){
+btn.onclick = function(){
 
-let age=+ageSelf.value
-let ageP=+agePartner.value
+let age = +document.getElementById("ageSelf").value
+let ageP = +document.getElementById("agePartner").value
 
-let asset=+asset.value*10000
-let r=rate.value/100
+let assetValue = +document.getElementById("asset").value * 10000
+let r = document.getElementById("rate").value / 100
 
-let inc1=incomeSelf.value*10000
-let inc2=incomePartner.value*10000
+let inc1 = document.getElementById("incomeSelf").value * 10000
+let inc2 = document.getElementById("incomePartner").value * 10000
 
-let g=incomeGrowth.value/100
+let g = document.getElementById("incomeGrowth").value / 100
 
-let expenseBase=expense.value*10000
-let infl=inflation.value/100
+let expenseBase = document.getElementById("expense").value * 10000
+let infl = document.getElementById("inflation").value / 100
 
-let retire1=retireSelf.value
-let retire2=retirePartner.value
+let retire1 = document.getElementById("retireSelf").value
+let retire2 = document.getElementById("retirePartner").value
 
-let childN=childCount.value
-let childIndep=childIndep.value
-let childCost=childCost.value*10000
+let childN = document.getElementById("childCount").value
+let childIndep = document.getElementById("childIndep").value
+let childCost = document.getElementById("childCost").value * 10000
 
 let labels=[]
 let assets=[]
@@ -54,70 +52,72 @@ if(agePNow<retire2) income+=inc2*Math.pow(1+g,i)
 let expense=expenseBase*Math.pow(1+infl,i)
 
 if(ageNow<childIndep){
-
 expense+=childCost*childN*Math.pow(1+infl,i)
-
 }
 
 let fireTarget=expense*25
 
-asset=asset*(1+r)+income-expense
+assetValue=assetValue*(1+r)+income-expense
 
-if(asset<=0 && !bankruptAge){
+if(assetValue<=0 && !bankruptAge){
 bankruptAge=ageNow
 }
 
-let passive=asset*r
+let passive=assetValue*r
 
 if(!fireAge && passive>=expense){
 fireAge=ageNow
 }
 
 labels.push(ageNow+" / "+agePNow)
-assets.push(asset)
+assets.push(assetValue)
 fireLine.push(fireTarget)
 
 let row=`
 <tr>
 <td>${ageNow}</td>
 <td>${agePNow}</td>
-<td>${format(asset)}</td>
+<td>${format(assetValue)}</td>
 <td>${format(income)}</td>
 <td>${format(expense)}</td>
 </tr>
 `
 
 tableBody.innerHTML+=row
-
 }
 
-resultBox.style.display="block"
+document.getElementById("resultBox").style.display="block"
 
 if(bankruptAge){
 
-resultText.innerHTML=`이대로라면 <b>${bankruptAge}세</b>에 자산이 고갈됩니다.`
+document.getElementById("resultText").innerHTML=
+`이대로라면 <b>${bankruptAge}세</b>에 자산이 고갈됩니다.`
 
 }else if(fireAge){
 
-resultText.innerHTML=`이대로라면 <b>${fireAge}세</b>에 경제적 자유에 도달합니다.`
+document.getElementById("resultText").innerHTML=
+`이대로라면 <b>${fireAge}세</b>에 경제적 자유에 도달합니다.`
 
 }else{
 
-resultText.innerHTML=`100세까지 경제적 자유에 도달하지 못합니다.`
+document.getElementById("resultText").innerHTML=
+`100세까지 경제적 자유에 도달하지 못합니다.`
 
 }
 
 if(chart) chart.destroy()
 
-chart=new Chart(assetChart,{
+chart=new Chart(document.getElementById("assetChart"),{
+
 type:"line",
+
 data:{
 labels:labels,
 datasets:[
 {
 label:"순자산",
 data:assets,
-borderWidth:4
+borderWidth:3
 },
 {
 label:"FIRE 목표자산",
