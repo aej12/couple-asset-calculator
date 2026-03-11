@@ -1,223 +1,181 @@
 document.addEventListener("DOMContentLoaded", function () {
 
-  const button = document.querySelector(".calculate-btn");
-  const summarySection = document.getElementById("summarySection");
-  const resultSection = document.getElementById("resultSection");
-  const summaryText = document.getElementById("summaryText");
-  const yearlyTable = document.getElementById("yearlyTable");
-  const chartCanvas = document.getElementById("assetChart");
+const btn = document.getElementById("calcBtn");
 
-  let chart;
+const summary = document.getElementById("summarySection");
+const result = document.getElementById("resultSection");
 
-  function formatNum(num) {
-    return Math.round(num).toLocaleString();
-  }
+const table = document.getElementById("yearlyTable");
+const summaryText = document.getElementById("summaryText");
 
-  button.addEventListener("click", function () {
+let chart;
 
-    const ageSelf = parseInt(document.getElementById("ageSelf").value);
-    const agePartner = parseInt(document.getElementById("agePartner").value);
+function money(x){
+return Math.round(x).toLocaleString();
+}
 
-    let currentAsset = parseFloat(document.getElementById("assetTotal").value);
+btn.addEventListener("click", function(){
 
-    const incomeSelf = parseFloat(document.getElementById("incomeSelf").value);
-    const incomePartner = parseFloat(document.getElementById("incomePartner").value);
+let ageSelf = +ageSelf.value;
+let agePartner = +agePartner.value;
 
-    const incomeGrowth = parseFloat(document.getElementById("incomeGrowth").value) / 100;
+let asset = +assetTotal.value;
 
-    const expenseTotal = parseFloat(document.getElementById("expenseTotal").value);
+let incomeSelfStart = +incomeSelf.value;
+let incomePartnerStart = +incomePartner.value;
 
-    const interestRate = parseFloat(document.getElementById("interestRate").value) / 100;
+let incomeGrowth = incomeGrowth.value/100;
 
-    const expenseInflation = parseFloat(document.getElementById("expenseInflation").value) / 100;
+let expense = +expenseTotal.value;
+let inflation = expenseInflation.value/100;
 
-    const retireSelf = parseInt(document.getElementById("retireSelf").value);
-    const retirePartner = parseInt(document.getElementById("retirePartner").value);
+let rate = interestRate.value/100;
 
-    const childCount = parseInt(document.getElementById("childCount").value);
-    const childYearsRemaining = parseInt(document.getElementById("childYearsRemaining").value);
-    const childAnnualExpense = parseFloat(document.getElementById("childAnnualExpense").value);
+let retireSelfAge = +retireSelf.value;
+let retirePartnerAge = +retirePartner.value;
 
-    const maxAge = 100;
-    const years = maxAge - ageSelf;
+let childCountN = +childCount.value;
+let childYears = +childYearsRemaining.value;
+let childCost = +childAnnualExpense.value;
 
-    let labels = [];
-    let assetData = [];
-    let incomeData = [];
-    let expenseData = [];
-    let childExpenseData = [];
+let labels=[];
+let assetData=[];
+let incomeData=[];
+let expenseData=[];
+let childData=[];
 
-    yearlyTable.innerHTML = "";
+table.innerHTML="";
 
-    let bankruptAge = null;
-    let fireAge = null;
+let fireAge=null;
 
-    for (let i = 0; i < years; i++) {
+for(let i=0;i<100-ageSelf;i++){
 
-      let currentAgeSelf = ageSelf + i;
-      let currentAgePartner = agePartner + i;
+let age=ageSelf+i;
+let ageP=agePartner+i;
 
-      let currentIncomeSelf =
-        currentAgeSelf < retireSelf
-          ? incomeSelf * Math.pow(1 + incomeGrowth, i)
-          : 0;
+let inc1 = age<retireSelfAge
+? incomeSelfStart*Math.pow(1+incomeGrowth,i)
+:0;
 
-      let currentIncomePartner =
-        currentAgePartner < retirePartner
-          ? incomePartner * Math.pow(1 + incomeGrowth, i)
-          : 0;
+let inc2 = ageP<retirePartnerAge
+? incomePartnerStart*Math.pow(1+incomeGrowth,i)
+:0;
 
-      let annualIncome = currentIncomeSelf + currentIncomePartner;
+let income=inc1+inc2;
 
-      let adjustedExpense =
-        expenseTotal * Math.pow(1 + expenseInflation, i);
+let baseExpense=expense*Math.pow(1+inflation,i);
 
-      let childExpense = 0;
+let childExpense=0;
 
-      if (childCount > 0 && i < childYearsRemaining) {
-        childExpense =
-          childCount *
-          childAnnualExpense *
-          Math.pow(1 + expenseInflation, i);
-      }
+if(i<childYears){
+childExpense=childCost*childCountN*Math.pow(1+inflation,i);
+}
 
-      let totalExpense = adjustedExpense + childExpense;
+let totalExpense=baseExpense+childExpense;
 
-      let passiveIncome =
-        currentAsset > 0 ? currentAsset * interestRate : 0;
+let passive=asset*rate;
 
-      if (fireAge === null && passiveIncome >= totalExpense) {
-        fireAge = currentAgeSelf;
-      }
+if(!fireAge && passive>totalExpense){
+fireAge=age;
+}
 
-      currentAsset =
-        currentAsset * (1 + interestRate) +
-        annualIncome -
-        totalExpense;
+asset = asset*(1+rate)+income-totalExpense;
 
-      if (currentAsset < 0 && bankruptAge === null) {
-        bankruptAge = currentAgeSelf;
-      }
+labels.push(age+"("+ageP+")");
+assetData.push(asset);
+incomeData.push(income);
+expenseData.push(totalExpense);
+childData.push(childExpense);
 
-      let tr = document.createElement("tr");
+let tr=document.createElement("tr");
 
-      tr.innerHTML = `
-        <td>${currentAgeSelf}(${currentAgePartner})</td>
-        <td>${formatNum(currentAsset)}</td>
-        <td>${formatNum(annualIncome)}</td>
-        <td>${formatNum(adjustedExpense)}</td>
-        <td>${formatNum(childExpense)}</td>
-      `;
+tr.innerHTML=`
+<td>${age}(${ageP})</td>
+<td>${money(asset)}</td>
+<td>${money(income)}</td>
+<td>${money(baseExpense)}</td>
+<td>${money(childExpense)}</td>
+`;
 
-      yearlyTable.appendChild(tr);
+table.appendChild(tr);
 
-      labels.push(`${currentAgeSelf}(${currentAgePartner})`);
+}
 
-      assetData.push(currentAsset);
-      incomeData.push(annualIncome);
-      expenseData.push(totalExpense);
-      childExpenseData.push(childExpense);
-    }
+summary.style.display="block";
+result.style.display="block";
 
-    summarySection.style.display = "block";
-    resultSection.style.display = "block";
+summaryText.innerHTML =
+fireAge
+? `<b>${fireAge}세 경제적 자유 예상</b>`
+: `100세까지 FIRE 도달하지 못함`;
 
-    const ctx = chartCanvas.getContext("2d");
+const ctx=document.getElementById("assetChart");
 
-    if (chart) chart.destroy();
+if(chart) chart.destroy();
 
-    chart = new Chart(ctx, {
-      type: "line",
+chart=new Chart(ctx,{
+type:"line",
 
-      data: {
-        labels: labels,
+data:{
+labels:labels,
 
-        datasets: [
-          {
-            label: "순자산",
-            data: assetData,
-            borderColor: "#3182f6",
-            borderWidth: 4,
-            tension: 0.3
-          },
+datasets:[
+{
+label:"순자산",
+data:assetData,
+borderWidth:5,
+borderColor:"#3182f6",
+tension:0.3
+},
+{
+label:"수입",
+data:incomeData,
+borderWidth:3,
+borderColor:"#20c997",
+tension:0.3
+},
+{
+label:"지출",
+data:expenseData,
+borderWidth:3,
+borderColor:"#f04452",
+tension:0.3
+},
+{
+label:"자녀지출",
+data:childData,
+borderWidth:3,
+borderColor:"#ff9800",
+tension:0.3
+}
+]
+},
 
-          {
-            label: "수입",
-            data: incomeData,
-            borderColor: "#20c997",
-            borderWidth: 3,
-            tension: 0.3
-          },
+options:{
 
-          {
-            label: "지출",
-            data: expenseData,
-            borderColor: "#f04452",
-            borderWidth: 3,
-            tension: 0.3
-          },
+responsive:true,
 
-          {
-            label: "자녀지출",
-            data: childExpenseData,
-            borderColor: "#ff9800",
-            borderWidth: 3,
-            tension: 0.3
-          }
-        ]
-      },
+scales:{
+y:{
+ticks:{
+callback:function(value){
 
-      options: {
+let eok=value/10000;
 
-        responsive: true,
+if(eok>=1){
+return eok+"억";
+}
 
-        scales: {
+return value;
+}
+}
+}
+}
 
-          y: {
+}
 
-            ticks: {
-              callback: function(value) {
+});
 
-                const 억 = value / 10000;
-
-                if (억 >= 1) return 억 + "억";
-
-                return value;
-              }
-            }
-          }
-        },
-
-        plugins: {
-
-          legend: {
-            labels: {
-              font: {
-                size: 14
-              }
-            }
-          }
-        }
-      }
-    });
-
-    if (bankruptAge) {
-
-      summaryText.innerHTML =
-        `<b>${bankruptAge}세 파산</b> 예상됩니다`;
-
-    } else if (fireAge) {
-
-      summaryText.innerHTML =
-        `<b>${fireAge}세 경제적 자유</b> 달성 예상`;
-
-    } else {
-
-      summaryText.innerHTML =
-        `100세까지 경제적 자유는 도달하지 못합니다`;
-
-    }
-
-  });
+});
 
 });
