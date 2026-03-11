@@ -1,87 +1,87 @@
-let chart;
+// =======================
+// 🟢 초기 입력값
+// =======================
+const startAge = 25;
+const endAge = 100;
+const monthlyIncome = 200; // 만원 단위
+const monthlyExpense = 150; // 만원 단위
+const annualIncomeGrowth = 0.03;
+const annualExpenseGrowth = 0.02;
+const monthlyInterest = 0; // 월 금융소득률 (0%)
 
-function calculate(){
-
-let age = parseInt(document.getElementById("husbandAge").value);
-let asset = parseFloat(document.getElementById("asset").value);
-
-let incomeH = parseFloat(document.getElementById("husbandIncome").value);
-let incomeW = parseFloat(document.getElementById("wifeIncome").value);
-
-let expense = parseFloat(document.getElementById("expense").value);
-
-let incomeGrowth = parseFloat(document.getElementById("incomeGrowth").value)/100;
-let inflation = parseFloat(document.getElementById("inflation").value)/100;
-let returnRate = parseFloat(document.getElementById("returnRate").value)/100;
-
-let retireH = parseInt(document.getElementById("husbandRetire").value);
-let retireW = parseInt(document.getElementById("wifeRetire").value);
-
-let labels=[]
-let data=[]
-
-let bankruptAge=null
-
-for(let i=0;i<=100-age;i++){
-
-let currentAge=age+i
-
-let income=0
-
-if(currentAge<retireH) income+=incomeH
-if(currentAge<retireW) income+=incomeW
-
-let investIncome=asset*returnRate
-
-let saving=income+investIncome-expense
-
-asset+=saving
-
-if(asset<0 && bankruptAge==null){
-bankruptAge=currentAge
+// =======================
+// 🟢 월별 계산 함수
+// =======================
+function calculateMonthlyIncome(age, month) {
+    return monthlyIncome * Math.pow(1 + annualIncomeGrowth, age - startAge);
 }
 
-labels.push(currentAge)
-data.push(asset)
-
-incomeH*=1+incomeGrowth
-incomeW*=1+incomeGrowth
-expense*=1+inflation
-
+function calculateMonthlyExpense(age, month) {
+    return monthlyExpense * Math.pow(1 + annualExpenseGrowth, age - startAge);
 }
 
-drawChart(labels,data)
-
-let result=document.getElementById("result")
-
-if(bankruptAge){
-result.innerHTML="이대로라면 <b>"+bankruptAge+"세에 파산합니다.</b>"
-}else{
-result.innerHTML="100세까지 자산이 유지됩니다."
+function calculateNetAssets() {
+    const netAssets = [];
+    let asset = 0;
+    for (let age = startAge; age <= endAge; age++) {
+        for (let month = 1; month <= 12; month++) {
+            const income = calculateMonthlyIncome(age, month);
+            const expense = calculateMonthlyExpense(age, month);
+            asset = asset + income - expense + asset * monthlyInterest;
+            netAssets.push({ age, month, asset, income, expense });
+        }
+    }
+    return netAssets;
 }
 
-}
+const netAssets = calculateNetAssets();
 
-function drawChart(labels,data){
+// =======================
+// 🟢 3줄 요약
+// =======================
+document.getElementById('summary').innerHTML = `
+1. ${startAge}세부터 월 ${monthlyIncome}만원 수입, ${monthlyExpense}만원 지출로 계산.<br>
+2. 연소득 증가 ${annualIncomeGrowth*100}%, 연지출 증가 ${annualExpenseGrowth*100}% 가정.<br>
+3. 월 금융소득 ${monthlyInterest*100}% 적용, 월 단위 누적 순자산 계산.
+`;
 
-let ctx=document.getElementById("chart").getContext("2d")
+// =======================
+// 🟢 그래프
+// =======================
+const labels = netAssets.map(d => `${d.age}세 ${d.month}월`);
+const data = {
+    labels: labels,
+    datasets: [{
+        label: '누적 순자산',
+        data: netAssets.map(d => d.asset),
+        borderColor: netAssets.map(d => d.asset >= 0 ? 'blue' : 'red'),
+        backgroundColor: netAssets.map(d => d.asset >= 0 ? 'rgba(0,0,255,0.1)' : 'rgba(255,0,0,0.1)'),
+        fill: true,
+        tension: 0.2
+    }]
+};
 
-if(chart) chart.destroy()
+new Chart(document.getElementById('assetChart'), {
+    type: 'line',
+    data: data,
+    options: {
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true } },
+    }
+});
 
-chart=new Chart(ctx,{
-type:'line',
-data:{
-labels:labels,
-datasets:[{
-label:"순자산",
-data:data,
-borderWidth:3,
-tension:0.2
-}]
-},
-options:{
-responsive:true
-}
-})
-
-}
+// =======================
+// 🟢 연도별/월별 표
+// =======================
+const tableBody = document.getElementById('assetTable');
+netAssets.forEach(d => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+        <td>${d.age}</td>
+        <td>${d.month}</td>
+        <td>${Math.round(d.asset).toLocaleString()}</td>
+        <td>${Math.round(d.expense).toLocaleString()}</td>
+        <td>${Math.round(d.income).toLocaleString()}</td>
+    `;
+    tableBody.appendChild(tr);
+});
