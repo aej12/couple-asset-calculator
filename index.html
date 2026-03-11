@@ -2,14 +2,14 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title>부부자산계산기</title>
+<title>커플 자산 계산기 - 연 단위 최종판</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="style.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
-<h1>부부자산계산기</h1>
+<h1>커플 경제적 자유 계산기 (연 단위)</h1>
 
 <section class="input-section">
   <h2>입력 정보</h2>
@@ -31,6 +31,7 @@
     <div class="form-row">
       <label>본인 은퇴 나이<input type="number" id="retireSelf" value="60" min="0" max="100"></label>
       <label>배우자 은퇴 나이<input type="number" id="retirePartner" value="60" min="0" max="100"></label>
+      <label>연 수입 증가율 (%)<input type="number" id="incomeInflation" value="3" step="0.1"></label>
     </div>
     <div class="form-row">
       <label>자녀 수<input type="number" id="childCount" value="1" min="0"></label>
@@ -47,13 +48,13 @@
 </section>
 
 <section class="result-section">
-  <h2>연 단위 누적 순자산 그래프</h2>
+  <h2>연 단위 누적 순자산 & 자녀 독립 후 지출 감소 금액 그래프</h2>
   <canvas id="assetChart" width="800" height="400"></canvas>
   <h3>연 단위 요약표</h3>
   <table>
     <thead>
       <tr>
-        <th>본인 나이</th><th>배우자 나이</th><th>누적 순자산 (만원)</th><th>연 수입 (만원)</th><th>연 지출 (만원)</th>
+        <th>본인 나이</th><th>배우자 나이</th><th>누적 순자산 (만원)</th><th>연 수입 (만원)</th><th>연 지출 (만원)</th><th>자녀 지출 감소 (만원)</th>
       </tr>
     </thead>
     <tbody id="yearlyTable"></tbody>
