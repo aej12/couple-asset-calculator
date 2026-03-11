@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>부부 경제적 자유 계산기</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <header>
+        <h1>부부 경제적 자유 계산기 💸</h1>
+        <p class="subtitle">금융 소득이 지출을 넘어서는 순간, 당신은 자유롭습니다.</p>
+    </header>
+
+    <section class="card input-section">
+        <form id="calcForm">
+            <div class="form-row">
+                <label>본인 나이<input type="number" id="ageSelf" value="27"></label>
+                <label>배우자 나이<input type="number" id="agePartner" value="30"></label>
+            </div>
+            <div class="form-row">
+                <label>현재 자산 (만원)<input type="number" id="assetTotal" value="10000"></label>
+                <label>금융자산 증가율 (%)<input type="number" id="interestRate" value="8" step="0.1"></label>
+            </div>
+            <div class="form-row">
+                <label>본인 연 수입 (만원)<input type="number" id="incomeSelf" value="4200"></label>
+                <label>배우자 연 수입 (만원)<input type="number" id="incomePartner" value="3500"></label>
+            </div>
+            <div class="form-row">
+                <label>연 수입 증가율 (%)<input type="number" id="incomeGrowth" value="3" step="0.1"></label>
+                <label>연 지출 합계 (만원)<input type="number" id="expenseTotal" value="4000"></label>
+            </div>
+            <div class="form-row">
+                <label>연 소비 증가율 (%)<input type="number" id="expenseInflation" value="3" step="0.1"></label>
+                <label>본인 은퇴 나이<input type="number" id="retireSelf" value="60"></label>
+                <label>배우자 은퇴 나이<input type="number" id="retirePartner" value="60"></label>
+            </div>
+            <div class="divider"></div>
+            <div class="form-row">
+                <label>자녀 수 (명)<input type="number" id="childCount" value="1"></label>
+                <label>자녀 독립까지(년)<input type="number" id="childYearsRemaining" value="20"></label>
+                <label>자녀 1인 연지출(만)<input type="number" id="childAnnualExpense" value="1000"></label>
+            </div>
+            <button type="button" id="btnCalculate" class="calculate-btn">계산하기</button>
+        </form>
+    </section>
+
+    <section class="card summary-section" id="summarySection" style="display:none;">
+        <div id="summaryText"></div>
+    </section>
+
+    <section class="card result-section" id="resultSection" style="display:none;">
+        <div class="chart-container" style="height: 500px;">
+            <canvas id="assetChart"></canvas>
+        </div>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>나이(본인/배우자)</th>
+                        <th>순자산(만원)</th>
+                        <th>수입</th>
+                        <th>지출</th>
+                        <th>자녀지출</th>
+                    </tr>
+                </thead>
+                <tbody id="yearlyTable"></tbody>
+            </table>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html>
