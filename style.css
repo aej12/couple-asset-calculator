@@ -1,54 +1,60 @@
-/* 필수 추가: 이 코드가 없으면 모달이 화면을 가리거나 레이아웃이 깨집니다 */
-.hidden {
-  display: none !important;
+@import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700&display=swap');
+
+:root {
+  --toss-blue: #3182f6;
+  --toss-blue-dark: #1b64da;
+  --toss-gray-bg: #f2f4f6;
+  --toss-text-main: #333d4b;
+  --toss-text-sub: #8b95a1;
+  --white: #ffffff;
 }
 
-/* 광고 모달 CSS */
-.ad-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.45);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 999;
+body {
+  font-family: 'Pretendard', sans-serif;
+  background-color: var(--toss-gray-bg);
+  color: var(--toss-text-main);
+  margin: 0; padding: 0;
+  display: flex; justify-content: center;
 }
 
-.ad-box {
-  background: white;
-  padding: 28px;
-  border-radius: 20px;
-  text-align: center;
-  max-width: 320px;
-  width: 90%;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+.hidden { display: none !important; }
+
+.container { width: 100%; max-width: 600px; padding: 20px; box-sizing: border-box; }
+
+.main-header { text-align: center; margin-bottom: 30px; }
+.main-header h1 { font-size: 24px; font-weight: 700; margin-bottom: 15px; }
+.main-header h1 span { color: var(--toss-blue); font-size: 14px; vertical-align: top; }
+
+/* 토스 스타일 배너 */
+.toss-banner {
+    display: flex; align-items: center; background: #fff; padding: 15px;
+    border-radius: 16px; text-decoration: none; color: inherit; margin-top: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
+.toss-banner-icon { font-size: 20px; margin-right: 12px; }
+.toss-banner-content { flex: 1; text-align: left; }
+.toss-banner-title { display: block; font-size: 14px; font-weight: 600; }
+.toss-banner-desc { font-size: 12px; color: var(--toss-text-sub); }
 
-.ad-icon { font-size: 36px; margin-bottom: 10px; }
-.ad-text { font-size: 14px; color: #4e5968; margin-bottom: 20px; }
+.fire-formula-card { background: var(--white); padding: 20px; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+.formula-main { font-size: 18px; font-weight: 700; color: var(--toss-blue); margin: 10px 0; }
 
-.coupang-btn {
-  display: block;
-  background: #3182f6;
-  color: white;
-  text-decoration: none;
-  padding: 14px;
-  border-radius: 12px;
-  font-weight: 700;
-  margin-bottom: 12px;
-}
+.card { background: var(--white); border-radius: 24px; padding: 28px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
+.section-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
 
-.countdown { font-size: 13px; color: #8b95a1; }
-.affiliate-notice { font-size: 12px; color: #8b95a1; text-align: center; margin-top: 8px; }
+input { width: 100%; padding: 16px; border: 1px solid #e5e8eb; border-radius: 12px; background: #f9fafb; font-size: 16px; box-sizing: border-box; }
+input:focus { outline: none; border-color: var(--toss-blue); background: #fff; }
 
-/* 결과창 스타일 (예시) */
-#resultArea {
-  margin-top: 30px;
-  padding: 20px;
-  background: #fff;
-  border-radius: 15px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-}
+.btn-calculate { width: 100%; padding: 18px; border: none; border-radius: 16px; background: var(--toss-blue); color: #fff; font-size: 18px; font-weight: 700; cursor: pointer; margin-top: 20px; }
+
+/* 광고 모달 */
+.ad-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+.ad-box { background: white; padding: 30px; border-radius: 24px; text-align: center; width: 85%; max-width: 320px; }
+.coupang-btn { display: block; background: var(--toss-blue); color: white; padding: 15px; border-radius: 12px; text-decoration: none; font-weight: 700; margin: 15px 0; }
+
+/* 테이블 및 결과 */
+.table-container { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th, td { padding: 12px; border-bottom: 1px solid #f2f4f6; text-align: right; }
+th { color: var(--toss-text-sub); }
