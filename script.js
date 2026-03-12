@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
         runSimulation();
     });
 
-    function runSimulation() {
+   function runSimulation() {
         const val = (id) => parseFloat(document.getElementById(id).value) || 0;
         
         const initialAsset = val("assetTotal");
@@ -36,11 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const expInf = val("expenseInflation") / 100;
         const retS = val("retireSelf"), retP = val("retirePartner");
         const ageS = val("ageSelf"), ageP = val("agePartner");
-        
-        // 추가 변수
-        const childCount = val("childCount");
-        const childExitAge = val("childExitAge");
-        const childExpense = val("childExpense");
+        const childCount = val("childCount"), childExitAge = val("childExitAge"), childExpense = val("childExpense");
         const pensionYearly = val("pensionMonthly") * 12;
 
         let asset = initialAsset;
@@ -49,23 +45,20 @@ document.addEventListener("DOMContentLoaded", () => {
         
         let labels = [], assetData = [], targetData = [], incData = [], expData = [];
         let fireAge = null;
+        let bankruptAge = null; // 파산 나이 변수 추가
 
         for (let i = 0; i <= (100 - ageS); i++) {
             let curAgeS = ageS + i;
             let curAgeP = ageP + i;
 
-            // 1. 수입 계산 (근로소득 + 국민연금)
+            // 1. 수입 계산
             let curInc = 0;
             if (curAgeS < retS) curInc += incomeS * Math.pow(1 + incInf, i);
             if (curAgeP < retP) curInc += incomeP * Math.pow(1 + incInf, i);
-            
-            // 국민연금: 65세부터 수령 (물가상승률만큼 연금액도 보전된다고 가정)
             if (curAgeS >= 65) curInc += pensionYearly * Math.pow(1 + expInf, i);
             
-            // 2. 지출 계산 (생활비 + 자녀 양육비)
+            // 2. 지출 계산
             let curExp = expenseBase * Math.pow(1 + expInf, i);
-            
-            // 자녀 양육비: 본인 나이가 독립 나이보다 적을 때만 합산
             if (curAgeS < childExitAge) {
                 curExp += (childCount * childExpense) * Math.pow(1 + expInf, i);
             }
@@ -73,8 +66,12 @@ document.addEventListener("DOMContentLoaded", () => {
             // 3. 자산 갱신
             asset = (asset * (1 + rate)) + curInc - curExp;
 
+            // 4. 상태 판정
             let target = curExp * 25;
             if (fireAge === null && asset >= target && asset > 0) fireAge = curAgeS;
+            
+            // 핵심: 자산이 0 미만으로 떨어지는 첫 순간을 기록
+            if (bankruptAge === null && asset < 0) bankruptAge = curAgeS;
 
             labels.push(curAgeS + "세");
             assetData.push(Math.round(asset));
@@ -86,11 +83,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 <tr>
                     <td>${curAgeS}세</td><td>${curAgeP}세</td>
                     <td style="color:${asset < 0 ? '#f04452' : 'inherit'}">${Math.round(asset).toLocaleString()}</td>
-                    <td style="color:#3182f6;">${Math.round(curInc).toLocaleString()}</td>
+                    <td>${Math.round(curInc).toLocaleString()}</td>
                     <td>${Math.round(curExp).toLocaleString()}</td>
                 </tr>
             `);
-            if (asset < -300000) break;
+
+            // 자산이 너무 크게 마이너스면 루프 종료 (성능 최적화)
+            if (asset < -500000) break;
         }
 
         resultArea.classList.remove("hidden");
@@ -98,16 +97,25 @@ document.addEventListener("DOMContentLoaded", () => {
         const headline = document.getElementById("resultHeadline");
         const summary = document.getElementById("summaryText");
 
-        if (fireAge) {
+        // 출력 로직 수정
+        if (bankruptAge !== null && (fireAge === null || bankruptAge < fireAge)) {
+            // 파산 케이스 (파이어 전 혹은 파이어 못하고 파산할 때)
+            headline.innerHTML = `⚠️ ${bankruptAge}세에 자산이 고갈될 것으로 보입니다`;
+            headline.style.color = "#f04452"; // 빨간색 강조
+            summary.innerHTML = `
+                현재 지출 및 양육비 규모가 자산 성장 속도보다 빠릅니다.<br>
+                <strong>${bankruptAge}세</strong> 무렵 순자산이 마이너스로 전환될 가능성이 높으므로,<br>
+                지출을 줄이거나 투자 수익률을 높이는 전략이 필요합니다.
+            `;
+        } else if (fireAge) {
+            // 성공 케이스
             headline.innerHTML = `💡 ${fireAge}세에 파이어 가능합니다`;
+            headline.style.color = "#191f28";
             summary.innerHTML = `
                 현재 순자산 ${initialAsset.toLocaleString()}만 원과 기본 지출 ${expenseBase.toLocaleString()}만 원 기준<br>
-                자녀 ${childCount}명 양육(${childExitAge}세 독립) 및 65세 국민연금 수령 반영 시<br>
-                연간 투자 수익률 ${(rate*100).toFixed(1)}% 하에 <strong>${fireAge}세</strong>에 경제적 자립이 가능합니다.
+                자녀 ${childCount}명 양육 및 65세 국민연금 수령을 모두 반영했을 때,<br>
+                <strong>${fireAge}세</strong>에 경제적 자립이 가능한 것으로 분석되었습니다.
             `;
-        } else {
-            headline.innerHTML = `⚠️ 자산 관리가 필요합니다`;
-            summary.innerHTML = `현재 지출 및 양육비 규모 대비 자산 증식이 부족합니다. 지출 조정이 필요합니다.`;
         }
 
         renderCharts(labels, assetData, targetData, incData, expData);
