@@ -3,7 +3,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const adModal = document.getElementById("adModal");
     const coupangLink = document.getElementById("coupangLink");
     const finalRunBtn = document.getElementById("finalRunBtn");
-    const verifyMsg = document.getElementById("verifyMsg");
     const resultArea = document.getElementById("resultArea");
     
     let assetChart = null, flowChart = null;
@@ -11,12 +10,11 @@ document.addEventListener("DOMContentLoaded", () => {
     btn.addEventListener("click", () => {
         adModal.classList.remove("hidden");
         finalRunBtn.classList.add("hidden");
-        verifyMsg.innerText = "방문 확인 대기 중...";
     });
 
     coupangLink.addEventListener("click", () => {
         setTimeout(() => {
-            verifyMsg.innerText = "방문 확인 완료! ✅";
+            document.getElementById("verifyMsg").innerText = "방문 확인 완료! ✅";
             finalRunBtn.classList.remove("hidden");
             coupangLink.style.display = "none";
         }, 1500);
@@ -31,16 +29,19 @@ document.addEventListener("DOMContentLoaded", () => {
         const val = (id) => parseFloat(document.getElementById(id).value) || 0;
         
         const initialAsset = val("assetTotal");
-        const incomeS = val("incomeSelf");
-        const incomeP = val("incomePartner");
+        const incomeS = val("incomeSelf"), incomeP = val("incomePartner");
         const expenseBase = val("expenseTotal");
         const rate = val("interestRate") / 100;
-        const incInf = val("incomeInflation") / 100; // 소득 상승률
-        const expInf = val("expenseInflation") / 100; // 물가 상승률
-        const retS = val("retireSelf");
-        const retP = val("retirePartner");
-        const ageS = val("ageSelf");
-        const ageP = val("agePartner");
+        const incInf = val("incomeInflation") / 100;
+        const expInf = val("expenseInflation") / 100;
+        const retS = val("retireSelf"), retP = val("retirePartner");
+        const ageS = val("ageSelf"), ageP = val("agePartner");
+        
+        // 추가 변수
+        const childCount = val("childCount");
+        const childExitAge = val("childExitAge");
+        const childExpense = val("childExpense");
+        const pensionYearly = val("pensionMonthly") * 12;
 
         let asset = initialAsset;
         const tableBody = document.querySelector("#resultTable tbody");
@@ -49,20 +50,27 @@ document.addEventListener("DOMContentLoaded", () => {
         let labels = [], assetData = [], targetData = [], incData = [], expData = [];
         let fireAge = null;
 
-        // 시뮬레이션 루프 (100세까지)
         for (let i = 0; i <= (100 - ageS); i++) {
             let curAgeS = ageS + i;
             let curAgeP = ageP + i;
 
-            // 핵심 수정: 본인과 배우자 각각 소득 상승률을 복리로 적용
-            let curIncS = (curAgeS < retS) ? (incomeS * Math.pow(1 + incInf, i)) : 0;
-            let curIncP = (curAgeP < retP) ? (incomeP * Math.pow(1 + incInf, i)) : 0;
-            let curInc = curIncS + curIncP;
+            // 1. 수입 계산 (근로소득 + 국민연금)
+            let curInc = 0;
+            if (curAgeS < retS) curInc += incomeS * Math.pow(1 + incInf, i);
+            if (curAgeP < retP) curInc += incomeP * Math.pow(1 + incInf, i);
             
-            // 지출도 물가상승률에 따라 복리 증가
+            // 국민연금: 65세부터 수령 (물가상승률만큼 연금액도 보전된다고 가정)
+            if (curAgeS >= 65) curInc += pensionYearly * Math.pow(1 + expInf, i);
+            
+            // 2. 지출 계산 (생활비 + 자녀 양육비)
             let curExp = expenseBase * Math.pow(1 + expInf, i);
             
-            // 자산 갱신: (기존자산 * 투자수익) + 현재소득 - 현재지출
+            // 자녀 양육비: 본인 나이가 독립 나이보다 적을 때만 합산
+            if (curAgeS < childExitAge) {
+                curExp += (childCount * childExpense) * Math.pow(1 + expInf, i);
+            }
+            
+            // 3. 자산 갱신
             asset = (asset * (1 + rate)) + curInc - curExp;
 
             let target = curExp * 25;
@@ -74,30 +82,32 @@ document.addEventListener("DOMContentLoaded", () => {
             incData.push(Math.round(curInc));
             expData.push(Math.round(curExp));
 
-            // 표에 한 줄씩 추가
             tableBody.insertAdjacentHTML('beforeend', `
                 <tr>
-                    <td>${curAgeS}세</td>
-                    <td>${curAgeP}세</td>
+                    <td>${curAgeS}세</td><td>${curAgeP}세</td>
                     <td style="color:${asset < 0 ? '#f04452' : 'inherit'}">${Math.round(asset).toLocaleString()}</td>
-                    <td style="font-weight:600; color:#3182f6;">${Math.round(curInc).toLocaleString()}</td>
+                    <td style="color:#3182f6;">${Math.round(curInc).toLocaleString()}</td>
                     <td>${Math.round(curExp).toLocaleString()}</td>
                 </tr>
             `);
-            if (asset < -200000) break;
+            if (asset < -300000) break;
         }
 
         resultArea.classList.remove("hidden");
         
-        // 결과 문구 업데이트
         const headline = document.getElementById("resultHeadline");
         const summary = document.getElementById("summaryText");
+
         if (fireAge) {
             headline.innerHTML = `💡 ${fireAge}세에 파이어 가능합니다`;
-            summary.innerHTML = `현재 순자산 ${initialAsset.toLocaleString()}만 원과 연간 지출 ${expenseBase.toLocaleString()}만 원 기준<br>연간 투자 수익률 ${(rate*100).toFixed(1)}%, <strong>소득 상승률 ${(incInf*100).toFixed(1)}%</strong> 반영 시<br>매년 자산 증가 추세에 따라 <strong>${fireAge}세</strong>에 경제적 자립이 가능합니다.`;
+            summary.innerHTML = `
+                현재 순자산 ${initialAsset.toLocaleString()}만 원과 기본 지출 ${expenseBase.toLocaleString()}만 원 기준<br>
+                자녀 ${childCount}명 양육(${childExitAge}세 독립) 및 65세 국민연금 수령 반영 시<br>
+                연간 투자 수익률 ${(rate*100).toFixed(1)}% 하에 <strong>${fireAge}세</strong>에 경제적 자립이 가능합니다.
+            `;
         } else {
             headline.innerHTML = `⚠️ 자산 관리가 필요합니다`;
-            summary.innerHTML = `현재 조건으로는 FIRE 달성이 어렵습니다. 지출을 줄이거나 소득 상승률을 높여보세요.`;
+            summary.innerHTML = `현재 지출 및 양육비 규모 대비 자산 증식이 부족합니다. 지출 조정이 필요합니다.`;
         }
 
         renderCharts(labels, assetData, targetData, incData, expData);
@@ -126,15 +136,11 @@ document.addEventListener("DOMContentLoaded", () => {
             data: {
                 labels: labels,
                 datasets: [
-                    { label: '연 소득', data: incData, backgroundColor: 'rgba(49,130,246,0.7)' },
-                    { label: '연 지출', data: expData, backgroundColor: 'rgba(240,68,82,0.4)' }
+                    { label: '연 수입(+연금)', data: incData, backgroundColor: 'rgba(49,130,246,0.7)' },
+                    { label: '연 지출(양육비 포함)', data: expData, backgroundColor: 'rgba(240,68,82,0.4)' }
                 ]
             },
-            options: { 
-                responsive: true, 
-                maintainAspectRatio: false,
-                scales: { y: { beginAtZero: false } } // 변화 폭이 더 잘 보이게 설정
-            }
+            options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: false } } }
         });
     }
 });
