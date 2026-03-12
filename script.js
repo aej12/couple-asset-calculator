@@ -1,176 +1,121 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const btn = document.getElementById("mainBtn");
+  const mainBtn = document.getElementById("mainBtn");
   let assetChart = null;
   let expenseChart = null;
 
-  // 1. 방문자 통계 로직 (localStorage 활용 가상 통계)
-  const initVisitorStats = () => {
-    let today = parseInt(localStorage.getItem('fire_today_visit') || "0");
-    let total = parseInt(localStorage.getItem('fire_total_visit') || "1240"); // 기본값 1240
-
-    // 오늘 첫 방문이면 오늘 카운트 초기화 (간단한 구현을 위해 세션 기준)
-    if(!sessionStorage.getItem('visited')) {
-      today++;
-      total++;
-      sessionStorage.setItem('visited', 'true');
-      localStorage.setItem('fire_today_visit', today);
-      localStorage.setItem('fire_total_visit', total);
+  // 1. 방문자 통계 (시뮬레이션)
+  const setVisitorStats = () => {
+    let today = localStorage.getItem('fire_today') || Math.floor(Math.random() * 50) + 100;
+    let total = localStorage.getItem('fire_total') || 3421;
+    if(!sessionStorage.getItem('v_inc')) {
+      today = Number(today) + 1;
+      total = Number(total) + 1;
+      localStorage.setItem('fire_today', today);
+      localStorage.setItem('fire_total', total);
+      sessionStorage.setItem('v_inc', '1');
     }
-
-    document.getElementById('todayCount').innerText = today.toLocaleString();
-    document.getElementById('totalCount').innerText = total.toLocaleString();
+    document.getElementById('todayCount').innerText = Number(today).toLocaleString();
+    document.getElementById('totalCount').innerText = Number(total).toLocaleString();
   };
-  initVisitorStats();
+  setVisitorStats();
 
-  // 🌟 핵심 기능: '만원' 단위를 'X억 X000' 형태로 예쁘게 변환하는 함수 (유지)
+  // 2. 억 단위 한글 변환
   const formatKrw = (num) => {
     if (num === 0) return "0";
-    let isNegative = num < 0;
     let absN = Math.abs(Math.round(num));
-    let result = "";
     if (absN >= 10000) {
       let uk = Math.floor(absN / 10000);
       let man = absN % 10000;
-      result = `${uk}억`;
-      if (man > 0) result += ` ${man.toLocaleString()}`;
-    } else {
-      result = `${absN.toLocaleString()}`;
+      return num < 0 ? `-${uk}억 ${man.toLocaleString()}` : `${uk}억 ${man.toLocaleString()}`;
     }
-    return isNegative ? `-${result}` : result;
+    return num.toLocaleString();
   };
 
-  // 2. 계산하기 클릭 시 광고 및 대기 로직
-  btn.addEventListener("click", () => {
-    // 쿠팡 파트너스 링크 열기
+  // 3. 🌟 버튼 클릭 로직 (가장 중요)
+  mainBtn.addEventListener("click", () => {
+    // 1. 쿠팡 열기
     window.open("https://link.coupang.com/a/d2Gw7t", "_blank");
 
-    // 버튼 상태 변경
-    btn.disabled = true;
-    let seconds = 5;
-    btn.innerText = `분석 중... (${seconds}초)`;
+    // 2. 버튼 상태 변경
+    mainBtn.disabled = true;
+    let count = 5;
+    mainBtn.innerText = `분석 중... ${count}초`;
 
+    // 3. 타이머 시작
     const timer = setInterval(() => {
-      seconds--;
-      if (seconds > 0) {
-        btn.innerText = `분석 중... (${seconds}초)`;
+      count--;
+      if (count > 0) {
+        mainBtn.innerText = `분석 중... ${count}초`;
       } else {
         clearInterval(timer);
-        btn.disabled = false;
-        btn.innerText = "시뮬레이션 시작";
-        // 5초 대기 완료 후 실제 계산 로직 실행
+        mainBtn.disabled = false;
+        mainBtn.innerText = "분석 완료 (결과보기)";
+        // 버튼 누르면 바로 실행되도록 연결
         runSimulation();
       }
     }, 1000);
   });
 
-  // 3. 실제 계산 및 결과 출력 로직 (기존 로직 그대로)
   function runSimulation() {
     const val = (id) => parseFloat(document.getElementById(id).value) || 0;
-
     const data = {
       asset: val("assetTotal"), incS: val("incomeSelf"), incP: val("incomePartner"),
-      exp: val("expenseTotal"), rate: val("interestRate") / 100,
-      incInf: val("incomeInflation") / 100, expInf: val("expenseInflation") / 100,
+      exp: val("expenseTotal"), rate: val("interestRate")/100,
+      expInf: val("expenseInflation")/100, ageS: val("ageSelf"), ageP: val("agePartner"),
       retS: val("retireSelf"), retP: val("retirePartner"),
-      ageS: val("ageSelf"), ageP: val("agePartner"),
       childC: val("childCount"), childY: val("childYears"), childE: val("childExpense")
     };
 
     const tableBody = document.querySelector("#resultTable tbody");
     tableBody.innerHTML = "";
-    let labels = [], assetNormalData = [], assetFIREData = [];
-    let incomeData = [], expBaseData = [], expChildData = [];
-
-    let isFIRE = false;
-    let fireAge = null;
-    let assetNormal = data.asset;
-    let assetFIRE = data.asset;
+    let labels = [], assetN = [], assetF = [], incD = [], expD = [];
+    let isFIRE = false, fireAge = null, aN = data.asset, aF = data.asset;
 
     for (let i = 0; i <= (100 - data.ageS); i++) {
-      const curAgeS = data.ageS + i;
-      const curAgeP = data.ageP + i;
-      const curIncS = curAgeS < data.retS ? data.incS * Math.pow(1 + data.incInf, i) : 0;
-      const curIncP = curAgeP < data.retP ? data.incP * Math.pow(1 + data.incInf, i) : 0;
-      const incNormal = curIncS + curIncP;
-      const incFIRE = isFIRE ? 0 : incNormal;
-      const baseExp = data.exp * Math.pow(1 + data.expInf, i);
-      const childExp = (data.childC > 0 && i < data.childY) ? (data.childC * data.childE * Math.pow(1 + data.expInf, i)) : 0;
-      const totalExp = baseExp + childExp;
+      let curAgeS = data.ageS + i;
+      let curAgeP = data.ageP + i;
+      let curInc = (curAgeS < data.retS ? data.incS * Math.pow(1.03, i) : 0) + (curAgeP < data.retP ? data.incP * Math.pow(1.03, i) : 0);
+      let totalExp = (data.exp * Math.pow(1 + data.expInf, i)) + (i < data.childY ? data.childC * data.childE : 0);
 
-      assetNormal = assetNormal + (assetNormal * data.rate) + incNormal - totalExp;
-      assetFIRE = assetFIRE + (assetFIRE * data.rate) + incFIRE - totalExp;
+      aN = aN * (1 + data.rate) + curInc - totalExp;
+      aF = aF * (1 + data.rate) + (isFIRE ? 0 : curInc) - totalExp;
 
-      if (!isFIRE && assetNormal >= totalExp * 25 && assetNormal > 0) {
-        isFIRE = true;
-        fireAge = curAgeS;
-      }
+      if (!isFIRE && aN >= totalExp * 25 && aN > 0) { isFIRE = true; fireAge = curAgeS; }
 
       labels.push(`${curAgeS}세`);
-      assetNormalData.push(assetNormal);
-      assetFIREData.push(assetFIRE);
-      incomeData.push(incNormal);
-      expBaseData.push(baseExp);
-      expChildData.push(childExp);
+      assetN.push(aN); assetF.push(aF); incD.push(curInc); expD.push(totalExp);
 
-      tableBody.insertAdjacentHTML("beforeend", `<tr>
-        <td>${curAgeS}세</td>
-        <td style="color:${assetNormal < 0 ? '#f04452' : '#333d4b'}">${formatKrw(assetNormal)}</td>
-        <td style="color:${assetFIRE < 0 ? '#f04452' : '#00c64b'}">${formatKrw(assetFIRE)}</td>
-        <td>${formatKrw(incNormal)}</td>
-        <td>${formatKrw(totalExp)}</td>
-      </tr>`);
+      tableBody.insertAdjacentHTML("beforeend", `<tr><td>${curAgeS}세</td><td>${formatKrw(aN)}</td><td>${formatKrw(aF)}</td><td>${formatKrw(curInc)}</td><td>${formatKrw(totalExp)}</td></tr>`);
     }
 
-    // 결과 UI 업데이트
     document.getElementById("resultArea").classList.remove("hidden");
-    const headline = document.getElementById("resultHeadline");
-    const summary = document.getElementById("summaryText");
-
-    if (fireAge) {
-      headline.innerText = `${fireAge}세에 파이어(FIRE) 달성 가능!`;
-      headline.style.color = "#00c64b";
-      summary.innerHTML = `<strong>목표 연령: ${fireAge}세</strong><br>파이어 시점부터 근로소득이 없어도 자산 수익만으로 생활이 가능합니다.`;
-    } else {
-      headline.innerText = `자산 고갈 위험이 있습니다.`;
-      headline.style.color = "#f04452";
-      summary.innerHTML = `지출을 줄이거나 투자 수익률을 높여보세요.`;
-    }
-
-    renderCharts(labels, assetNormalData, assetFIREData, incomeData, expBaseData, expChildData);
-
-    setTimeout(() => {
-      window.scrollTo({ top: document.getElementById("resultArea").offsetTop - 20, behavior: "smooth" });
-    }, 100);
+    document.getElementById("resultHeadline").innerText = fireAge ? `${fireAge}세 파이어 가능!` : "분석 결과";
+    document.getElementById("summaryText").innerHTML = fireAge ? `<strong>${fireAge}세</strong>에 경제적 자유를 얻을 수 있습니다.` : "현재 설정으로는 자산이 부족할 수 있습니다.";
+    
+    renderCharts(labels, assetN, assetF, incD, expD);
+    window.scrollTo({ top: document.getElementById("resultArea").offsetTop - 20, behavior: "smooth" });
   }
 
-  // 4. 차트 렌더링 함수 (기존 로직 유지)
-  function renderCharts(labels, assetNormalData, assetFIREData, incomeData, expBaseData, expChildData) {
-    const yAxisFormat = { callback: (val) => formatKrw(val) };
-    const tooltipFormat = { callbacks: { label: (c) => `${c.dataset.label}: ${formatKrw(c.raw)}` } };
+  function renderCharts(labels, assetN, assetF, incD, expD) {
+    const tip = { callbacks: { label: (c) => `${c.dataset.label}: ${formatKrw(c.raw)}` } };
+    const ySc = { ticks: { callback: (v) => formatKrw(v) } };
 
     if (assetChart) assetChart.destroy();
-    assetChart = new Chart(document.getElementById("assetChart").getContext("2d"), {
-      data: {
-        labels: labels,
-        datasets: [
-          { type: 'line', label: '총 자산 (일반)', data: assetNormalData, borderColor: '#8b95a1', borderDash: [5,5], tension: 0.3 },
-          { type: 'line', label: '총 자산 (FIRE)', data: assetFIREData, borderColor: '#3182f6', backgroundColor: 'rgba(49,130,246,0.1)', borderWidth: 3, fill: true, tension: 0.3 }
-        ]
-      },
-      options: { responsive: true, maintainAspectRatio: false, plugins: { tooltip: tooltipFormat }, scales: { y: { ticks: yAxisFormat } } }
+    assetChart = new Chart(document.getElementById("assetChart"), {
+      data: { labels: labels, datasets: [
+        { type: 'line', label: '일반 자산', data: assetN, borderColor: '#b0b8c1', borderWidth: 1, borderDash: [5,5] },
+        { type: 'line', label: 'FIRE 자산', data: assetF, borderColor: '#3182f6', borderWidth: 3, fill: true, backgroundColor: 'rgba(49,130,246,0.1)' }
+      ]},
+      options: { responsive: true, maintainAspectRatio: false, plugins: { tooltip: tip }, scales: { y: ySc } }
     });
 
     if (expenseChart) expenseChart.destroy();
-    expenseChart = new Chart(document.getElementById("expenseChart").getContext("2d"), {
-      data: {
-        labels: labels,
-        datasets: [
-          { type: 'line', label: '연 수입', data: incomeData, borderColor: '#00c64b', tension: 0.3 },
-          { type: 'bar', label: '기본 지출', data: expBaseData, backgroundColor: '#f04452', stacked: true },
-          { type: 'bar', label: '자녀 지출', data: expChildData, backgroundColor: '#ffb020', stacked: true }
-        ]
-      },
-      options: { responsive: true, maintainAspectRatio: false, plugins: { tooltip: tooltipFormat }, scales: { y: { stacked: true, ticks: yAxisFormat }, x: { stacked: true } } }
+    expenseChart = new Chart(document.getElementById("expenseChart"), {
+      data: { labels: labels, datasets: [
+        { type: 'line', label: '연 수입', data: incD, borderColor: '#00c64b', borderWidth: 2 },
+        { type: 'bar', label: '연 지출', data: expD, backgroundColor: '#f04452' }
+      ]},
+      options: { responsive: true, maintainAspectRatio: false, plugins: { tooltip: tip }, scales: { y: ySc } }
     });
   }
 });
