@@ -18,12 +18,13 @@
       <p class="formula-main">순자산이 연간 지출의 25배가 되면,<br>자산 수익만으로 생활이 가능해집니다.</p>
     </div>
 
-    <a href="https://blog.naver.com/dowls027" target="_blank" class="blog-banner">
-      <span class="blog-icon">💡</span>
-      <div class="blog-text">
-        <strong>더 자세한 경제정보는 블로그 참조</strong>
-        <span>https://blog.naver.com/dowls027</span>
+    <a href="https://blog.naver.com/dowls027" target="_blank" class="toss-banner">
+      <div class="toss-banner-icon">💡</div>
+      <div class="toss-banner-content">
+        <span class="toss-banner-title">더 자세한 경제정보는 블로그 참조</span>
+        <span class="toss-banner-desc">blog.naver.com/dowls027</span>
       </div>
+      <div class="toss-banner-arrow">〉</div>
     </a>
   </header>
 
@@ -32,7 +33,7 @@
       <h2 class="section-title">자산 및 수입</h2>
       <div class="form-group">
         <label>현재 순자산 합계 (만원)
-          <span class="tooltip">현금, 주식, 채권, 퇴직금 포함한 순자산 (실거주용 부동산은 제외)</span>
+          <span class="tooltip">현금, 주식, 채권, 퇴직금을 포함한 순자산 (실거주용 부동산 제외)</span>
           <input type="number" id="assetTotal" value="10000">
         </label>
       </div>
@@ -75,7 +76,7 @@
       <div class="grid-2">
         <label>소득 상승률 (%) <input type="number" id="incomeInflation" value="3" step="0.1"></label>
         <label>지출 상승률 (%) 
-          <span class="tooltip">물가상승률을 포함해야 합니다.</span>
+          <span class="tooltip">물가상승률을 반드시 포함하여 작성해주세요.</span>
           <input type="number" id="expenseInflation" value="2.5" step="0.1">
         </label>
       </div>
@@ -107,13 +108,17 @@
     <section class="card chart-card">
       <h3 class="card-subtitle">자산 및 소득 추이 (FIRE 비교)</h3>
       <p class="chart-desc">파이어 달성 시점부터 근로소득이 0원이 되었을 때의 자산 변화를 비교합니다.</p>
-      <canvas id="assetChart"></canvas>
+      <div class="chart-wrapper">
+        <canvas id="assetChart"></canvas>
+      </div>
     </section>
 
     <section class="card chart-card">
       <h3 class="card-subtitle">지출 증가 및 수입 흐름</h3>
       <p class="chart-desc">기본 생활비와 자녀 지출의 변동, 그리고 연 수입을 비교합니다.</p>
-      <canvas id="expenseChart"></canvas>
+      <div class="chart-wrapper">
+        <canvas id="expenseChart"></canvas>
+      </div>
     </section>
 
     <section class="card table-card">
@@ -122,7 +127,7 @@
         <table id="resultTable">
           <thead>
             <tr>
-              <th>나이(본인)</th><th>총자산(일반)</th><th>총자산(파이어시)</th><th>연 수입(일반)</th><th>연 지출(총합)</th>
+              <th>나이(본인)</th><th>총자산(일반)</th><th>총자산(파이어시)</th><th>연 수입</th><th>연 지출(총합)</th>
             </tr>
           </thead>
           <tbody></tbody>
@@ -132,12 +137,13 @@
   </div>
 
   <footer class="main-footer">
-    <a href="https://blog.naver.com/dowls027" target="_blank" class="blog-banner">
-      <span class="blog-icon">📈</span>
-      <div class="blog-text">
-        <strong>더 자세한 경제정보는 블로그 참조</strong>
-        <span>https://blog.naver.com/dowls027</span>
+    <a href="https://blog.naver.com/dowls027" target="_blank" class="toss-banner">
+      <div class="toss-banner-icon">📈</div>
+      <div class="toss-banner-content">
+        <span class="toss-banner-title">더 자세한 경제정보는 블로그 참조</span>
+        <span class="toss-banner-desc">blog.naver.com/dowls027</span>
       </div>
+      <div class="toss-banner-arrow">〉</div>
     </a>
   </footer>
 </div>
