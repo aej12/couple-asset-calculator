@@ -17,7 +17,7 @@ body {
 .container { width: 100%; max-width: 550px; padding: 20px; box-sizing: border-box; }
 .hidden { display: none !important; }
 
-/* 헤더 및 배너 */
+/* 헤더 & 배너 */
 .main-header { text-align: center; margin-bottom: 30px; }
 .toss-banner {
     display: flex; align-items: center; background: #fff; padding: 15px;
@@ -28,25 +28,29 @@ body {
 .toss-banner-title { font-size: 14px; font-weight: 700; display: block; }
 .toss-banner-desc { font-size: 12px; color: #8b95a1; }
 
-/* 카드 스타일 */
-.card { background: var(--white); border-radius: 24px; padding: 25px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+/* 카드 & 입력창 */
+.card { background: var(--white); border-radius: 24px; padding: 25px; margin-bottom: 20px; }
 .section-title { font-size: 17px; font-weight: 700; margin-bottom: 15px; }
 .divider { height: 1px; background: #efefef; margin: 20px 0; }
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 12px; }
 
 label { font-size: 13px; color: #4e5968; display: flex; flex-direction: column; gap: 6px; }
-input { padding: 14px; border: 1px solid #e5e8eb; border-radius: 12px; background: #f9fafb; font-size: 15px; }
+input { padding: 14px; border: 1px solid #e5e8eb; border-radius: 12px; background: #f9fafb; font-size: 15px; width: 100%; box-sizing: border-box; }
 
-/* 버튼 및 모달 */
+/* 버튼 & 모달 */
 .btn-calculate { width: 100%; padding: 18px; border: none; border-radius: 16px; background: var(--toss-blue); color: #fff; font-size: 17px; font-weight: 700; cursor: pointer; }
 .ad-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 999; }
 .ad-box { background: #fff; padding: 30px; border-radius: 24px; text-align: center; width: 80%; max-width: 320px; }
 .coupang-btn { display: block; background: #ff9000; color: #fff; padding: 15px; border-radius: 12px; text-decoration: none; font-weight: 700; margin: 15px 0; }
-.final-run-btn { width: 100%; padding: 15px; border: none; border-radius: 12px; background: var(--toss-blue); color: #fff; font-weight: 700; cursor: pointer; animation: pulse 1.5s infinite; }
-@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.8; } }
+.final-run-btn { width: 100%; padding: 15px; border: none; border-radius: 12px; background: var(--toss-blue); color: #fff; font-weight: 700; cursor: pointer; }
 
-/* 차트 및 테이블 */
-.chart-container { height: 300px; margin-top: 10px; }
+/* 결과 텍스트 스타일 (요청 반영) */
+.result-headline { font-size: 22px; font-weight: 700; margin-bottom: 12px; color: #191f28; }
+.summary-text { font-size: 14px; line-height: 1.6; color: #4e5968; border-top: 1px solid #f2f4f6; pt: 15px; }
+
+/* 차트 & 테이블 */
+.chart-container { height: 280px; margin-top: 10px; }
 .table-container { overflow-x: auto; font-size: 12px; }
 table { width: 100%; border-collapse: collapse; }
 th, td { padding: 12px 8px; border-bottom: 1px solid #f2f4f6; text-align: right; }
