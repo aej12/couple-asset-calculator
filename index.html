@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>PRO 커플 파이어 계산기</title>
+  <title>부부 FIRE 시뮬레이터</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -11,12 +11,20 @@
 
 <div class="container">
   <header class="main-header">
-    <h1>경제적 자유 시뮬레이터 <span>PRO</span></h1>
+    <h1>부부 FIRE 시뮬레이터</h1>
+    <p class="subtitle">우리는 몇살에 파이어 할까?</p>
+    
     <div class="fire-formula-card">
-      <p class="formula-title">FIRE 공식 적용</p>
-      <p class="formula-main">$$ \text{Target Asset} = \text{Annual Expense} \times 25 $$</p>
-      <p class="formula-sub">순자산이 연간 지출의 25배가 되면, 자산 수익만으로 생활이 가능해집니다.</p>
+      <p class="formula-main">순자산이 연간 지출의 25배가 되면,<br>자산 수익만으로 생활이 가능해집니다.</p>
     </div>
+
+    <a href="https://blog.naver.com/dowls027" target="_blank" class="blog-banner">
+      <span class="blog-icon">💡</span>
+      <div class="blog-text">
+        <strong>더 자세한 경제정보는 블로그 참조</strong>
+        <span>https://blog.naver.com/dowls027</span>
+      </div>
+    </a>
   </header>
 
   <main class="card input-card">
@@ -24,29 +32,13 @@
       <h2 class="section-title">자산 및 수입</h2>
       <div class="form-group">
         <label>현재 순자산 합계 (만원)
-          <span class="tooltip">현금, 주식, 부동산, 퇴직금 포함</span>
+          <span class="tooltip">현금, 주식, 채권, 퇴직금 포함한 순자산 (실거주용 부동산은 제외)</span>
           <input type="number" id="assetTotal" value="10000">
         </label>
       </div>
       <div class="grid-2">
         <label>본인 연 수입 (만원) <input type="number" id="incomeSelf" value="4500"></label>
         <label>배우자 연 수입 (만원) <input type="number" id="incomePartner" value="3500"></label>
-      </div>
-    </section>
-
-    <div class="divider"></div>
-
-    <section>
-      <h2 class="section-title">지출 및 은퇴 설정</h2>
-      <div class="form-group">
-        <label>연간 생활비 합계 (만원)
-          <span class="tooltip">두 사람의 순수 고정/변동 지출 (자녀 제외)</span>
-          <input type="number" id="expenseTotal" value="3000">
-        </label>
-      </div>
-      <div class="grid-2">
-        <label>본인 은퇴 나이 (만) <input type="number" id="retireSelf" value="55"></label>
-        <label>배우자 은퇴 나이 (만) <input type="number" id="retirePartner" value="55"></label>
       </div>
       <div class="grid-2">
         <label>본인 현재 나이 <input type="number" id="ageSelf" value="30"></label>
@@ -57,16 +49,35 @@
     <div class="divider"></div>
 
     <section>
-      <h2 class="section-title">투자 및 인플레이션</h2>
+      <h2 class="section-title">지출 및 은퇴 설정</h2>
+      <div class="form-group">
+        <label>연간 생활비 합계 (만원)
+          <span class="tooltip">두 사람의 순수 고정/변동 지출 (자녀 비용 제외)</span>
+          <input type="number" id="expenseTotal" value="3000">
+        </label>
+      </div>
+      <div class="grid-2">
+        <label>본인 은퇴 예정 나이 (만) <input type="number" id="retireSelf" value="60"></label>
+        <label>배우자 은퇴 예정 나이 (만) <input type="number" id="retirePartner" value="60"></label>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <section>
+      <h2 class="section-title">투자 및 상승률</h2>
       <div class="form-group">
         <label>연간 투자 수익률 (%)
-          <span class="tooltip">보수적 3~4%, 적극적 7~10%</span>
+          <span class="tooltip">보수적 3~4%, 적극적 7~10% 권장</span>
           <input type="number" id="interestRate" value="5" step="0.1">
         </label>
       </div>
       <div class="grid-2">
         <label>소득 상승률 (%) <input type="number" id="incomeInflation" value="3" step="0.1"></label>
-        <label>물가 상승률 (%) <input type="number" id="expenseInflation" value="2.5" step="0.1"></label>
+        <label>지출 상승률 (%) 
+          <span class="tooltip">물가상승률을 포함해야 합니다.</span>
+          <input type="number" id="expenseInflation" value="2.5" step="0.1">
+        </label>
       </div>
     </section>
 
@@ -94,8 +105,15 @@
     </section>
 
     <section class="card chart-card">
-      <h3 class="card-subtitle">자산 흐름 및 지출 변동</h3>
-      <canvas id="mainChart"></canvas>
+      <h3 class="card-subtitle">자산 및 소득 추이 (FIRE 비교)</h3>
+      <p class="chart-desc">파이어 달성 시점부터 근로소득이 0원이 되었을 때의 자산 변화를 비교합니다.</p>
+      <canvas id="assetChart"></canvas>
+    </section>
+
+    <section class="card chart-card">
+      <h3 class="card-subtitle">지출 증가 및 수입 흐름</h3>
+      <p class="chart-desc">기본 생활비와 자녀 지출의 변동, 그리고 연 수입을 비교합니다.</p>
+      <canvas id="expenseChart"></canvas>
     </section>
 
     <section class="card table-card">
@@ -104,7 +122,7 @@
         <table id="resultTable">
           <thead>
             <tr>
-              <th>본인</th><th>배우자</th><th>순자산</th><th>연 소득</th><th>연 지출</th>
+              <th>나이(본인)</th><th>총자산(일반)</th><th>총자산(파이어시)</th><th>연 수입(일반)</th><th>연 지출(총합)</th>
             </tr>
           </thead>
           <tbody></tbody>
@@ -112,6 +130,16 @@
       </div>
     </section>
   </div>
+
+  <footer class="main-footer">
+    <a href="https://blog.naver.com/dowls027" target="_blank" class="blog-banner">
+      <span class="blog-icon">📈</span>
+      <div class="blog-text">
+        <strong>더 자세한 경제정보는 블로그 참조</strong>
+        <span>https://blog.naver.com/dowls027</span>
+      </div>
+    </a>
+  </footer>
 </div>
 
 <script src="script.js"></script>
