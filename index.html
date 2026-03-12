@@ -33,17 +33,17 @@
       <h2 class="section-title">자산 및 수입</h2>
       <div class="form-group">
         <label>현재 순자산 합계 (만원)
-          <span class="tooltip">현금, 주식, 채권, 퇴직금을 포함한 순자산 (실거주용 부동산 제외)</span>
+          <span class="tooltip">현금, 주식, 채권 포함 (실거주 부동산 제외)</span>
           <input type="number" id="assetTotal" value="10000">
         </label>
       </div>
       <div class="grid-2">
-        <label>본인 연 수입 (만원) <input type="number" id="incomeSelf" value="4500"></label>
-        <label>배우자 연 수입 (만원) <input type="number" id="incomePartner" value="3500"></label>
+        <label>본인 수입(년) <input type="number" id="incomeSelf" value="4500"></label>
+        <label>배우자 수입(년) <input type="number" id="incomePartner" value="3500"></label>
       </div>
       <div class="grid-2">
-        <label>본인 현재 나이 <input type="number" id="ageSelf" value="30"></label>
-        <label>배우자 현재 나이 <input type="number" id="agePartner" value="33"></label>
+        <label>본인 나이 <input type="number" id="ageSelf" value="30"></label>
+        <label>배우자 나이 <input type="number" id="agePartner" value="33"></label>
       </div>
     </section>
 
@@ -53,49 +53,32 @@
       <h2 class="section-title">지출 및 은퇴 설정</h2>
       <div class="form-group">
         <label>연간 생활비 합계 (만원)
-          <span class="tooltip">두 사람의 순수 고정/변동 지출 (자녀 비용 제외)</span>
+          <span class="tooltip">자녀 비용 제외 순수 생활비</span>
           <input type="number" id="expenseTotal" value="3000">
         </label>
       </div>
       <div class="grid-2">
-        <label>본인 은퇴 예정 나이 (만) <input type="number" id="retireSelf" value="60"></label>
-        <label>배우자 은퇴 예정 나이 (만) <input type="number" id="retirePartner" value="60"></label>
+        <label>본인 은퇴 나이 <input type="number" id="retireSelf" value="60"></label>
+        <label>배우자 은퇴 나이 <input type="number" id="retirePartner" value="60"></label>
       </div>
     </section>
 
     <div class="divider"></div>
 
     <section>
-      <h2 class="section-title">투자 및 상승률</h2>
-      <div class="form-group">
-        <label>연간 투자 수익률 (%)
-          <span class="tooltip">보수적 3~4%, 적극적 7~10% 권장</span>
-          <input type="number" id="interestRate" value="5" step="0.1">
-        </label>
+      <h2 class="section-title">성장률 및 자녀</h2>
+      <div class="grid-2">
+        <label>투자 수익률 (%) <input type="number" id="interestRate" value="5" step="0.1"></label>
+        <label>지출 상승률 (%) <input type="number" id="expenseInflation" value="2.5" step="0.1"></label>
       </div>
       <div class="grid-2">
-        <label>소득 상승률 (%) <input type="number" id="incomeInflation" value="3" step="0.1"></label>
-        <label>지출 상승률 (%) 
-          <span class="tooltip">물가상승률을 반드시 포함하여 작성해주세요.</span>
-          <input type="number" id="expenseInflation" value="2.5" step="0.1">
-        </label>
+        <label>자녀 수 <input type="number" id="childCount" value="1"></label>
+        <label>자녀 독립까지(년) <input type="number" id="childYears" value="20"></label>
       </div>
     </section>
 
-    <div class="divider"></div>
-
-    <section>
-      <h2 class="section-title">자녀 계획</h2>
-      <div class="grid-2">
-        <label>자녀 수 (명) <input type="number" id="childCount" value="1"></label>
-        <label>독립까지 남은 기간 (년) <input type="number" id="childYears" value="20"></label>
-      </div>
-      <div class="form-group mt-10">
-        <label>자녀 1인당 연 지출 (만원) <input type="number" id="childExpense" value="600"></label>
-      </div>
-    </section>
-
-    <button type="button" class="btn-calculate">시뮬레이션 시작</button>
+    <div class="ad-notice">계산하기 클릭 시 파트너스 활동의 일환으로 일정액의 수수료를 제공받으며, 5초 후 분석이 시작됩니다.</div>
+    <button type="button" id="mainBtn" class="btn-calculate">시뮬레이션 시작</button>
   </main>
 
   <div id="resultArea" class="hidden">
@@ -106,33 +89,13 @@
     </section>
 
     <section class="card chart-card">
-      <h3 class="card-subtitle">자산 및 소득 추이 (FIRE 비교)</h3>
-      <p class="chart-desc">파이어 달성 시점부터 근로소득이 0원이 되었을 때의 자산 변화를 비교합니다.</p>
-      <div class="chart-wrapper">
-        <canvas id="assetChart"></canvas>
-      </div>
+      <h3 class="card-subtitle">자산 및 소득 추이</h3>
+      <div class="chart-wrapper"><canvas id="assetChart"></canvas></div>
     </section>
 
     <section class="card chart-card">
-      <h3 class="card-subtitle">지출 증가 및 수입 흐름</h3>
-      <p class="chart-desc">기본 생활비와 자녀 지출의 변동, 그리고 연 수입을 비교합니다.</p>
-      <div class="chart-wrapper">
-        <canvas id="expenseChart"></canvas>
-      </div>
-    </section>
-
-    <section class="card table-card">
-      <h3 class="card-subtitle">연도별 상세 데이터</h3>
-      <div class="table-container">
-        <table id="resultTable">
-          <thead>
-            <tr>
-              <th>나이(본인)</th><th>총자산(일반)</th><th>총자산(파이어시)</th><th>연 수입</th><th>연 지출(총합)</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
+      <h3 class="card-subtitle">지출 및 수입 흐름</h3>
+      <div class="chart-wrapper"><canvas id="expenseChart"></canvas></div>
     </section>
   </div>
 
@@ -145,6 +108,18 @@
       </div>
       <div class="toss-banner-arrow">〉</div>
     </a>
+
+    <div class="visitor-card">
+      <div class="visitor-item">
+        <span class="visitor-label">오늘 방문자</span>
+        <span class="visitor-value" id="todayVisit">124</span>
+      </div>
+      <div class="visitor-divider"></div>
+      <div class="visitor-item">
+        <span class="visitor-label">전체 방문자</span>
+        <span class="visitor-value" id="totalVisit">3,852</span>
+      </div>
+    </div>
   </footer>
 </div>
 
