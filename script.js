@@ -7,16 +7,19 @@ document.addEventListener("DOMContentLoaded", () => {
     
     let assetChart = null, flowChart = null;
 
-    // --- 단위 변환 함수 (핵심 추가) ---
+    // --- [수정] 한글 단위 변환 함수: 억 단위가 있으면 반드시 '0억 0000만' 출력 ---
     function formatKRW(val) {
         const num = Math.round(val);
-        if (Math.abs(num) < 10000) return num.toLocaleString() + "만";
-        
-        const eok = Math.floor(Math.abs(num) / 10000);
-        const man = Math.abs(num) % 10000;
+        const absNum = Math.abs(num);
         const sign = num < 0 ? "-" : "";
+
+        if (absNum < 10000) return sign + absNum.toLocaleString() + "만";
+        
+        const eok = Math.floor(absNum / 10000);
+        const man = absNum % 10000;
         
         if (man === 0) return `${sign}${eok}억`;
+        // 1억 500만 원 같은 형식을 위해 만 단위에 콤마 추가
         return `${sign}${eok}억 ${man.toLocaleString()}만`;
     }
 
@@ -88,16 +91,15 @@ document.addEventListener("DOMContentLoaded", () => {
             incData.push(Math.round(curInc));
             expData.push(Math.round(curExp));
 
-            // 표에 단위 변환 적용 (formatKRW)
             tableBody.insertAdjacentHTML('beforeend', `
                 <tr>
                     <td>${curAgeS}세</td><td>${curAgeP}세</td>
-                    <td style="color:${asset < 0 ? '#f04452' : 'inherit'}">${formatKRW(asset)}</td>
+                    <td style="color:${asset < 0 ? '#f04452' : '#333'} font-weight:bold;">${formatKRW(asset)}</td>
                     <td style="color:#3182f6;">${formatKRW(curInc)}</td>
                     <td>${formatKRW(curExp)}</td>
                 </tr>
             `);
-            if (asset < -1000000) break;
+            if (asset < -2000000) break; 
         }
 
         resultArea.classList.remove("hidden");
@@ -105,10 +107,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const headline = document.getElementById("resultHeadline");
         const summary = document.getElementById("summaryText");
 
-        if (bankruptAge !== null) {
-            headline.innerHTML = `⚠️ ${bankruptAge}세에 자산이 고갈될 것으로 보입니다`;
+        if (bankruptAge !== null && (fireAge === null || bankruptAge < fireAge + 5)) {
+            headline.innerHTML = `⚠️ ${bankruptAge}세에 자산이 고갈될 수 있습니다`;
             headline.style.color = "#f04452";
-            summary.innerHTML = `현재 지출 및 양육비 규모가 자산 성장보다 큽니다. <strong>${bankruptAge}세</strong> 무렵 자산이 고갈될 위험이 있으니 계획 수정이 필요합니다.`;
+            summary.innerHTML = `현재 소비 수준이 자산 성장보다 빠릅니다. <strong>${bankruptAge}세</strong> 무렵 고갈 위험이 있으니 점검이 필요합니다.`;
         } else if (fireAge) {
             headline.innerHTML = `💡 ${fireAge}세에 파이어 가능합니다`;
             headline.style.color = "#191f28";
@@ -123,6 +125,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function renderCharts(labels, assetData, targetData, incData, expData) {
+        // 차트 Y축 눈금도 '억' 단위 표기 함수 적용
+        const yLabelFormat = (v) => {
+            if (Math.abs(v) >= 10000) return (v / 10000).toFixed(1) + '억';
+            return v.toLocaleString();
+        };
+
         const ctx1 = document.getElementById('assetChart').getContext('2d');
         if (assetChart) assetChart.destroy();
         assetChart = new Chart(ctx1, {
@@ -135,9 +143,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 ]
             },
             options: { 
-                responsive: true, 
-                maintainAspectRatio: false,
-                scales: { y: { ticks: { callback: (v) => v >= 10000 ? (v/10000).toFixed(1) + '억' : v.toLocaleString() } } }
+                responsive: true, maintainAspectRatio: false,
+                scales: { y: { ticks: { callback: yLabelFormat } } }
             }
         });
 
@@ -153,9 +160,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 ]
             },
             options: { 
-                responsive: true, 
-                maintainAspectRatio: false,
-                scales: { y: { ticks: { callback: (v) => v >= 10000 ? (v/10000).toFixed(1) + '억' : v.toLocaleString() } } }
+                responsive: true, maintainAspectRatio: false,
+                scales: { y: { ticks: { callback: yLabelFormat } } }
             }
         });
     }
