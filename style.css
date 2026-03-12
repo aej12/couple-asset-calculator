@@ -1,6 +1,6 @@
-/* 기존 스타일 유지 및 신규 스타일 추가 */
 :root {
   --toss-blue: #3182f6;
+  --toss-blue-light: rgba(49, 130, 246, 0.1);
   --toss-gray-bg: #f2f4f6;
   --toss-text-main: #333d4b;
   --toss-text-sub: #8b95a1;
@@ -12,45 +12,57 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Pretendard", sans-serif;
   background-color: var(--toss-gray-bg);
   color: var(--toss-text-main);
-  margin: 0; display: flex; justify-content: center;
+  margin: 0; padding: 0;
+  display: flex; justify-content: center;
 }
 
 .container { width: 100%; max-width: 640px; padding: 20px; box-sizing: border-box; }
 
-.card { background: var(--white); border-radius: 24px; padding: 28px; margin-bottom: 20px; box-shadow: 0 2px 14px rgba(0,0,0,0.03); }
-
-/* 🌟 광고 안내 문구 */
-.ad-notice {
-  font-size: 11px; color: var(--toss-text-sub); text-align: center;
-  margin-top: 15px; margin-bottom: 8px; line-height: 1.4; padding: 0 10px;
-}
-
-/* 🌟 버튼 비활성화 상태 스타일 */
-.btn-calculate:disabled {
-  background: #ccd2d9; cursor: not-allowed; transform: none;
-}
+/* 헤더 및 배너 */
+.main-header { text-align: center; margin-bottom: 24px; }
+.main-header h1 { font-size: 26px; font-weight: 800; margin-bottom: 8px; }
+.subtitle { color: var(--toss-blue); font-weight: 600; margin-bottom: 20px; }
 
 .toss-banner {
-  display: flex; align-items: center; padding: 18px;
-  background: #ffffff; border-radius: 18px; text-decoration: none;
+  display: flex; align-items: center; padding: 16px;
+  background: var(--white); border-radius: 18px; text-decoration: none;
   box-shadow: 0 2px 10px rgba(0,0,0,0.04); margin-bottom: 12px;
 }
+.toss-banner-icon { width: 40px; height: 40px; background: var(--toss-blue-light); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 12px; font-size: 20px; }
+.toss-banner-content { flex: 1; text-align: left; }
+.toss-banner-title { font-size: 14px; font-weight: 700; color: #191f28; display: block; }
+.toss-banner-desc { font-size: 12px; color: var(--toss-text-sub); }
 
-/* 🌟 방문자 통계 카드 스타일 */
-.visitor-card {
-  display: flex; background: #ffffff; border-radius: 18px;
-  padding: 16px; margin-top: 20px; justify-content: space-around;
-  align-items: center; border: 1px solid rgba(0,0,0,0.03);
-}
-.visitor-item { display: flex; flex-direction: column; align-items: center; flex: 1; }
-.visitor-label { font-size: 12px; color: var(--toss-text-sub); margin-bottom: 4px; }
-.visitor-value { font-size: 16px; font-weight: 700; color: var(--toss-text-main); }
-.visitor-divider { width: 1px; height: 24px; background: var(--toss-border); }
+/* 카드 공통 */
+.card { background: var(--white); border-radius: 24px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 14px rgba(0,0,0,0.03); }
+.section-title { font-size: 18px; font-weight: 700; margin-bottom: 16px; }
+.divider { height: 1px; background: var(--toss-border); margin: 24px 0; }
 
-/* (중략: 기존 차트 래퍼 및 테이블 스타일 동일하게 유지) */
-.chart-wrapper { position: relative; width: 100%; height: 350px; }
+/* 입력창 */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+label { font-size: 13px; font-weight: 600; display: flex; flex-direction: column; gap: 4px; }
+.tooltip { font-size: 11px; color: var(--toss-text-sub); font-weight: 400; margin-bottom: 4px; }
+input { padding: 14px; border: 1px solid var(--toss-border); border-radius: 12px; background: #f9fafb; font-size: 15px; }
+
+/* 광고 및 버튼 */
+.ad-notice { font-size: 11px; color: var(--toss-text-sub); text-align: center; margin-bottom: 10px; line-height: 1.4; }
+.btn-calculate { width: 100%; padding: 18px; border: none; border-radius: 16px; background: var(--toss-blue); color: #fff; font-size: 17px; font-weight: 700; cursor: pointer; }
+.btn-calculate:disabled { background: #ccd2d9; cursor: not-allowed; }
+
+/* 결과 및 차트 */
 .hidden { display: none; }
-.section-title { font-size: 19px; font-weight: 700; margin-bottom: 20px; }
-.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
-input { width: 100%; padding: 16px; border: 1px solid var(--toss-border); border-radius: 12px; background: #f9fafb; font-size: 16px; box-sizing: border-box;}
-.btn-calculate { width: 100%; padding: 18px; border: none; border-radius: 16px; background: var(--toss-blue); color: #fff; font-size: 18px; font-weight: 700; cursor: pointer; transition: 0.2s;}
+.chart-wrapper { position: relative; width: 100%; height: 350px; margin-top: 10px; }
+.summary-text { background: #f9fafb; padding: 16px; border-radius: 16px; font-size: 14px; line-height: 1.6; text-align: center; }
+
+/* 테이블 */
+.table-container { overflow-x: auto; margin-top: 10px; }
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+th, td { padding: 12px 8px; border-bottom: 1px solid var(--toss-border); text-align: right; }
+th { color: var(--toss-text-sub); text-align: center; }
+
+/* 방문자 통계 */
+.visitor-card { display: flex; background: #fff; border-radius: 18px; padding: 16px; margin-top: 20px; border: 1px solid rgba(0,0,0,0.03); }
+.visitor-item { flex: 1; text-align: center; }
+.visitor-label { font-size: 11px; color: var(--toss-text-sub); display: block; margin-bottom: 2px; }
+.visitor-value { font-size: 15px; font-weight: 700; }
+.visitor-divider { width: 1px; background: var(--toss-border); margin: 0 10px; }
