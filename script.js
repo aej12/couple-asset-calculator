@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let expenseChart = null;
   let isAdClicked = false;
 
-  // 1. 방문자 통계
+  // 1. 방문자 통계 (로컬스토리지 시뮬레이션)
   const updateVisitors = () => {
     let total = parseInt(localStorage.getItem("total_v") || 3852);
     let today = parseInt(localStorage.getItem("today_v") || 124);
@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
   updateVisitors();
 
-  // 2. 억 단위 한글 변환 함수
+  // 2. 억 단위 한글 변환 함수 (핵심 요구사항)
   const formatKrw = (num) => {
     if (num === 0) return "0";
     let isNegative = num < 0;
@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return isNegative ? `-${result}` : result;
   };
 
-  // 3. 버튼 클릭 이벤트 (쿠팡 5초 게이트)
+  // 3. 버튼 클릭 이벤트 (쿠팡 게이트)
   mainBtn.addEventListener("click", () => {
     if (!isAdClicked) {
       window.open("https://link.coupang.com/a/d2Gw7t", "_blank");
@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
       let count = 5;
       mainBtn.disabled = true;
       const timer = setInterval(() => {
-        mainBtn.innerText = `분석 준비 중... ${count}초`;
+        mainBtn.innerText = `데이터 분석 중... ${count}초`;
         count--;
         if (count < 0) {
           clearInterval(timer);
@@ -99,9 +99,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     document.getElementById("resultArea").classList.remove("hidden");
-    document.getElementById("resultHeadline").innerText = fireAge ? `${fireAge}세에 파이어 달성!` : "분석 결과";
+    document.getElementById("resultHeadline").innerText = fireAge ? `${fireAge}세에 파이어 달성!` : "자산 계획 수정 필요";
     document.getElementById("summaryText").innerHTML = fireAge ? `목표 연령 <strong>${fireAge}세</strong>에 경제적 자유가 가능합니다.` : "현재 설정으로는 자산 고갈 위험이 있습니다.";
 
+    // 그래프 렌더링
     renderCharts(labels, assetN, assetF, incD, expB, expC);
     window.scrollTo({ top: document.getElementById("resultArea").offsetTop - 20, behavior: "smooth" });
   }
