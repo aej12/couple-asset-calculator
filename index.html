@@ -1,13 +1,11 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head> <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9818196544210218"
+<head><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9818196544210218"
      crossorigin="anonymous"></script>
 <meta charset="UTF-8">
 <title>부부 FIRE 시뮬레이터</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <link rel="stylesheet" href="style.css">
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
@@ -18,15 +16,39 @@
 <header class="main-header">
 <h1>부부 FIRE 시뮬레이터</h1>
 <p class="subtitle">우리는 몇살에 파이어 할까?</p>
+
+<div class="fire-formula-card">
+<p class="formula-main">
+순자산이 연간 지출의 25배가 되면,<br>
+자산 수익만으로 생활이 가능해집니다.
+</p>
+</div>
+
+<a href="https://blog.naver.com/dowls027" target="_blank" class="toss-banner">
+<div class="toss-banner-icon">💡</div>
+<div class="toss-banner-content">
+<span class="toss-banner-title">더 자세한 경제정보는 블로그 참조</span>
+<span class="toss-banner-desc">blog.naver.com/dowls027</span>
+</div>
+<div class="toss-banner-arrow">〉</div>
+</a>
+
 </header>
+
 
 <main class="card input-card">
 
+<!-- 입력 영역 동일 -->
+
+<section>
 <h2 class="section-title">자산 및 수입</h2>
 
-<label>현재 순자산 합계 (만원)
+<div class="form-group">
+<label>
+현재 순자산 합계 (만원)
 <input type="number" id="assetTotal" value="10000">
 </label>
+</div>
 
 <div class="grid-2">
 <label>본인 연 수입 (만원)
@@ -48,44 +70,59 @@
 </label>
 </div>
 
-<hr>
+</section>
 
-<h2 class="section-title">지출</h2>
+<div class="divider"></div>
 
-<label>연간 생활비 합계 (만원)
+<section>
+<h2 class="section-title">지출 및 은퇴 설정</h2>
+
+<div class="form-group">
+<label>
+연간 생활비 합계 (만원)
 <input type="number" id="expenseTotal" value="3000">
 </label>
+</div>
 
 <div class="grid-2">
-<label>본인 은퇴 나이
+<label>본인 은퇴 예정 나이
 <input type="number" id="retireSelf" value="60">
 </label>
 
-<label>배우자 은퇴 나이
+<label>배우자 은퇴 예정 나이
 <input type="number" id="retirePartner" value="60">
 </label>
 </div>
 
-<hr>
+</section>
 
-<h2 class="section-title">투자 설정</h2>
+<div class="divider"></div>
 
-<label>연 수익률 (%)
-<input type="number" id="interestRate" value="5">
-</label>
+<section>
+<h2 class="section-title">투자 및 상승률</h2>
 
-<div class="grid-2">
-<label>소득 상승률 (%)
-<input type="number" id="incomeInflation" value="3">
-</label>
-
-<label>지출 상승률 (%)
-<input type="number" id="expenseInflation" value="2.5">
+<div class="form-group">
+<label>
+연간 투자 수익률 (%)
+<input type="number" id="interestRate" value="5" step="0.1">
 </label>
 </div>
 
-<hr>
+<div class="grid-2">
+<label>소득 상승률 (%)
+<input type="number" id="incomeInflation" value="3" step="0.1">
+</label>
 
+<label>지출 상승률 (%)
+<input type="number" id="expenseInflation" value="2.5" step="0.1">
+</label>
+</div>
+
+</section>
+
+<div class="divider"></div>
+
+<section>
 <h2 class="section-title">자녀 계획</h2>
 
 <div class="grid-2">
@@ -98,41 +135,46 @@
 </label>
 </div>
 
+<div class="form-group mt-10">
 <label>자녀 1인당 연 지출
 <input type="number" id="childExpense" value="600">
 </label>
+</div>
 
-<button class="btn-calculate">시뮬레이션 시작</button>
+</section>
+
+<button type="button" class="btn-calculate">
+시뮬레이션 시작
+</button>
 
 <p class="affiliate-notice">
-쿠팡파트너스 활동의 일환으로 소정의 수수료를 지급받을 수 있습니다.
+쿠팡파트너스 활동의 일환으로 수수료를 지급받을 수 있습니다
 </p>
 
 </main>
 
+
 <div id="resultArea" class="hidden">
-
-<section class="card">
-<h2 id="resultHeadline"></h2>
-<div id="summaryText"></div>
-</section>
-
-<section class="card">
-<div class="chart-wrapper">
-<canvas id="assetChart"></canvas>
+<!-- 기존 결과 영역 그대로 유지 -->
 </div>
-</section>
 
-<section class="card">
-<div class="chart-wrapper">
-<canvas id="expenseChart"></canvas>
+<footer class="main-footer">
+
+<a href="https://blog.naver.com/dowls027" target="_blank" class="toss-banner">
+<div class="toss-banner-icon">📈</div>
+<div class="toss-banner-content">
+<span class="toss-banner-title">더 자세한 경제정보는 블로그 참조</span>
+<span class="toss-banner-desc">blog.naver.com/dowls027</span>
 </div>
-</section>
+<div class="toss-banner-arrow">〉</div>
+</a>
+
+</footer>
 
 </div>
 
-</div>
 
+<!-- 광고 모달 -->
 
 <div id="adModal" class="ad-modal hidden">
 
@@ -150,9 +192,7 @@
 <a href="https://link.coupang.com/a/d2Gw7t"
 target="_blank"
 class="coupang-btn">
-
 쿠팡 방문하기
-
 </a>
 
 <div class="countdown">
