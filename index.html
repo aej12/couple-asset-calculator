@@ -13,15 +13,15 @@
         <h1>경제적 자유 시뮬레이터 <span>PRO</span></h1>
         <div class="fire-formula-card">
             <p class="formula-title">전통적 FIRE 공식 적용</p>
-    
-            <p class="formula-sub">순자산이 연간 지출의 25배가 되면, 자산 수익만으로 생활이 가능해집니다.</p>
+            <p class="formula-main">$$ \text{Target} = \text{Annual Expense} \times 25 $$</p>
+            <p class="formula-sub">순자산이 연간 지출의 25배가 되면 자립이 가능해집니다.</p>
         </div>
         
         <a href="https://blog.naver.com/dowls027" target="_blank" class="toss-banner">
             <div class="toss-banner-icon">💡</div>
             <div class="toss-banner-content">
-                <span class="toss-banner-title">더 자세한 경제정보는 블로그 참조</span>
-                <span class="toss-banner-desc">blog.naver.com/dowls027</span>
+                <span class="toss-banner-title">더 자세한 재테크 정보</span>
+                <span class="toss-banner-desc">작가 A의 블로그 바로가기</span>
             </div>
             <div class="toss-banner-arrow">〉</div>
         </a>
@@ -29,65 +29,40 @@
 
     <main class="card input-card">
         <section>
-            <h2 class="section-title">자산 및 수입</h2>
+            <h2 class="section-title">기본 정보</h2>
             <div class="form-group">
-                <label>현재 순자산 합계 (만원)
-                    <span class="tooltip">현금, 주식, 부동산, 퇴직금 포함</span>
-                    <input type="number" id="assetTotal" value="10000">
-                </label>
+                <label>현재 순자산 합계 (만원) <input type="number" id="assetTotal" value="10000"></label>
             </div>
             <div class="grid-2">
-                <label>본인 연 수입 (만원) <input type="number" id="incomeSelf" value="4500"></label>
-                <label>배우자 연 수입 (만원) <input type="number" id="incomePartner" value="3500"></label>
+                <label>본인 연 수입 <input type="number" id="incomeSelf" value="4500"></label>
+                <label>배우자 연 수입 <input type="number" id="incomePartner" value="3500"></label>
             </div>
             <div class="grid-2">
-                <label>본인 현재 나이 (만) <input type="number" id="ageSelf" value="30"></label>
-                <label>배우자 현재 나이 (만) <input type="number" id="agePartner" value="33"></label>
+                <label>본인 나이 <input type="number" id="ageSelf" value="30"></label>
+                <label>배우자 나이 <input type="number" id="agePartner" value="33"></label>
             </div>
         </section>
 
         <div class="divider"></div>
 
         <section>
-            <h2 class="section-title">지출 및 은퇴 설정</h2>
+            <h2 class="section-title">은퇴 및 지출</h2>
             <div class="form-group">
-                <label>연간 생활비 합계 (만원)
-                    <span class="tooltip">두 사람의 순수 생활비 (자녀 제외)</span>
-                    <input type="number" id="expenseTotal" value="3000">
-                </label>
+                <label>연간 생활비 합계 (만원) <input type="number" id="expenseTotal" value="3000"></label>
             </div>
             <div class="grid-2">
-                <label>본인 은퇴 나이 <input type="number" id="retireSelf" value="60"></label>
-                <label>배우자 은퇴 나이 <input type="number" id="retirePartner" value="60"></label>
+                <label>본인 은퇴 나이 <input type="number" id="retireSelf" value="55"></label>
+                <label>배우자 은퇴 나이 <input type="number" id="retirePartner" value="55"></label>
             </div>
         </section>
 
         <div class="divider"></div>
 
         <section>
-            <h2 class="section-title">투자 및 인플레이션</h2>
-            <div class="form-group">
-                <label>연간 투자 수익률 (%)
-                    <span class="tooltip">예적금 2-3%, 주식투자 5-10% 보수적 권장</span>
-                    <input type="number" id="interestRate" value="5" step="0.1">
-                </label>
-            </div>
+            <h2 class="section-title">투자 및 변수</h2>
             <div class="grid-2">
-                <label>소득 상승률 (%) <input type="number" id="incomeInflation" value="3" step="0.1"></label>
+                <label>투자 수익률 (%) <input type="number" id="interestRate" value="5" step="0.1"></label>
                 <label>물가 상승률 (%) <input type="number" id="expenseInflation" value="2.5" step="0.1"></label>
-            </div>
-        </section>
-
-        <div class="divider"></div>
-
-        <section>
-            <h2 class="section-title">자녀 계획</h2>
-            <div class="grid-2">
-                <label>자녀 수 (명) <input type="number" id="childCount" value="1"></label>
-                <label>독립까지 남은 기간 (년) <input type="number" id="childYears" value="20"></label>
-            </div>
-            <div class="form-group mt-10">
-                <label>자녀 1인당 연 지출 (만원) <input type="number" id="childExpense" value="600"></label>
             </div>
         </section>
 
@@ -104,27 +79,19 @@
 
         <section class="card chart-card">
             <h3 class="card-subtitle">📈 누적 순자산 성장 추이</h3>
-            <div class="chart-container">
-                <canvas id="assetChart"></canvas>
-            </div>
+            <div class="chart-container"><canvas id="assetChart"></canvas></div>
         </section>
 
         <section class="card chart-card">
             <h3 class="card-subtitle">💰 연간 수입 및 지출 균형</h3>
-            <div class="chart-container">
-                <canvas id="flowChart"></canvas>
-            </div>
+            <div class="chart-container"><canvas id="flowChart"></canvas></div>
         </section>
 
         <section class="card table-card">
             <h3 class="card-subtitle">연도별 상세 데이터</h3>
             <div class="table-container">
                 <table id="resultTable">
-                    <thead>
-                        <tr>
-                            <th>본인</th><th>배우자</th><th>순자산</th><th>연 소득</th><th>연 지출</th>
-                        </tr>
-                    </thead>
+                    <thead><tr><th>본인</th><th>배우자</th><th>순자산</th><th>연 소득</th><th>연 지출</th></tr></thead>
                     <tbody></tbody>
                 </table>
             </div>
@@ -134,11 +101,12 @@
 
 <div id="adModal" class="ad-modal hidden">
     <div class="ad-box">
-        <div class="ad-icon">🛒</div>
-        <h3>무료 계산기 이용 안내</h3>
-        <p class="ad-text">계산기 품질 유지를 위해<br>쿠팡 방문 한번 부탁드립니다!</p>
-        <a href="https://link.coupang.com/a/d2Gw7t" target="_blank" class="coupang-btn">쿠팡 방문하기</a>
-        <div class="countdown"><span id="countNum">5</span>초 후 자동으로 계산됩니다</div>
+        <div class="ad-icon">🎁</div>
+        <h3>계산기 잠금 해제</h3>
+        <p class="ad-text">무료 서비스 유지를 위해<br><strong>쿠팡 방문 후</strong> 결과가 공개됩니다.</p>
+        <a href="https://link.coupang.com/a/d2Gw7t" target="_blank" id="coupangLink" class="coupang-btn">쿠팡 방문하기</a>
+        <div id="verifyMsg" class="verify-msg">방문 확인 대기 중...</div>
+        <button type="button" id="finalRunBtn" class="final-run-btn hidden">결과 확인하기</button>
     </div>
 </div>
 
