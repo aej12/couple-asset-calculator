@@ -21,40 +21,48 @@ body {
 
 .container { width: 100%; max-width: 600px; padding: 20px; box-sizing: border-box; }
 
-.main-header { text-align: center; margin-bottom: 30px; }
+.main-header { text-align: center; margin: 40px 0; }
 .main-header h1 { font-size: 24px; font-weight: 700; margin-bottom: 15px; }
 .main-header h1 span { color: var(--toss-blue); font-size: 14px; vertical-align: top; }
 
-/* 토스 스타일 배너 */
 .toss-banner {
-    display: flex; align-items: center; background: #fff; padding: 15px;
-    border-radius: 16px; text-decoration: none; color: inherit; margin-top: 15px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    display: flex; align-items: center; background: #fff; padding: 18px;
+    border-radius: 20px; text-decoration: none; color: inherit; margin-top: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
-.toss-banner-icon { font-size: 20px; margin-right: 12px; }
-.toss-banner-content { flex: 1; text-align: left; }
-.toss-banner-title { display: block; font-size: 14px; font-weight: 600; }
+.toss-banner-icon { font-size: 22px; margin-right: 12px; }
+.toss-banner-content { flex: 1; }
+.toss-banner-title { display: block; font-size: 14px; font-weight: 700; }
 .toss-banner-desc { font-size: 12px; color: var(--toss-text-sub); }
 
-.fire-formula-card { background: var(--white); padding: 20px; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-.formula-main { font-size: 18px; font-weight: 700; color: var(--toss-blue); margin: 10px 0; }
+.fire-formula-card { background: var(--white); padding: 24px; border-radius: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.06); }
+.formula-main { font-size: 18px; font-weight: 700; color: var(--toss-blue); margin: 12px 0; }
+.formula-sub { font-size: 12px; color: var(--toss-text-sub); line-height: 1.5; }
 
-.card { background: var(--white); border-radius: 24px; padding: 28px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
+.card { background: var(--white); border-radius: 28px; padding: 30px; margin-bottom: 24px; }
 .section-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; }
-.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
 
-input { width: 100%; padding: 16px; border: 1px solid #e5e8eb; border-radius: 12px; background: #f9fafb; font-size: 16px; box-sizing: border-box; }
+label { font-size: 14px; font-weight: 600; display: flex; flex-direction: column; gap: 8px; color: #4e5968; }
+.tooltip { font-size: 11px; font-weight: 400; color: var(--toss-text-sub); }
+input { padding: 16px; border: 1px solid #e5e8eb; border-radius: 14px; background: #f9fafb; font-size: 16px; box-sizing: border-box; }
 input:focus { outline: none; border-color: var(--toss-blue); background: #fff; }
 
-.btn-calculate { width: 100%; padding: 18px; border: none; border-radius: 16px; background: var(--toss-blue); color: #fff; font-size: 18px; font-weight: 700; cursor: pointer; margin-top: 20px; }
+.btn-calculate { width: 100%; padding: 20px; border: none; border-radius: 18px; background: var(--toss-blue); color: #fff; font-size: 18px; font-weight: 700; cursor: pointer; margin-top: 20px; }
+.affiliate-notice { font-size: 11px; color: #adb5bd; text-align: center; margin-top: 15px; }
 
-/* 광고 모달 */
-.ad-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; }
-.ad-box { background: white; padding: 30px; border-radius: 24px; text-align: center; width: 85%; max-width: 320px; }
-.coupang-btn { display: block; background: var(--toss-blue); color: white; padding: 15px; border-radius: 12px; text-decoration: none; font-weight: 700; margin: 15px 0; }
+.ad-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+.ad-box { background: white; padding: 35px; border-radius: 30px; text-align: center; width: 85%; max-width: 320px; }
+.coupang-btn { display: block; background: var(--toss-blue); color: white; padding: 16px; border-radius: 14px; text-decoration: none; font-weight: 700; margin: 20px 0; }
+.countdown { font-size: 13px; color: var(--toss-text-sub); }
 
-/* 테이블 및 결과 */
+.chart-container { position: relative; height: 320px; width: 100%; }
 .table-container { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; font-size: 13px; }
-th, td { padding: 12px; border-bottom: 1px solid #f2f4f6; text-align: right; }
-th { color: var(--toss-text-sub); }
+th, td { padding: 14px 10px; border-bottom: 1px solid #f2f4f6; text-align: right; }
+th { color: var(--toss-text-sub); font-weight: 500; }
+
+@media (max-width: 480px) {
+  .grid-2 { grid-template-columns: 1fr; }
+  .card { padding: 20px; }
+}
