@@ -7,6 +7,19 @@ document.addEventListener("DOMContentLoaded", () => {
     
     let assetChart = null, flowChart = null;
 
+    // --- 단위 변환 함수 (핵심 추가) ---
+    function formatKRW(val) {
+        const num = Math.round(val);
+        if (Math.abs(num) < 10000) return num.toLocaleString() + "만";
+        
+        const eok = Math.floor(Math.abs(num) / 10000);
+        const man = Math.abs(num) % 10000;
+        const sign = num < 0 ? "-" : "";
+        
+        if (man === 0) return `${sign}${eok}억`;
+        return `${sign}${eok}억 ${man.toLocaleString()}만`;
+    }
+
     btn.addEventListener("click", () => {
         adModal.classList.remove("hidden");
         finalRunBtn.classList.add("hidden");
@@ -25,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
         runSimulation();
     });
 
-   function runSimulation() {
+    function runSimulation() {
         const val = (id) => parseFloat(document.getElementById(id).value) || 0;
         
         const initialAsset = val("assetTotal");
@@ -37,40 +50,36 @@ document.addEventListener("DOMContentLoaded", () => {
         const retS = val("retireSelf"), retP = val("retirePartner");
         const ageS = val("ageSelf"), ageP = val("agePartner");
         const childCount = val("childCount"), childExitAge = val("childExitAge"), childExpense = val("childExpense");
-        const pensionYearly = val("pensionMonthly") * 12;
+        const pensionYearlyBase = val("pensionMonthly") * 12;
 
         let asset = initialAsset;
         const tableBody = document.querySelector("#resultTable tbody");
         tableBody.innerHTML = "";
         
         let labels = [], assetData = [], targetData = [], incData = [], expData = [];
-        let fireAge = null;
-        let bankruptAge = null; // 파산 나이 변수 추가
+        let fireAge = null, bankruptAge = null;
 
         for (let i = 0; i <= (100 - ageS); i++) {
             let curAgeS = ageS + i;
             let curAgeP = ageP + i;
 
-            // 1. 수입 계산
             let curInc = 0;
             if (curAgeS < retS) curInc += incomeS * Math.pow(1 + incInf, i);
             if (curAgeP < retP) curInc += incomeP * Math.pow(1 + incInf, i);
-            if (curAgeS >= 65) curInc += pensionYearly * Math.pow(1 + expInf, i);
+            if (curAgeS >= 65) {
+                let upgradeCount = Math.floor((curAgeS - 65) / 3);
+                curInc += pensionYearlyBase * Math.pow(1 + 0.02, upgradeCount);
+            }
             
-            // 2. 지출 계산
             let curExp = expenseBase * Math.pow(1 + expInf, i);
             if (curAgeS < childExitAge) {
                 curExp += (childCount * childExpense) * Math.pow(1 + expInf, i);
             }
             
-            // 3. 자산 갱신
             asset = (asset * (1 + rate)) + curInc - curExp;
 
-            // 4. 상태 판정
             let target = curExp * 25;
             if (fireAge === null && asset >= target && asset > 0) fireAge = curAgeS;
-            
-            // 핵심: 자산이 0 미만으로 떨어지는 첫 순간을 기록
             if (bankruptAge === null && asset < 0) bankruptAge = curAgeS;
 
             labels.push(curAgeS + "세");
@@ -79,17 +88,16 @@ document.addEventListener("DOMContentLoaded", () => {
             incData.push(Math.round(curInc));
             expData.push(Math.round(curExp));
 
+            // 표에 단위 변환 적용 (formatKRW)
             tableBody.insertAdjacentHTML('beforeend', `
                 <tr>
                     <td>${curAgeS}세</td><td>${curAgeP}세</td>
-                    <td style="color:${asset < 0 ? '#f04452' : 'inherit'}">${Math.round(asset).toLocaleString()}</td>
-                    <td>${Math.round(curInc).toLocaleString()}</td>
-                    <td>${Math.round(curExp).toLocaleString()}</td>
+                    <td style="color:${asset < 0 ? '#f04452' : 'inherit'}">${formatKRW(asset)}</td>
+                    <td style="color:#3182f6;">${formatKRW(curInc)}</td>
+                    <td>${formatKRW(curExp)}</td>
                 </tr>
             `);
-
-            // 자산이 너무 크게 마이너스면 루프 종료 (성능 최적화)
-            if (asset < -500000) break;
+            if (asset < -1000000) break;
         }
 
         resultArea.classList.remove("hidden");
@@ -97,23 +105,15 @@ document.addEventListener("DOMContentLoaded", () => {
         const headline = document.getElementById("resultHeadline");
         const summary = document.getElementById("summaryText");
 
-        // 출력 로직 수정
-        if (bankruptAge !== null && (fireAge === null || bankruptAge < fireAge)) {
-            // 파산 케이스 (파이어 전 혹은 파이어 못하고 파산할 때)
+        if (bankruptAge !== null) {
             headline.innerHTML = `⚠️ ${bankruptAge}세에 자산이 고갈될 것으로 보입니다`;
-            headline.style.color = "#f04452"; // 빨간색 강조
-            summary.innerHTML = `
-                현재 지출 및 양육비 규모가 자산 성장 속도보다 빠릅니다.<br>
-                <strong>${bankruptAge}세</strong> 무렵 순자산이 마이너스로 전환될 가능성이 높으므로,<br>
-                지출을 줄이거나 투자 수익률을 높이는 전략이 필요합니다.
-            `;
+            headline.style.color = "#f04452";
+            summary.innerHTML = `현재 지출 및 양육비 규모가 자산 성장보다 큽니다. <strong>${bankruptAge}세</strong> 무렵 자산이 고갈될 위험이 있으니 계획 수정이 필요합니다.`;
         } else if (fireAge) {
-            // 성공 케이스
             headline.innerHTML = `💡 ${fireAge}세에 파이어 가능합니다`;
             headline.style.color = "#191f28";
             summary.innerHTML = `
-                현재 순자산 ${initialAsset.toLocaleString()}만 원과 기본 지출 ${expenseBase.toLocaleString()}만 원 기준<br>
-                자녀 ${childCount}명 양육 및 65세 국민연금 수령을 모두 반영했을 때,<br>
+                현재 순자산 <strong>${formatKRW(initialAsset)}</strong> 기준, 자녀 양육 및 보수적 연금 수령을 반영했을 때<br>
                 <strong>${fireAge}세</strong>에 경제적 자립이 가능한 것으로 분석되었습니다.
             `;
         }
@@ -134,7 +134,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     { label: 'FIRE 목표선', data: targetData, borderColor: '#f04452', borderDash: [5,5], pointRadius: 0 }
                 ]
             },
-            options: { responsive: true, maintainAspectRatio: false }
+            options: { 
+                responsive: true, 
+                maintainAspectRatio: false,
+                scales: { y: { ticks: { callback: (v) => v >= 10000 ? (v/10000).toFixed(1) + '억' : v.toLocaleString() } } }
+            }
         });
 
         const ctx2 = document.getElementById('flowChart').getContext('2d');
@@ -148,7 +152,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     { label: '연 지출(양육비 포함)', data: expData, backgroundColor: 'rgba(240,68,82,0.4)' }
                 ]
             },
-            options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: false } } }
+            options: { 
+                responsive: true, 
+                maintainAspectRatio: false,
+                scales: { y: { ticks: { callback: (v) => v >= 10000 ? (v/10000).toFixed(1) + '억' : v.toLocaleString() } } }
+            }
         });
     }
 });
