@@ -10,9 +10,9 @@
 <body>
 <div class="container">
     <header class="main-header">
-        <h1>💸부부 경제적자유 시뮬레이터💸<span></span></h1>
+        <h1>💸부부 경제적 자유 시뮬레이터💸<span></span></h1>
         <div class="fire-formula-card">
-            <p class="formula-sub">순자산이 연간 지출의 25배가 되면 자립이 가능해집니다.</p>
+            <p class="formula-sub">자녀 양육비와 국민연금 수령액을 포함한 정밀 시뮬레이션입니다.</p>
         </div>
         
         <a href="https://blog.naver.com/dowls027" target="_blank" class="toss-banner">
@@ -44,9 +44,23 @@
         <div class="divider"></div>
 
         <section>
+            <h2 class="section-title">자녀 및 노후 정보</h2>
+            <div class="grid-3">
+                <label>자녀 수 (명) <input type="number" id="childCount" value="1"></label>
+                <label>독립 시 본인 나이 <input type="number" id="childExitAge" value="55"></label>
+                <label>자녀 1인당 연 지출 <input type="number" id="childExpense" value="1200"></label>
+            </div>
+            <div class="form-group mt-10">
+                <label>부부 합산 국민연금 (월 예상액/만원) <input type="number" id="pensionMonthly" value="200"></label>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <section>
             <h2 class="section-title">은퇴 및 지출</h2>
             <div class="form-group">
-                <label>연간 생활비 합계 (만원) <input type="number" id="expenseTotal" value="3000"></label>
+                <label>기본 생활비 (만원/연) <input type="number" id="expenseTotal" value="3000"></label>
             </div>
             <div class="grid-2">
                 <label>본인 은퇴 나이 <input type="number" id="retireSelf" value="55"></label>
@@ -89,7 +103,7 @@
             <h3 class="card-subtitle">연도별 상세 데이터</h3>
             <div class="table-container">
                 <table id="resultTable">
-                    <thead><tr><th>본인</th><th>배우자</th><th>순자산</th><th>연 소득</th><th>연 지출</th></tr></thead>
+                    <thead><tr><th>본인</th><th>배우자</th><th>순자산</th><th>연 수입+연금</th><th>연 지출(양육비포함)</th></tr></thead>
                     <tbody></tbody>
                 </table>
             </div>
