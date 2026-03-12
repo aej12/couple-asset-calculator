@@ -1,7 +1,8 @@
 :root {
   --toss-blue: #3182f6;
+  --toss-blue-light: rgba(49, 130, 246, 0.1);
   --toss-gray-bg: #f2f4f6;
-  --toss-text-main: #191f28;
+  --toss-text-main: #333d4b;
   --toss-text-sub: #8b95a1;
   --toss-border: #e5e8eb;
   --white: #ffffff;
@@ -12,41 +13,65 @@ body {
   background-color: var(--toss-gray-bg);
   color: var(--toss-text-main);
   margin: 0; padding: 0;
+  display: flex; justify-content: center;
 }
 
-.container { width: 100%; max-width: 500px; margin: 0 auto; padding: 20px; box-sizing: border-box; }
-.main-header { padding: 30px 0 10px; }
-.main-header h1 { font-size: 24px; font-weight: 700; }
-.subtitle { color: var(--toss-blue); font-size: 15px; margin-top: 5px; font-weight: 600; }
+.container { width: 100%; max-width: 640px; padding: 20px; box-sizing: border-box; }
 
-.card { background: var(--white); border-radius: 24px; padding: 24px; margin-bottom: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
-.section-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; }
+/* 헤더 및 배너 */
+.main-header { text-align: center; margin-bottom: 24px; }
+.main-header h1 { font-size: 26px; font-weight: 800; margin-bottom: 8px; }
+.subtitle { color: var(--toss-blue); font-weight: 600; margin-bottom: 20px; }
+
+.toss-banner {
+  display: flex; align-items: center; padding: 16px;
+  background: var(--white); border-radius: 18px; text-decoration: none;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.04); margin-bottom: 12px;
+}
+.toss-banner-icon { width: 40px; height: 40px; background: var(--toss-blue-light); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 12px; font-size: 20px; }
+.toss-banner-content { flex: 1; text-align: left; }
+.toss-banner-title { font-size: 14px; font-weight: 700; color: #191f28; display: block; }
+.toss-banner-desc { font-size: 12px; color: var(--toss-text-sub); }
+
+/* 카드 공통 */
+.card { background: var(--white); border-radius: 24px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 14px rgba(0,0,0,0.03); }
+.section-title { font-size: 18px; font-weight: 700; margin-bottom: 16px; }
 .divider { height: 1px; background: var(--toss-border); margin: 24px 0; }
 
-.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.form-group { margin-bottom: 15px; }
-label { font-size: 13px; color: var(--toss-text-sub); display: block; margin-bottom: 8px; }
-input {
-  width: 100%; padding: 14px; border: none; border-radius: 12px;
-  background: #f9fafb; font-size: 16px; font-weight: 600; box-sizing: border-box;
+/* 입력창 */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+label { font-size: 13px; font-weight: 600; display: flex; flex-direction: column; gap: 4px; }
+.tooltip { font-size: 11px; color: var(--toss-text-sub); font-weight: 400; margin-bottom: 4px; }
+input { padding: 14px; border: 1px solid var(--toss-border); border-radius: 12px; background: #f9fafb; font-size: 15px; width: 100%; box-sizing: border-box;}
+
+/* 광고 및 버튼 */
+.btn-calculate { width: 100%; padding: 18px; border: none; border-radius: 16px; background: var(--toss-blue); color: #fff; font-size: 17px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+.btn-calculate:disabled { background: #ccd2d9; cursor: not-allowed; }
+
+/* 🌟 버튼 아래 광고 안내 (더 작고 연하게) */
+.ad-notice { 
+  font-size: 10px; 
+  color: var(--toss-text-sub); 
+  text-align: center; 
+  margin-top: 12px; 
+  opacity: 0.7; 
+  font-weight: 400;
 }
 
-.btn-toss-primary {
-  width: 100%; padding: 18px; border: none; border-radius: 16px;
-  background: var(--toss-blue); color: #fff; font-size: 17px; font-weight: 700;
-  cursor: pointer; transition: 0.2s;
-}
-.btn-toss-primary:disabled { background: #d1d6db; }
-
-.ad-notice { font-size: 10px; color: #b0b8c1; margin-top: 12px; text-align: center; }
-
+/* 결과 및 차트 */
 .hidden { display: none; }
-.summary-box { background: #f9fafb; padding: 20px; border-radius: 16px; text-align: center; line-height: 1.6; }
-.chart-wrapper { position: relative; width: 100%; height: 300px; }
+.chart-wrapper { position: relative; width: 100%; height: 350px; margin-top: 10px; }
+.summary-text { background: #f9fafb; padding: 16px; border-radius: 16px; font-size: 14px; line-height: 1.6; text-align: center; }
 
-.visitor-footer { text-align: center; padding: 40px 0; font-size: 12px; color: var(--toss-text-sub); }
-.v-divider { margin: 0 10px; color: var(--toss-border); }
+/* 테이블 */
+.table-container { overflow-x: auto; margin-top: 10px; }
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+th, td { padding: 12px 8px; border-bottom: 1px solid var(--toss-border); text-align: right; }
+th { color: var(--toss-text-sub); text-align: center; }
 
-table { width: 100%; border-collapse: collapse; font-size: 11px; }
-th, td { padding: 10px 5px; text-align: right; border-bottom: 1px solid #f9fafb; }
-th { color: var(--toss-text-sub); font-weight: 400; text-align: center; }
+/* 방문자 통계 */
+.visitor-card { display: flex; background: #fff; border-radius: 18px; padding: 16px; margin-top: 20px; border: 1px solid rgba(0,0,0,0.03); }
+.visitor-item { flex: 1; text-align: center; }
+.visitor-label { font-size: 11px; color: var(--toss-text-sub); display: block; margin-bottom: 2px; }
+.visitor-value { font-size: 15px; font-weight: 700; }
+.visitor-divider { width: 1px; background: var(--toss-border); margin: 0 10px; }
