@@ -1,16 +1,18 @@
 :root {
   --toss-blue: #3182f6;
+  --toss-blue-light: rgba(49, 130, 246, 0.1);
   --toss-blue-dark: #1b64da;
   --toss-gray-bg: #f2f4f6;
   --toss-text-main: #333d4b;
   --toss-text-sub: #8b95a1;
   --toss-danger: #f04452;
   --toss-success: #00c64b;
+  --toss-border: #e5e8eb;
   --white: #ffffff;
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Pretendard", "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
   background-color: var(--toss-gray-bg);
   color: var(--toss-text-main);
   margin: 0; padding: 0;
@@ -18,60 +20,81 @@ body {
 }
 
 .container {
-  width: 100%; max-width: 600px; padding: 20px; box-sizing: border-box;
+  width: 100%; max-width: 640px; padding: 20px; box-sizing: border-box;
 }
 
-.main-header { text-align: center; margin-bottom: 30px; }
-.main-header h1 { font-size: 24px; font-weight: 700; margin-bottom: 15px; }
-.main-header h1 span { color: var(--toss-blue); font-size: 14px; vertical-align: top; }
+/* Header & Banner */
+.main-header { text-align: center; margin-bottom: 30px; margin-top: 20px;}
+.main-header h1 { font-size: 28px; font-weight: 800; margin-bottom: 8px; color: #191f28; }
+.subtitle { font-size: 18px; font-weight: 600; color: var(--toss-blue); margin-top: 0; margin-bottom: 20px; }
 
 .fire-formula-card {
-  background: var(--white); padding: 20px; border-radius: 20px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  background: var(--white); padding: 18px; border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.03); margin-bottom: 20px;
 }
-.formula-title { font-size: 13px; color: var(--toss-text-sub); margin: 0; }
-.formula-main { font-size: 18px; font-weight: 700; margin: 10px 0; color: var(--toss-blue); }
-.formula-sub { font-size: 12px; color: var(--toss-text-sub); margin: 0; line-height: 1.4; }
+.formula-main { font-size: 15px; font-weight: 600; line-height: 1.5; color: var(--toss-text-main); margin: 0; }
 
+.blog-banner {
+  display: flex; align-items: center; gap: 12px; padding: 16px; 
+  background: var(--white); border-radius: 16px; text-decoration: none;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04); transition: transform 0.2s;
+  border: 1px solid var(--toss-border); text-align: left;
+}
+.blog-banner:hover { transform: translateY(-2px); }
+.blog-icon { font-size: 24px; }
+.blog-text { display: flex; flex-direction: column; gap: 4px; }
+.blog-text strong { font-size: 14px; color: var(--toss-text-main); }
+.blog-text span { font-size: 12px; color: var(--toss-text-sub); }
+
+.main-footer { margin-top: 30px; margin-bottom: 40px; }
+
+/* Cards & Forms */
 .card {
   background: var(--white); border-radius: 24px; padding: 28px;
-  margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+  margin-bottom: 20px; box-shadow: 0 2px 14px rgba(0,0,0,0.03);
 }
 
-.section-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; color: #191f28; }
-.divider { height: 1px; background: #eff1f3; margin: 30px 0; }
+.section-title { font-size: 19px; font-weight: 700; margin-bottom: 20px; color: #191f28; }
+.card-subtitle { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+.chart-desc { font-size: 13px; color: var(--toss-text-sub); margin-bottom: 20px; line-height: 1.4; }
 
-.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
-.form-group { margin-bottom: 15px; }
+.divider { height: 1px; background: var(--toss-border); margin: 30px 0; }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.form-group { margin-bottom: 16px; }
+.mt-10 { margin-top: 10px; }
 
 label { font-size: 14px; font-weight: 600; display: flex; flex-direction: column; gap: 6px; }
-.tooltip { font-size: 11px; font-weight: 400; color: var(--toss-text-sub); }
+.tooltip { font-size: 12px; font-weight: 400; color: var(--toss-text-sub); line-height: 1.4; word-break: keep-all; }
 
 input {
-  padding: 16px; border: 1px solid #e5e8eb; border-radius: 12px;
-  background: #f9fafb; font-size: 16px; transition: 0.2s;
+  padding: 16px; border: 1px solid var(--toss-border); border-radius: 12px;
+  background: #f9fafb; font-size: 16px; transition: 0.2s; color: var(--toss-text-main);
+  box-sizing: border-box; width: 100%;
 }
-input:focus { outline: none; border-color: var(--toss-blue); background: #fff; }
+input:focus { outline: none; border-color: var(--toss-blue); background: #fff; box-shadow: 0 0 0 3px var(--toss-blue-light); }
 
 .btn-calculate {
   width: 100%; padding: 18px; border: none; border-radius: 16px;
   background: var(--toss-blue); color: #fff; font-size: 18px; font-weight: 700;
-  cursor: pointer; margin-top: 20px; transition: 0.2s;
+  cursor: pointer; margin-top: 10px; transition: background 0.2s;
 }
 .btn-calculate:hover { background: var(--toss-blue-dark); }
 
+/* Results */
 .hidden { display: none; }
-.status-icon { font-size: 40px; margin-bottom: 10px; text-align: center; }
-.result-headline { font-size: 22px; font-weight: 700; text-align: center; margin-bottom: 20px; }
-.summary-text { font-size: 15px; line-height: 1.6; color: #4e5968; background: #f9fafb; padding: 20px; border-radius: 16px; }
+.status-icon { font-size: 44px; margin-bottom: 10px; text-align: center; }
+.result-headline { font-size: 24px; font-weight: 700; text-align: center; margin-bottom: 20px; }
+.summary-text { font-size: 15px; line-height: 1.6; color: #4e5968; background: #f9fafb; padding: 20px; border-radius: 16px; text-align: center; }
 
 .table-container { overflow-x: auto; margin-top: 15px; }
 table { width: 100%; border-collapse: collapse; font-size: 13px; white-space: nowrap; }
-th, td { padding: 15px 10px; border-bottom: 1px solid #f2f4f6; text-align: right; }
-th { color: var(--toss-text-sub); font-weight: 500; text-align: right; }
-th:nth-child(1), th:nth-child(2), td:nth-child(1), td:nth-child(2) { text-align: center; }
+th, td { padding: 14px 10px; border-bottom: 1px solid var(--toss-border); text-align: right; }
+th { color: var(--toss-text-sub); font-weight: 600; text-align: center; background: #f9fafb; }
+td:nth-child(1) { text-align: center; font-weight: 600; }
 
 @media (max-width: 480px) {
   .grid-2 { grid-template-columns: 1fr; }
-  .card { padding: 20px; }
+  .card { padding: 22px; }
+  .main-header h1 { font-size: 24px; }
 }
