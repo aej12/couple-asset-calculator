@@ -3,7 +3,24 @@ document.addEventListener("DOMContentLoaded", () => {
   let assetChart = null;
   let expenseChart = null;
 
-  const fmt = (n) => Math.round(n).toLocaleString();
+  // 🌟 핵심 기능: '만원' 단위를 'X억 X000' 형태로 예쁘게 변환하는 함수
+  const formatKrw = (num) => {
+    if (num === 0) return "0";
+    let isNegative = num < 0;
+    let absN = Math.abs(Math.round(num));
+    let result = "";
+    
+    if (absN >= 10000) {
+      let uk = Math.floor(absN / 10000); // 억 단위
+      let man = absN % 10000;            // 만 단위
+      result = `${uk}억`;
+      if (man > 0) result += ` ${man.toLocaleString()}`; // 예: 1억 5000
+    } else {
+      result = `${absN.toLocaleString()}`; // 1억 미만은 콤마만
+    }
+    
+    return isNegative ? `-${result}` : result;
+  };
 
   btn.addEventListener("click", () => {
     const val = (id) => parseFloat(document.getElementById(id).value) || 0;
@@ -28,7 +45,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const tableBody = document.querySelector("#resultTable tbody");
     tableBody.innerHTML = "";
     
-    // 차트용 배열
     let labels = [];
     let assetNormalData = [], assetFIREData = [];
     let incomeData = [], expBaseData = [], expChildData = [];
@@ -45,15 +61,15 @@ document.addEventListener("DOMContentLoaded", () => {
       const curAgeS = data.ageS + i;
       const curAgeP = data.ageP + i;
 
-      // 1. 일반 소득 및 파이어 소득 계산
+      // 1. 소득 계산
       const curIncS = curAgeS < data.retS ? data.incS * Math.pow(1 + data.incInf, i) : 0;
       const curIncP = curAgeP < data.retP ? data.incP * Math.pow(1 + data.incInf, i) : 0;
       const incNormal = curIncS + curIncP;
       
-      // 파이어 달성 이후에는 근로소득이 0원이라고 가정
+      // 파이어 달성 시 소득 0원으로 계산 (달성한 '다음 해'부터 적용)
       const incFIRE = isFIRE ? 0 : incNormal;
 
-      // 2. 지출 계산 (자녀 독립 반영)
+      // 2. 지출 계산
       const baseExp = data.exp * Math.pow(1 + data.expInf, i);
       const childExp = (data.childC > 0 && i < data.childY) ? (data.childC * data.childE * Math.pow(1 + data.expInf, i)) : 0;
       const totalExp = baseExp + childExp;
@@ -65,7 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
       assetNormal = assetNormal + finIncNormal + incNormal - totalExp;
       assetFIRE = assetFIRE + finIncFIRE + incFIRE - totalExp;
 
-      // 4. FIRE 조건 체크 (순자산 >= 연간 총지출 * 25)
+      // 4. FIRE 조건 (순자산 >= 연지출 * 25)
       if (!isFIRE && assetNormal >= totalExp * 25 && assetNormal > 0) {
         isFIRE = true;
         fireAge = curAgeS;
@@ -74,7 +90,6 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!deadAgeNormal && assetNormal < 0) deadAgeNormal = curAgeS;
       if (!deadAgeFIRE && assetFIRE < 0) deadAgeFIRE = curAgeS;
 
-      // 데이터 푸시
       labels.push(`${curAgeS}세`);
       assetNormalData.push(assetNormal);
       assetFIREData.push(assetFIRE);
@@ -82,21 +97,17 @@ document.addEventListener("DOMContentLoaded", () => {
       expBaseData.push(baseExp);
       expChildData.push(childExp);
 
-      // 테이블 작성
+      // 테이블 작성 (formatKrw 사용)
       const row = `<tr>
         <td>${curAgeS}세</td>
-        <td style="color:${assetNormal < 0 ? '#f04452' : '#333d4b'}">${fmt(assetNormal)}</td>
-        <td style="color:${assetFIRE < 0 ? '#f04452' : '#00c64b'}">${fmt(assetFIRE)}</td>
-        <td>${fmt(incNormal)}</td>
-        <td>${fmt(totalExp)}</td>
+        <td style="color:${assetNormal < 0 ? '#f04452' : '#333d4b'}">${formatKrw(assetNormal)}</td>
+        <td style="color:${assetFIRE < 0 ? '#f04452' : '#00c64b'}">${formatKrw(assetFIRE)}</td>
+        <td>${formatKrw(incNormal)}</td>
+        <td>${formatKrw(totalExp)}</td>
       </tr>`;
       tableBody.insertAdjacentHTML("beforeend", row);
-
-      // 그래프 가독성을 위해 과도한 마이너스는 렌더링 중단
-      if (assetNormal < -200000 && assetFIRE < -200000) break;
     }
 
-    // 결과 텍스트 처리
     document.getElementById("resultArea").classList.remove("hidden");
     const headline = document.getElementById("resultHeadline");
     const icon = document.getElementById("statusIcon");
@@ -108,15 +119,25 @@ document.addEventListener("DOMContentLoaded", () => {
       headline.style.color = "#00c64b";
       summary.innerHTML = `
         <strong>목표 연령: ${fireAge}세</strong><br>
-        목표 시점부터 근로소득을 0원으로 전환해도, 자산 수익이 생활비를 충당합니다.<br>
-        (은퇴 전까지 투자 수익률 연 ${data.rate*100}% 유지 가정)
+        파이어 시점부터 근로소득이 0원이 되어도, 자산 수익만으로 생활비를 충당할 수 있습니다.<br>
+        <span style="font-size:12px; color:#8b95a1;">(투자 수익률 연 ${data.rate*100}% 유지 기준)</span>
       `;
     } else {
       icon.innerText = "⚠️";
       headline.innerText = `자산 고갈 위험이 있습니다.`;
       headline.style.color = "#f04452";
-      summary.innerHTML = `현재 설정으로는 지출의 25배를 모으기 전에 자산이 감소합니다.<br>지출을 줄이거나 투자 수익률을 높여보세요.`;
+      summary.innerHTML = `현재 설정으로는 목표 달성 전에 자산이 감소합니다.<br>지출을 줄이거나 투자 수익률을 높여보세요.`;
     }
+
+    // 공통 툴팁 포맷 (억 단위 변환)
+    const tooltipFormat = {
+      callbacks: { label: (c) => `${c.dataset.label}: ${formatKrw(c.raw)}` }
+    };
+    
+    // Y축 단위 포맷 (억 단위 변환)
+    const yAxisFormat = {
+      callback: function(value) { return formatKrw(value); }
+    };
 
     // --- 차트 1: 자산 & 소득 추이 ---
     const ctx1 = document.getElementById("assetChart").getContext("2d");
@@ -143,11 +164,12 @@ document.addEventListener("DOMContentLoaded", () => {
       },
       options: {
         responsive: true,
+        maintainAspectRatio: false, // 🌟 높이 고정을 위해 필수
         interaction: { mode: 'index', intersect: false },
-        plugins: { tooltip: { callbacks: { label: (c) => `${c.dataset.label}: ${fmt(c.raw)}만원` } } },
+        plugins: { tooltip: tooltipFormat },
         scales: {
-          y: { position: 'left', title: { display: true, text: '총 자산 (만원)' } },
-          y1: { position: 'right', grid: { display: false }, title: { display: true, text: '연 소득 (만원)' } }
+          y: { type: 'linear', position: 'left', title: { display: true, text: '총 자산' }, ticks: yAxisFormat },
+          y1: { type: 'linear', position: 'right', grid: { drawOnChartArea: false }, title: { display: true, text: '연 소득' }, ticks: yAxisFormat }
         }
       }
     });
@@ -176,16 +198,17 @@ document.addEventListener("DOMContentLoaded", () => {
       },
       options: {
         responsive: true,
+        maintainAspectRatio: false, // 🌟 높이 고정을 위해 필수
         interaction: { mode: 'index', intersect: false },
-        plugins: { tooltip: { callbacks: { label: (c) => `${c.dataset.label}: ${fmt(c.raw)}만원` } } },
+        plugins: { tooltip: tooltipFormat },
         scales: {
           x: { stacked: true },
-          y: { stacked: true, title: { display: true, text: '금액 (만원)' } }
+          y: { stacked: true, title: { display: true, text: '금액' }, ticks: yAxisFormat }
         }
       }
     });
 
-    // 결과 화면으로 스크롤
+    // 스크롤 이동
     setTimeout(() => {
       window.scrollTo({ top: document.getElementById("resultArea").offsetTop - 20, behavior: "smooth" });
     }, 100);
