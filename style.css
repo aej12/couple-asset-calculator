@@ -1,59 +1,6 @@
-body{
-font-family: Pretendard, sans-serif;
-background:#f2f4f6;
-margin:0;
-display:flex;
-justify-content:center;
-}
-
-.container{
-width:100%;
-max-width:640px;
-padding:20px;
-}
-
-.card{
-background:white;
-padding:25px;
-border-radius:20px;
-margin-bottom:20px;
-}
-
-.grid-2{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:12px;
-}
-
-input{
-padding:12px;
-border:1px solid #ddd;
-border-radius:10px;
-}
-
-.btn-calculate{
-width:100%;
-padding:16px;
-border:none;
-border-radius:14px;
-background:#3182f6;
-color:white;
-font-size:17px;
-font-weight:700;
-margin-top:15px;
-}
-
-.chart-wrapper{
-height:350px;
-}
-
-.hidden{
-display:none;
-}
-
 .affiliate-notice{
 font-size:12px;
-color:#888;
+color:#8b95a1;
 text-align:center;
 margin-top:8px;
 }
@@ -64,23 +11,32 @@ top:0;
 left:0;
 width:100%;
 height:100%;
-background:rgba(0,0,0,0.5);
+background:rgba(0,0,0,0.45);
 display:flex;
 align-items:center;
 justify-content:center;
+z-index:999;
 }
 
 .ad-box{
 background:white;
-padding:30px;
+padding:28px;
 border-radius:20px;
 text-align:center;
 max-width:320px;
+width:90%;
+box-shadow:0 10px 30px rgba(0,0,0,0.15);
 }
 
 .ad-icon{
 font-size:36px;
 margin-bottom:10px;
+}
+
+.ad-text{
+font-size:14px;
+color:#4e5968;
+margin-bottom:20px;
 }
 
 .coupang-btn{
@@ -91,10 +47,10 @@ text-decoration:none;
 padding:14px;
 border-radius:12px;
 font-weight:700;
-margin-bottom:10px;
+margin-bottom:12px;
 }
 
 .countdown{
 font-size:13px;
-color:#666;
+color:#8b95a1;
 }
