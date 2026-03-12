@@ -1,75 +1,84 @@
-/* 기존 스타일 유지 */
 :root {
   --toss-blue: #3182f6;
-  --toss-blue-light: rgba(49, 130, 246, 0.1);
-  --toss-blue-dark: #1b64da;
+  --toss-blue-pressed: #1b64da;
   --toss-gray-bg: #f2f4f6;
-  --toss-text-main: #333d4b;
+  --toss-text-main: #191f28;
   --toss-text-sub: #8b95a1;
+  --toss-text-muted: #b0b8c1;
   --toss-border: #e5e8eb;
   --white: #ffffff;
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Pretendard", "Segoe UI", Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Pretendard", sans-serif;
   background-color: var(--toss-gray-bg);
   color: var(--toss-text-main);
-  margin: 0; padding: 0;
-  display: flex; justify-content: center;
+  margin: 0; padding: 0; line-height: 1.5;
 }
 
-.container { width: 100%; max-width: 640px; padding: 20px; box-sizing: border-box; }
-.card { background: var(--white); border-radius: 24px; padding: 28px; margin-bottom: 20px; box-shadow: 0 2px 14px rgba(0,0,0,0.03); }
+.container { width: 100%; max-width: 500px; margin: 0 auto; padding: 20px; box-sizing: border-box; }
 
-/* 🌟 광고 안내 문구 스타일 */
-.ad-notice-small {
-  font-size: 11px;
-  color: var(--toss-text-sub);
-  text-align: center;
-  margin-top: 10px;
-  letter-spacing: -0.5px;
+/* 헤더 & 배너 */
+.main-header { padding: 20px 0; text-align: left; }
+.main-header h1 { font-size: 26px; font-weight: 700; margin: 0; }
+.subtitle { color: var(--toss-blue); font-weight: 600; font-size: 16px; margin-top: 4px; }
+
+.toss-banner {
+  display: flex; align-items: center; padding: 16px;
+  background: var(--white); border-radius: 20px; text-decoration: none;
+  margin-top: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+}
+.toss-banner-icon { width: 40px; height: 40px; background: #ebf4ff; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; margin-right: 12px; }
+.toss-banner-content { flex: 1; }
+.toss-banner-title { font-size: 14px; font-weight: 700; color: var(--toss-text-main); display: block; }
+.toss-banner-desc { font-size: 12px; color: var(--toss-text-sub); }
+.toss-banner-arrow { color: var(--toss-text-muted); font-size: 12px; }
+
+/* 카드 디자인 */
+.card { background: var(--white); border-radius: 24px; padding: 24px; margin-bottom: 16px; }
+.section-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; }
+.divider { height: 1px; background: var(--toss-border); margin: 24px 0; }
+
+/* 입력 필드 */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-group { margin-bottom: 16px; }
+label { font-size: 13px; color: var(--toss-text-sub); display: block; margin-bottom: 6px; font-weight: 500; }
+.tooltip { font-size: 11px; color: var(--toss-blue); display: block; margin-bottom: 6px; }
+input {
+  width: 100%; padding: 14px; border: 1px solid transparent; border-radius: 12px;
+  background: #f9fafb; font-size: 16px; font-weight: 600; box-sizing: border-box;
+  transition: all 0.2s;
+}
+input:focus { outline: none; background: #fff; border-color: var(--toss-blue); }
+
+/* 🌟 버튼 & 광고 문구 (핵심) */
+.action-area { text-align: center; margin-top: 10px; }
+.btn-toss-primary {
+  width: 100%; padding: 18px; border: none; border-radius: 16px;
+  background: var(--toss-blue); color: #fff; font-size: 17px; font-weight: 700;
+  cursor: pointer; transition: 0.2s;
+}
+.btn-toss-primary:active { background: var(--toss-blue-pressed); transform: scale(0.98); }
+.btn-toss-primary:disabled { background: #d1d6db; cursor: not-allowed; }
+
+.ad-notice {
+  font-size: 11px; color: var(--toss-text-muted); margin-top: 12px; font-weight: 400;
 }
 
-/* 🌟 방문자 통계 카드 스타일 */
-.visitor-stat-card {
-  display: flex;
-  background: #ffffff;
-  border-radius: 18px;
-  padding: 18px;
-  margin-top: 15px;
-  border: 1px solid rgba(0,0,0,0.02);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-}
-.stat-item {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.stat-label { font-size: 12px; color: var(--toss-text-sub); margin-bottom: 4px; }
-.stat-value { font-size: 16px; font-weight: 700; color: var(--toss-text-main); }
-.stat-divider { width: 1px; background: var(--toss-border); margin: 0 10px; }
-
-/* 버튼 비활성화 시 스타일 */
-.btn-calculate:disabled {
-  background: #b0b8c1;
-  cursor: not-allowed;
-}
-
-/* (기존 나머지 CSS 생략 - 그대로 유지됨) */
-.main-header { text-align: center; margin-bottom: 24px; margin-top: 20px;}
-.main-header h1 { font-size: 28px; font-weight: 800; margin-bottom: 8px; color: #191f28; }
-.subtitle { font-size: 18px; font-weight: 600; color: var(--toss-blue); margin-bottom: 24px; }
-.toss-banner { display: flex; align-items: center; padding: 18px; background: #ffffff; border-radius: 18px; text-decoration: none; box-shadow: 0 2px 10px rgba(0,0,0,0.04); margin-bottom: 10px; }
-.toss-banner-icon { width: 44px; height: 44px; background: rgba(49, 130, 246, 0.1); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 22px; margin-right: 14px; }
-.toss-banner-content { display: flex; flex-direction: column; flex: 1; }
-.toss-banner-title { font-size: 15px; font-weight: 700; color: #191f28; margin-bottom: 4px; }
-.toss-banner-desc { font-size: 13px; color: var(--toss-text-sub); }
-.chart-wrapper { position: relative; width: 100%; height: 350px; }
+/* 결과창 스타일 */
 .hidden { display: none; }
-.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
-input { padding: 16px; border: 1px solid var(--toss-border); border-radius: 12px; background: #f9fafb; font-size: 16px; width: 100%; box-sizing: border-box; }
-.btn-calculate { width: 100%; padding: 18px; border: none; border-radius: 16px; background: var(--toss-blue); color: #fff; font-size: 18px; font-weight: 700; cursor: pointer; transition: 0.2s; }
-.table-container { overflow-x: auto; margin-top: 15px; }
-table { width: 100%; border-collapse: collapse; font-size: 13px; white-space: nowrap; }
-th, td { padding: 14px 10px; border-bottom: 1px solid var(--toss-border); text-align: right; }
+.summary-box { background: #f9fafb; padding: 20px; border-radius: 16px; font-size: 15px; text-align: center; line-height: 1.6; }
+.chart-wrapper { position: relative; width: 100%; height: 300px; }
+
+/* 하단 방문자 표시 */
+.visitor-footer {
+  text-align: center; padding: 40px 0; font-size: 13px; color: var(--toss-text-muted);
+}
+.v-divider { margin: 0 8px; color: var(--toss-border); }
+strong { color: var(--toss-text-sub); }
+
+/* 테이블 */
+.table-container { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+th, td { padding: 12px 8px; text-align: right; border-bottom: 1px solid #f9fafb; }
+th { color: var(--toss-text-muted); font-weight: 500; text-align: center; }
