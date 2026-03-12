@@ -23,28 +23,33 @@ body {
   width: 100%; max-width: 640px; padding: 20px; box-sizing: border-box;
 }
 
-/* Header & Banner */
-.main-header { text-align: center; margin-bottom: 30px; margin-top: 20px;}
+/* Header & Titles */
+.main-header { text-align: center; margin-bottom: 24px; margin-top: 20px;}
 .main-header h1 { font-size: 28px; font-weight: 800; margin-bottom: 8px; color: #191f28; }
-.subtitle { font-size: 18px; font-weight: 600; color: var(--toss-blue); margin-top: 0; margin-bottom: 20px; }
+.subtitle { font-size: 18px; font-weight: 600; color: var(--toss-blue); margin-top: 0; margin-bottom: 24px; }
 
 .fire-formula-card {
-  background: var(--white); padding: 18px; border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.03); margin-bottom: 20px;
+  background: var(--white); padding: 20px; border-radius: 18px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.03); margin-bottom: 24px;
 }
-.formula-main { font-size: 15px; font-weight: 600; line-height: 1.5; color: var(--toss-text-main); margin: 0; }
+.formula-main { font-size: 16px; font-weight: 600; line-height: 1.6; color: var(--toss-text-main); margin: 0; }
 
-.blog-banner {
-  display: flex; align-items: center; gap: 12px; padding: 16px; 
-  background: var(--white); border-radius: 16px; text-decoration: none;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04); transition: transform 0.2s;
-  border: 1px solid var(--toss-border); text-align: left;
+/* 🌟 토스 스타일 블로그 배너 */
+.toss-banner {
+  display: flex; align-items: center; padding: 18px;
+  background: #ffffff; border-radius: 18px; text-decoration: none;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.04); transition: transform 0.2s, background 0.2s;
+  margin-bottom: 10px; border: 1px solid rgba(0,0,0,0.02);
 }
-.blog-banner:hover { transform: translateY(-2px); }
-.blog-icon { font-size: 24px; }
-.blog-text { display: flex; flex-direction: column; gap: 4px; }
-.blog-text strong { font-size: 14px; color: var(--toss-text-main); }
-.blog-text span { font-size: 12px; color: var(--toss-text-sub); }
+.toss-banner:active { transform: scale(0.98); background: #f9fafb; }
+.toss-banner-icon {
+  width: 44px; height: 44px; background: rgba(49, 130, 246, 0.1); border-radius: 14px;
+  display: flex; align-items: center; justify-content: center; font-size: 22px; margin-right: 14px;
+}
+.toss-banner-content { display: flex; flex-direction: column; flex: 1; text-align: left; }
+.toss-banner-title { font-size: 15px; font-weight: 700; color: #191f28; margin-bottom: 4px; }
+.toss-banner-desc { font-size: 13px; color: var(--toss-text-sub); }
+.toss-banner-arrow { color: #b0b8c1; font-weight: bold; font-size: 14px; margin-left: 10px; }
 
 .main-footer { margin-top: 30px; margin-bottom: 40px; }
 
@@ -57,6 +62,13 @@ body {
 .section-title { font-size: 19px; font-weight: 700; margin-bottom: 20px; color: #191f28; }
 .card-subtitle { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
 .chart-desc { font-size: 13px; color: var(--toss-text-sub); margin-bottom: 20px; line-height: 1.4; }
+
+/* 🌟 차트 래퍼 (그래프가 안 나오는 현상 방지) */
+.chart-wrapper {
+  position: relative;
+  width: 100%;
+  height: 350px;
+}
 
 .divider { height: 1px; background: var(--toss-border); margin: 30px 0; }
 
