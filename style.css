@@ -1,56 +1,54 @@
-.affiliate-notice{
-font-size:12px;
-color:#8b95a1;
-text-align:center;
-margin-top:8px;
+/* 필수 추가: 이 코드가 없으면 모달이 화면을 가리거나 레이아웃이 깨집니다 */
+.hidden {
+  display: none !important;
 }
 
-.ad-modal{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.45);
-display:flex;
-align-items:center;
-justify-content:center;
-z-index:999;
+/* 광고 모달 CSS */
+.ad-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
 }
 
-.ad-box{
-background:white;
-padding:28px;
-border-radius:20px;
-text-align:center;
-max-width:320px;
-width:90%;
-box-shadow:0 10px 30px rgba(0,0,0,0.15);
+.ad-box {
+  background: white;
+  padding: 28px;
+  border-radius: 20px;
+  text-align: center;
+  max-width: 320px;
+  width: 90%;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
 }
 
-.ad-icon{
-font-size:36px;
-margin-bottom:10px;
+.ad-icon { font-size: 36px; margin-bottom: 10px; }
+.ad-text { font-size: 14px; color: #4e5968; margin-bottom: 20px; }
+
+.coupang-btn {
+  display: block;
+  background: #3182f6;
+  color: white;
+  text-decoration: none;
+  padding: 14px;
+  border-radius: 12px;
+  font-weight: 700;
+  margin-bottom: 12px;
 }
 
-.ad-text{
-font-size:14px;
-color:#4e5968;
-margin-bottom:20px;
-}
+.countdown { font-size: 13px; color: #8b95a1; }
+.affiliate-notice { font-size: 12px; color: #8b95a1; text-align: center; margin-top: 8px; }
 
-.coupang-btn{
-display:block;
-background:#3182f6;
-color:white;
-text-decoration:none;
-padding:14px;
-border-radius:12px;
-font-weight:700;
-margin-bottom:12px;
-}
-
-.countdown{
-font-size:13px;
-color:#8b95a1;
+/* 결과창 스타일 (예시) */
+#resultArea {
+  margin-top: 30px;
+  padding: 20px;
+  background: #fff;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
 }
