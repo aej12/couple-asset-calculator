@@ -1,15 +1,9 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
+<!DOCTYPE html><html lang="ko"><head>
   <meta charset="UTF-8">
   <title>부부 FIRE 시뮬레이터</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <link rel="stylesheet" href="style.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body>
-
-<div class="container">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script></head><body><div class="container">
   <header class="main-header">
     <h1>부부 FIRE 시뮬레이터</h1>
     <p class="subtitle">우리는 몇살에 파이어 할까?</p>
@@ -33,7 +27,7 @@
       <h2 class="section-title">자산 및 수입</h2>
       <div class="form-group">
         <label>현재 순자산 합계 (만원)
-          <span class="tooltip">현금, 주식, 채권 포함 (실거주 부동산 제외)</span>
+          <span class="tooltip">현금, 주식, 채권, 퇴직금을 포함한 순자산 (실거주용 부동산 제외)</span>
           <input type="number" id="assetTotal" value="10000">
         </label>
       </div>
@@ -68,11 +62,17 @@
     <section>
       <h2 class="section-title">투자 및 상승률</h2>
       <div class="form-group">
-        <label>연간 투자 수익률 (%) <input type="number" id="interestRate" value="5" step="0.1"></label>
+        <label>연간 투자 수익률 (%)
+          <span class="tooltip">보수적 3~4%, 적극적 7~10% 권장</span>
+          <input type="number" id="interestRate" value="5" step="0.1">
+        </label>
       </div>
       <div class="grid-2">
         <label>소득 상승률 (%) <input type="number" id="incomeInflation" value="3" step="0.1"></label>
-        <label>지출 상승률 (%) <input type="number" id="expenseInflation" value="2.5" step="0.1"></label>
+        <label>지출 상승률 (%) 
+          <span class="tooltip">물가상승률을 반드시 포함하여 작성해주세요.</span>
+          <input type="number" id="expenseInflation" value="2.5" step="0.1">
+        </label>
       </div>
     </section>
 
@@ -89,8 +89,8 @@
       </div>
     </section>
 
-    <p class="ad-notice">계산하기 클릭 시 쿠팡 파트너스 활동의 일환으로 일정액의 수수료를 제공받으며, 5초 후 분석이 시작됩니다.</p>
     <button type="button" id="mainBtn" class="btn-calculate">시뮬레이션 시작</button>
+    <p class="ad-notice-small">쿠팡파트너스활동을통해 소정의수수료를 지원받습니다</p>
   </main>
 
   <div id="resultArea" class="hidden">
@@ -115,9 +115,7 @@
       <div class="table-container">
         <table id="resultTable">
           <thead>
-            <tr>
-              <th>나이(본인)</th><th>총자산(일반)</th><th>총자산(파이어시)</th><th>연 수입</th><th>연 지출</th>
-            </tr>
+            <tr><th>나이(본인)</th><th>총자산(일반)</th><th>총자산(파이어시)</th><th>연 수입</th><th>연 지출(총합)</th></tr>
           </thead>
           <tbody></tbody>
         </table>
@@ -135,20 +133,16 @@
       <div class="toss-banner-arrow">〉</div>
     </a>
 
-    <div class="visitor-card">
-      <div class="visitor-item">
-        <span class="visitor-label">오늘 방문자</span>
-        <span class="visitor-value" id="todayVisit">0</span>
+    <div class="visitor-stat-card">
+      <div class="stat-item">
+        <span class="stat-label">오늘 방문자</span>
+        <span id="todayCount" class="stat-value">0</span>
       </div>
-      <div class="visitor-divider"></div>
-      <div class="visitor-item">
-        <span class="visitor-label">전체 방문자</span>
-        <span class="visitor-value" id="totalVisit">0</span>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-label">전체 방문자</span>
+        <span id="totalCount" class="stat-value">0</span>
       </div>
     </div>
   </footer>
-</div>
-
-<script src="script.js"></script>
-</body>
-</html>
+</div><script src="script.js"></script></body></html>
